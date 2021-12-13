@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/startAppFragment">
+
+    <fragment
+        android:id="@+id/listPostFragment"
+        android:name="com.example.wineapp.ListPostFragment"
+        android:label="Post List"
+        tools:layout="@layout/fragment_list_post">
+        <action
+            android:id="@+id/action_listPostFragment_to_startAppFragment"
+            app:destination="@id/startAppFragment" />
+        <action
+            android:id="@+id/action_listPostFragment_to_postDetailsFragment"
+            app:destination="@id/postDetailsFragment" />
+        <action
+            android:id="@+id/action_listPostFragment_to_userPageFragment"
+            app:destination="@id/userPageFragment" />
+        <argument
+            android:name="user"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/userPageFragment"
+        android:name="com.example.wineapp.UserPageFragment"
+        android:label="User Home Page"
+        tools:layout="@layout/fragment_user_page">
+        <action
+            android:id="@+id/action_userPageFragment_to_editPostFragment"
+            app:destination="@id/editPostFragment" />
+        <action
+            android:id="@+id/action_userPageFragment_to_userAddPostFragment"
+            app:destination="@id/userAddPostFragment" />
+        <action
+            android:id="@+id/action_userPageFragment_to_startAppFragment"
+            app:destination="@id/startAppFragment" />
+        <action
+            android:id="@+id/action_userPageFragment_to_listPostFragment"
+            app:destination="@id/listPostFragment" />
+        <argument
+            android:name="user"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/userAddPostFragment"
+        android:name="com.example.wineapp.UserAddPostFragment"
+        android:label="Add New Post"
+        tools:layout="@layout/fragment_user_add_post" >
+        <action
+            android:id="@+id/action_userAddPostFragment_to_userPageFragment"
+            app:destination="@id/userPageFragment" />
+        <argument
+            android:name="user"
+            app:argType="com.example.wineapp.model.User" />
+    </fragment>
+    <fragment
+        android:id="@+id/startAppFragment"
+        android:name="com.example.wineapp.StartAppFragment"
+        android:label="WineWay"
+        tools:layout="@layout/fragment_start_app">
+        <action
+            android:id="@+id/action_startAppFragment_to_registerFragment"
+            app:destination="@id/registerFragment" />
+        <action
+            android:id="@+id/action_startAppFragment_to_signInFragment"
+            app:destination="@id/signInFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.example.wineapp.RegisterFragment"
+        android:label="WineWay Register"
+        tools:layout="@layout/fragment_register">
+        <action
+            android:id="@+id/action_registerFragment_to_signInFragment"
+            app:destination="@id/signInFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/signInFragment"
+        android:name="com.example.wineapp.SignInFragment"
+        android:label="WineWay Sign In"
+        tools:layout="@layout/fragment_sign_in">
+        <action
+            android:id="@+id/action_signInFragment_to_listPostFragment"
+            app:destination="@id/listPostFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/editPostFragment"
+        android:name="com.example.wineapp.EditPostFragment"
+        android:label="Edit My Post"
+        tools:layout="@layout/fragment_edit_post">
+        <action
+            android:id="@+id/action_editPostFragment_to_userPageFragment"
+            app:destination="@id/userPageFragment" />
+        <argument
+            android:name="Post"
+            app:argType="com.example.wineapp.model.Post" />
+        <argument
+            android:name="user"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/postDetailsFragment"
+        android:name="com.example.wineapp.PostDetailsFragment"
+        android:label="Post details"
+        tools:layout="@layout/fragment_post_details">
+        <argument
+            android:name="post"
+            app:argType="com.example.wineapp.model.Post" />
+        <action
+            android:id="@+id/action_postDetailsFragment_to_listPostFragment"
+            app:destination="@id/listPostFragment" />
+    </fragment>
+</navigation>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/userPageLogout"
+        android:icon="@drawable/logout"
+        android:title="Add"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/userPageAddPost"
+        android:icon="@drawable/post"
+        android:title="Add"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/userPageListPost"
+        android:title="Post List"
+        app:showAsAction="always" />
+</menu>
