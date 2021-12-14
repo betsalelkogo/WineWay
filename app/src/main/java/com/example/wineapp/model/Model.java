@@ -7,6 +7,7 @@ import java.util.List;
 
 public class Model {
     static final public Model instance = new Model();
+    ModelFirebase modelFirebase = new ModelFirebase();
     private List<User> users = new LinkedList<User>();
     private  Model(){
         User u=new User("1","1","1");
@@ -28,46 +29,50 @@ public class Model {
         void onComplete(List<Post> data);
     }
     public void getAllPosts(GetAllPostsListener listener){
-        MyApplication.executorService.execute(()->{
-            List<Post> data = AppLocalDB.db.postDao().getAll();
-            MyApplication.mainHandler.post(()->{
-                listener.onComplete(data);
-            });
-        });
+        modelFirebase.getAllPosts(listener);
+//        MyApplication.executorService.execute(()->{
+//            List<Post> data = AppLocalDB.db.postDao().getAll();
+//            MyApplication.mainHandler.post(()->{
+//                listener.onComplete(data);
+//            });
+//        });
     }
 
     public interface AddPostListener{
         void onComplete();
     }
     public void addPost(Post post, AddPostListener listener){
-        MyApplication.executorService.execute(()->{
-            AppLocalDB.db.postDao().insertAll(post);
-            MyApplication.mainHandler.post(()->{
-                listener.onComplete();
-            });
-        });
+        modelFirebase.addPost(post,listener);
+//        MyApplication.executorService.execute(()->{
+//            AppLocalDB.db.postDao().insertAll(post);
+//            MyApplication.mainHandler.post(()->{
+//                listener.onComplete();
+//            });
+//        });
     }
 
     public interface GetPostByNameListener{
         void onComplete(Post post);
     }
     public void getPostByName(String postId,GetPostByNameListener listener) {
-        MyApplication.executorService.execute(()->{
-            Post post = AppLocalDB.db.postDao().getPostByName(postId);
-            MyApplication.mainHandler.post(()->{
-                listener.onComplete(post);
-            });
-        });
+        modelFirebase.getPostByName(postId,listener);
+//        MyApplication.executorService.execute(()->{
+//            Post post = AppLocalDB.db.postDao().getPostByName(postId);
+//            MyApplication.mainHandler.post(()->{
+//                listener.onComplete(post);
+//            });
+//        });
     }
     public interface DeletePostListener{
         void onComplete();
     }
     public void DeletePost(Post post, DeletePostListener listener){
-        MyApplication.executorService.execute(()->{
-            AppLocalDB.db.postDao().delete(post);
-            MyApplication.mainHandler.post(()->{
-                listener.onComplete();
-            });
-        });
+        modelFirebase.deletePost(post,listener);
+//        MyApplication.executorService.execute(()->{
+//            AppLocalDB.db.postDao().delete(post);
+//            MyApplication.mainHandler.post(()->{
+//                listener.onComplete();
+//            });
+//        });
     }
 }
