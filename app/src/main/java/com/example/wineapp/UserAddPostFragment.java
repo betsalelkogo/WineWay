@@ -23,7 +23,7 @@ import java.util.List;
 
 public class UserAddPostFragment extends Fragment {
     View view;
-    EditText postEt;
+    EditText postEt, subjectEt;
     Button cancelBtn;
     ImageButton sendBtn;
     ProgressBar progressBar;
@@ -37,6 +37,7 @@ public class UserAddPostFragment extends Fragment {
         sendBtn=view.findViewById(R.id.user_add_new_post_send_btn);
         cancelBtn=view.findViewById(R.id.user_add_new_post_cancel_btn);
         postEt=view.findViewById(R.id.user_add_new_post_et);
+        subjectEt=view.findViewById(R.id.user_add_subject_post_et);
         progressBar=view.findViewById(R.id.user_add_new_post_progressbar);
         progressBar.setVisibility(View.GONE);
         sendBtn.setOnClickListener(new View.OnClickListener() {
@@ -59,7 +60,7 @@ public class UserAddPostFragment extends Fragment {
         progressBar.setVisibility(View.VISIBLE);
         sendBtn.setEnabled(false);
         cancelBtn.setEnabled(false);
-        Post p = new Post(user.getName(), postEt.getText().toString());
+        Post p = new Post(user.getName(), postEt.getText().toString(),subjectEt.getText().toString());
         Model.instance.addPost(p,()->{
             Navigation.findNavController(view).navigateUp();
         });

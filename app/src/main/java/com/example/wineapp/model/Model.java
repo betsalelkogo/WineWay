@@ -75,4 +75,54 @@ public class Model {
 //            });
 //        });
     }
+//    public interface GetAllUserListener{
+//        void onComplete(List<User> data);
+//    }
+//    public void getAllUser(GetAllUserListener listener){
+//        //modelFirebase.getAllUser(listener);
+//        MyApplication.executorService.execute(()->{
+//            List<User> data = AppLocalDB.db.userDao().getAll();
+//            MyApplication.mainHandler.post(()->{
+//                listener.onComplete(data);
+//            });
+//        });
+//    }
+//
+//    public interface AddUserListener{
+//        void onComplete();
+//    }
+//    public void addUser(User user, AddUserListener listener){
+////        modelFirebase.addUser(post,listener);
+//        MyApplication.executorService.execute(()->{
+//            AppLocalDB.db.userDao().insertAll(user);
+//            MyApplication.mainHandler.post(()->{
+//                listener.onComplete();
+//            });
+//        });
+//    }
+//
+//    public interface GetUserByNameListener{
+//        void onComplete(User user);
+//    }
+//    public void getUserByName(String userName,GetUserByNameListener listener) {
+//        //modelFirebase.getUserByName(userName,listener);
+//        MyApplication.executorService.execute(()->{
+//            User user = AppLocalDB.db.userDao().getPostByName(userName);
+//            MyApplication.mainHandler.post(()->{
+//                listener.onComplete(user);
+//            });
+//        });
+//    }
+//    public interface DeleteUserListener{
+//        void onComplete();
+//    }
+//    public void DeleteUser(User user, DeleteUserListener listener){
+//        //modelFirebase.DeleteUser(user,listener);
+//        MyApplication.executorService.execute(()->{
+//            AppLocalDB.db.userDao().delete(user);
+//            MyApplication.mainHandler.post(()->{
+//                listener.onComplete();
+//            });
+//        });
+//    }
 }

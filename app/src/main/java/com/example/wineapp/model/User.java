@@ -3,19 +3,21 @@ package com.example.wineapp.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.LinkedList;
-import java.util.List;
+import androidx.annotation.NonNull;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
+//@Entity
 public class User implements Parcelable {
+    //@PrimaryKey
+    //@NonNull
     private String name;
     private String password;
     private String email;
-    //private List<Post> list;
     public User(String name,String password,String email){
         this.name=name;
         this.password=password;
         this.email=email;
-        //this.list=new LinkedList<Post>();
     }
 
     protected User(Parcel in) {

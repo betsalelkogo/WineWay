@@ -22,7 +22,7 @@ import java.util.List;
 
 public class PostDetailsFragment extends Fragment {
     Post p;
-    TextView caveName, details;
+    TextView subjectEt, details;
     ImageView photo;
     MapView map;
     ProgressBar progressBar;
@@ -32,7 +32,7 @@ public class PostDetailsFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_post_details, container, false);
         p= PostDetailsFragmentArgs.fromBundle(getArguments()).getPost();
-        caveName=view.findViewById(R.id.post_details_cave_name_tv);
+        subjectEt=view.findViewById(R.id.post_details_cave_name_tv);
         details=view.findViewById(R.id.post_detail_tv);
         photo=view.findViewById(R.id.post_detail_wineryPicture);
         map=view.findViewById(R.id.post_details_map);
@@ -46,7 +46,7 @@ public class PostDetailsFragment extends Fragment {
     }
     private void updateDisplay() {
         progressBar.setVisibility(View.GONE);
-        caveName.setText(p.getName());
+        subjectEt.setText(p.getSubject());
         details.setText(p.getDetails());
     }
 }

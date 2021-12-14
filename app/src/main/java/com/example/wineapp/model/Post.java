@@ -11,17 +11,21 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Entity
-public class Post implements Parcelable {
+public class Post implements Parcelable{
+    private String subject;
+    private String details;
     @PrimaryKey
     @NonNull
-    private String name = "";
-    private String details="";
-    public Post(String name,String details){
+    private String name;
+    public Post(String name,String details,String subject){
         this.name=name;
         this.details=details;
+        this.subject=subject;
     }
 
+
     protected Post(Parcel in) {
+        subject = in.readString();
         name = in.readString();
         details = in.readString();
     }
@@ -39,7 +43,9 @@ public class Post implements Parcelable {
     };
 
     public String getName(){return this.name;}
+    public String getSubject(){return this.subject;}
     public void setName(String name){this.name=name;}
+    public void setSubject(String subject){this.subject=subject;}
     public String getDetails() {
         return this.details;
     }
@@ -47,19 +53,10 @@ public class Post implements Parcelable {
         this.details = details;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(name);
-        dest.writeString(details);
-    }
     public Map<String,Object> toJson(){
         Map<String, Object> json = new HashMap<>();
         json.put("name", getName());
+        json.put("subject", getSubject());
         json.put("details", getDetails());
         return json;
     }
@@ -70,7 +67,20 @@ public class Post implements Parcelable {
             return null;
         }
         String name = (String)json.get("name");
-        Post p = new Post(name,details);
+        String subject = (String)json.get("subject");
+        Post p = new Post(name,details,subject);
         return p;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(subject);
+        dest.writeString(name);
+        dest.writeString(details);
     }
 }

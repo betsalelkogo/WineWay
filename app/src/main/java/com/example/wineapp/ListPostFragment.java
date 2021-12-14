@@ -97,7 +97,7 @@ public class ListPostFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
             Post p = data.get(position);
-            holder.nameTv.setText(p.getName());
+            holder.nameTv.setText(p.getSubject());
             holder.detailsTv.setText(p.getDetails());
         }
 
