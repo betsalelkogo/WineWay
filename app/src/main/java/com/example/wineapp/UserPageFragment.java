@@ -29,13 +29,13 @@ import java.util.List;
 
 
 public class UserPageFragment extends Fragment {
-    List<Post> allData= new LinkedList<>();
     List<Post> data= new LinkedList<>();
     View view;
-    UserPageFragment.MyAdapter adapter;
+    Adapter adapter;
     ProgressBar progressbar;
     TextView userName, email;
     User user;
+    UserPageFragmentDirections.ActionUserPageFragmentToUserAddPostFragment action;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -48,21 +48,20 @@ public class UserPageFragment extends Fragment {
         Model.instance.getAllPosts(new Model.GetAllPostsListener(){
             @Override
             public void onComplete(List<Post> p) {
-                allData = p;
-                Filter(allData);
+                data = p;
                 adapter.notifyDataSetChanged();
+                Filter();
                 progressbar.setVisibility(View.GONE);
             }
         });
         RecyclerView list = view.findViewById(R.id.user_page_post_list_tv);
         list.setHasFixedSize(true);
         list.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new UserPageFragment.MyAdapter(this);
+        adapter = new Adapter();
         list.setAdapter(adapter);
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(int position, View v) {
-
                 progressbar.setVisibility(View.VISIBLE);
                 Post p = data.get(position);
                 UserPageFragmentDirections.ActionUserPageFragmentToEditPostFragment action = UserPageFragmentDirections.actionUserPageFragmentToEditPostFragment(p,user);
@@ -73,13 +72,14 @@ public class UserPageFragment extends Fragment {
         userName.setText(user.getName());
         email.setText(user.getEmail());
         setHasOptionsMenu(true);
+        action=UserPageFragmentDirections.actionUserPageFragmentToUserAddPostFragment(user);
         return view;
 
     }
-    private void Filter(List<Post> list){
-        for(int i=0;i<list.size();i++) {
-            if (list.get(i).getName().equals(user.getName()))
-                data.add(list.get(i));
+    private void Filter(){
+        for(int i=0;i<data.size();i++) {
+            if (!data.get(i).getName().equals(user.getName()))
+                data.remove(i);
         }
     }
     @Override
@@ -98,7 +98,6 @@ public class UserPageFragment extends Fragment {
                     break;
                 case R.id.userPageAddPost:
                     progressbar.setVisibility(View.VISIBLE);
-                    UserPageFragmentDirections.ActionUserPageFragmentToUserAddPostFragment action=UserPageFragmentDirections.actionUserPageFragmentToUserAddPostFragment(user);
                     Navigation.findNavController(view).navigate(action);
                     break;
                 case R.id.userPageListPost:
@@ -113,14 +112,9 @@ public class UserPageFragment extends Fragment {
         }
         return result;
     }
-    static class MyAdapter extends RecyclerView.Adapter<UserPageFragment.MyViewHolder> {
+    class Adapter extends RecyclerView.Adapter<UserPageFragment.MyViewHolder> {
 
-        private final UserPageFragment listPostFragment;
         OnItemClickListener listener;
-
-        public MyAdapter(UserPageFragment listPostFragment) {
-            this.listPostFragment = listPostFragment;
-        }
 
         public void setOnItemClickListener(OnItemClickListener listener) {
             this.listener = listener;
@@ -129,20 +123,20 @@ public class UserPageFragment extends Fragment {
         @NonNull
         @Override
         public UserPageFragment.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = listPostFragment.getLayoutInflater().inflate(R.layout.post_wine_list_row, parent, false);
+            View view = getLayoutInflater().inflate(R.layout.post_wine_list_row, parent, false);
             UserPageFragment.MyViewHolder holder = new UserPageFragment.MyViewHolder(view, listener);
             return holder;
         }
 
         @Override
         public void onBindViewHolder(@NonNull UserPageFragment.MyViewHolder holder, int position) {
-            Post p = listPostFragment.data.get(position);
+            Post p = data.get(position);
             holder.nameTv.setText(p.getName());
             holder.detailsTv.setText(p.getDetails());
         }
 
         @Override
-        public int getItemCount() { return listPostFragment.data.size(); }
+        public int getItemCount() { return data.size(); }
     }
 
     static class MyViewHolder extends RecyclerView.ViewHolder {

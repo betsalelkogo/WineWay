@@ -8,46 +8,20 @@ import java.util.List;
 public class Model {
     static final public Model instance = new Model();
     private List<User> users = new LinkedList<User>();
-    private List<Post> data = new LinkedList<Post>();
     private  Model(){
         User u=new User("1","1","1");
         User u2=new User("2","2","2");
         users.add(u);
         users.add(u2);
     }
-    public List<Post> getPostList(){
-        return data;
-    }
     public List<User> getUsersList(){
         return users;
-    }
-    public void addNewPost(Post post){
-        data.add(post);
-    }
-    public void addNewUser(User user){
-        users.add(user);
-    }
-    public Post getPost(String name) {
-        return data.get(getPostPosition(name));
-    }
-    public User getUser(int i){return users.get(i);}
-    private int getPostPosition(String name) {
-        for(int i=0;i<data.size();i++)
-            if(name.equals(data.get(i).getName()))
-                return i;
-        return 0;
     }
     public int getUserPosition(String name) {
         for(int i=0;i<users.size();i++)
             if(name.equals(users.get(i).getName()))
                 return i;
         return 0;
-    }
-    public void DeletePostPosition(int postPosition) {
-        data.remove(postPosition);
-    }
-    public void EditPost(Post post, int position) {
-        data.set(position,post);
     }
 //////////////////////////////////////////////////////////////////////////////////
     public interface GetAllPostsListener{

@@ -43,14 +43,6 @@ public class ListPostFragment extends Fragment {
         userBtn=view.findViewById(R.id.list_post_user_btn);
         progressBar= view.findViewById(R.id.list_post_progressbar);
         progressBar.setVisibility(View.VISIBLE);
-        userBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                progressBar.setVisibility(View.VISIBLE);
-                ListPostFragmentDirections.ActionListPostFragmentToUserPageFragment action1=ListPostFragmentDirections.actionListPostFragmentToUserPageFragment(user);
-                Navigation.findNavController(view).navigate(action1);
-            }
-        });
         Model.instance.getAllPosts(new Model.GetAllPostsListener(){
             @Override
             public void onComplete(List<Post> p) {
@@ -62,7 +54,7 @@ public class ListPostFragment extends Fragment {
         RecyclerView list = view.findViewById(R.id.winelist_list_rv);
         list.setHasFixedSize(true);
         list.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new MyAdapter(this);
+        adapter = new MyAdapter();
         list.setAdapter(adapter);
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
@@ -73,41 +65,45 @@ public class ListPostFragment extends Fragment {
                 Navigation.findNavController(v).navigate(action);
             }
         });
+        userBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                progressBar.setVisibility(View.VISIBLE);
+                ListPostFragmentDirections.ActionListPostFragmentToUserPageFragment action1=ListPostFragmentDirections.actionListPostFragmentToUserPageFragment(user);
+                Navigation.findNavController(view).navigate(action1);
+            }
+        });
         setHasOptionsMenu(true);
         return view;
     }
 
-    static class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
+     class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
-        private final ListPostFragment listPostFragment;
         OnItemClickListener listener;
 
-        public MyAdapter(ListPostFragment listPostFragment) {
-            this.listPostFragment = listPostFragment;
-        }
-
-        public void setOnItemClickListener(OnItemClickListener listener) {
+         public void setOnItemClickListener(OnItemClickListener listener) {
             this.listener = listener;
         }
+
 
         @NonNull
         @Override
         public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = listPostFragment.getLayoutInflater().inflate(R.layout.post_wine_list_row, parent, false);
+            View view = getLayoutInflater().inflate(R.layout.post_wine_list_row, parent, false);
             MyViewHolder holder = new MyViewHolder(view, listener);
             return holder;
         }
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            Post p = listPostFragment.data.get(position);
+            Post p = data.get(position);
             holder.nameTv.setText(p.getName());
             holder.detailsTv.setText(p.getDetails());
         }
 
         @Override
         public int getItemCount() {
-            return listPostFragment.data.size();
+            return data.size();
         }
     }
 

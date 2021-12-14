@@ -23,7 +23,7 @@ import java.util.List;
 
 public class UserAddPostFragment extends Fragment {
     View view;
-    EditText post;
+    EditText postEt;
     Button cancelBtn;
     ImageButton sendBtn;
     ProgressBar progressBar;
@@ -36,7 +36,7 @@ public class UserAddPostFragment extends Fragment {
         user=UserAddPostFragmentArgs.fromBundle(getArguments()).getUser();
         sendBtn=view.findViewById(R.id.user_add_new_post_send_btn);
         cancelBtn=view.findViewById(R.id.user_add_new_post_cancel_btn);
-        post=view.findViewById(R.id.user_add_new_post_et);
+        postEt=view.findViewById(R.id.user_add_new_post_et);
         progressBar=view.findViewById(R.id.user_add_new_post_progressbar);
         progressBar.setVisibility(View.GONE);
         sendBtn.setOnClickListener(new View.OnClickListener() {
@@ -54,17 +54,14 @@ public class UserAddPostFragment extends Fragment {
         });
         setHasOptionsMenu(true);
         return view;
-
     }
     private void save() {
         progressBar.setVisibility(View.VISIBLE);
         sendBtn.setEnabled(false);
         cancelBtn.setEnabled(false);
-        String new_post = post.getText().toString();
-        Post p = new Post(user.getName(), new_post);
+        Post p = new Post(user.getName(), postEt.getText().toString());
         Model.instance.addPost(p,()->{
-            UserAddPostFragmentDirections.ActionUserAddPostFragmentToUserPageFragment action1 = UserAddPostFragmentDirections.actionUserAddPostFragmentToUserPageFragment(user);
-            Navigation.findNavController(view).navigate(action1);
+            Navigation.findNavController(view).navigateUp();
         });
 
     }
