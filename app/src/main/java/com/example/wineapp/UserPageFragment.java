@@ -1,5 +1,6 @@
 package com.example.wineapp;
 
+import android.app.MediaRouteButton;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.wineapp.model.Model;
@@ -31,6 +33,7 @@ public class UserPageFragment extends Fragment {
     List<Post> data= new LinkedList<>();
     View view;
     UserPageFragment.MyAdapter adapter;
+    ProgressBar progressbar;
     TextView userName, email;
     User user;
     @Override
@@ -39,6 +42,8 @@ public class UserPageFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_user_page, container, false);
         userName=view.findViewById(R.id.user_page_name_tv);
         email=view.findViewById(R.id.user_page_email_tv);
+        progressbar= view.findViewById(R.id.user_page_progressbar);
+        progressbar.setVisibility(View.VISIBLE);
         user=UserPageFragmentArgs.fromBundle(getArguments()).getUser();
         Model.instance.getAllPosts(new Model.GetAllPostsListener(){
             @Override
@@ -46,7 +51,7 @@ public class UserPageFragment extends Fragment {
                 allData = p;
                 Filter(allData);
                 adapter.notifyDataSetChanged();
-                //progressbar.setVisibility(View.GONE);
+                progressbar.setVisibility(View.GONE);
             }
         });
         RecyclerView list = view.findViewById(R.id.user_page_post_list_tv);
@@ -57,7 +62,8 @@ public class UserPageFragment extends Fragment {
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(int position, View v) {
-                //progressbar.setVisibility(View.VISIBLE);
+
+                progressbar.setVisibility(View.VISIBLE);
                 Post p = data.get(position);
                 UserPageFragmentDirections.ActionUserPageFragmentToEditPostFragment action = UserPageFragmentDirections.actionUserPageFragmentToEditPostFragment(p,user);
                 Navigation.findNavController(v).navigate(action);
@@ -87,13 +93,16 @@ public class UserPageFragment extends Fragment {
         if (!super.onOptionsItemSelected(item)) {
             switch (item.getItemId()) {
                 case R.id.userPageLogout:
+                    progressbar.setVisibility(View.VISIBLE);
                     Navigation.findNavController(view).navigate(R.id.action_userPageFragment_to_startAppFragment);
                     break;
                 case R.id.userPageAddPost:
+                    progressbar.setVisibility(View.VISIBLE);
                     UserPageFragmentDirections.ActionUserPageFragmentToUserAddPostFragment action=UserPageFragmentDirections.actionUserPageFragmentToUserAddPostFragment(user);
                     Navigation.findNavController(view).navigate(action);
                     break;
                 case R.id.userPageListPost:
+                    progressbar.setVisibility(View.VISIBLE);
                     UserPageFragmentDirections.ActionUserPageFragmentToListPostFragment action1=UserPageFragmentDirections.actionUserPageFragmentToListPostFragment(user);
                     Navigation.findNavController(view).navigate(action1);
                     break;

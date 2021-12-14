@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.example.wineapp.model.Model;
 import com.example.wineapp.model.Post;
@@ -24,6 +25,7 @@ public class EditPostFragment extends Fragment {
     User user;
     View view;
     EditText postTextEd;
+    ProgressBar progressBar;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -33,13 +35,14 @@ public class EditPostFragment extends Fragment {
         ImageButton sendPostBtn=view.findViewById(R.id.edit_post_save_btn);
         Button cancelBtn=view.findViewById(R.id.edit_post_cancel_btn);
         Button deleteBtn=view.findViewById(R.id.edit_post_delete_btn);
+        progressBar=view.findViewById(R.id.edit_post_progressbar);
+        progressBar.setVisibility(View.GONE);
         p=EditPostFragmentArgs.fromBundle(getArguments()).getPost();
         user=EditPostFragmentArgs.fromBundle(getArguments()).getUser();
-        postTextEd.setText(p.getDetails());
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //progressBar.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
                 EditPostFragmentDirections.ActionEditPostFragmentToUserPageFragment action1 = EditPostFragmentDirections.actionEditPostFragmentToUserPageFragment(user);
                 Navigation.findNavController(view).navigate(action1);
             }
@@ -47,6 +50,7 @@ public class EditPostFragment extends Fragment {
         deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progressBar.setVisibility(View.VISIBLE);
                 Model.instance.DeletePost(p,()->{
                     EditPostFragmentDirections.ActionEditPostFragmentToUserPageFragment action1 = EditPostFragmentDirections.actionEditPostFragmentToUserPageFragment(user);
                     Navigation.findNavController(view).navigate(action1);
@@ -56,6 +60,7 @@ public class EditPostFragment extends Fragment {
         sendPostBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progressBar.setVisibility(View.VISIBLE);
                 sendPostBtn.setEnabled(false);
                 cancelBtn.setEnabled(false);
                 p.setDetails(postTextEd.getText().toString());
@@ -66,6 +71,7 @@ public class EditPostFragment extends Fragment {
 
             }});
         setHasOptionsMenu(true);
+        postTextEd.setText(p.getDetails());
         return view;
     }
 }

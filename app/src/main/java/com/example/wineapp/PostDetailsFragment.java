@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.wineapp.model.Model;
@@ -24,6 +25,7 @@ public class PostDetailsFragment extends Fragment {
     TextView caveName, details;
     ImageView photo;
     MapView map;
+    ProgressBar progressBar;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -34,7 +36,8 @@ public class PostDetailsFragment extends Fragment {
         details=view.findViewById(R.id.post_detail_tv);
         photo=view.findViewById(R.id.post_detail_wineryPicture);
         map=view.findViewById(R.id.post_details_map);
-        //progressBar.setVisibility(View.VISIBLE);
+        progressBar=view.findViewById(R.id.post_details_progressbar);
+        progressBar.setVisibility(View.VISIBLE);
         if (p != null){
             updateDisplay();
         }
@@ -42,6 +45,7 @@ public class PostDetailsFragment extends Fragment {
         return view;
     }
     private void updateDisplay() {
+        progressBar.setVisibility(View.GONE);
         caveName.setText(p.getName());
         details.setText(p.getDetails());
     }

@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.wineapp.model.Model;
@@ -33,15 +34,19 @@ public class ListPostFragment extends Fragment {
     MyAdapter adapter;
     User user;
     ImageButton userBtn;
+    ProgressBar progressBar;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_list_post, container, false);
         user=ListPostFragmentArgs.fromBundle(getArguments()).getUser();
         userBtn=view.findViewById(R.id.list_post_user_btn);
+        progressBar= view.findViewById(R.id.list_post_progressbar);
+        progressBar.setVisibility(View.VISIBLE);
         userBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progressBar.setVisibility(View.VISIBLE);
                 ListPostFragmentDirections.ActionListPostFragmentToUserPageFragment action1=ListPostFragmentDirections.actionListPostFragmentToUserPageFragment(user);
                 Navigation.findNavController(view).navigate(action1);
             }
@@ -51,7 +56,7 @@ public class ListPostFragment extends Fragment {
             public void onComplete(List<Post> p) {
                 data = p;
                 adapter.notifyDataSetChanged();
-                //progressbar.setVisibility(View.GONE);
+                progressBar.setVisibility(View.GONE);
             }
         });
         RecyclerView list = view.findViewById(R.id.winelist_list_rv);
@@ -62,7 +67,7 @@ public class ListPostFragment extends Fragment {
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(int position, View v) {
-                //progressbar.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
                 Post p = data.get(position);
                 ListPostFragmentDirections.ActionListPostFragmentToPostDetailsFragment action = ListPostFragmentDirections.actionListPostFragmentToPostDetailsFragment(p);
                 Navigation.findNavController(v).navigate(action);

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 
 import com.example.wineapp.model.Model;
 import com.example.wineapp.model.Post;
@@ -25,7 +26,7 @@ public class UserAddPostFragment extends Fragment {
     EditText post;
     Button cancelBtn;
     ImageButton sendBtn;
-    int userPosition;
+    ProgressBar progressBar;
     User user;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -36,6 +37,8 @@ public class UserAddPostFragment extends Fragment {
         sendBtn=view.findViewById(R.id.user_add_new_post_send_btn);
         cancelBtn=view.findViewById(R.id.user_add_new_post_cancel_btn);
         post=view.findViewById(R.id.user_add_new_post_et);
+        progressBar=view.findViewById(R.id.user_add_new_post_progressbar);
+        progressBar.setVisibility(View.GONE);
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -44,6 +47,7 @@ public class UserAddPostFragment extends Fragment {
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progressBar.setVisibility(View.VISIBLE);
                 UserAddPostFragmentDirections.ActionUserAddPostFragmentToUserPageFragment action1 = UserAddPostFragmentDirections.actionUserAddPostFragmentToUserPageFragment(user);
                 Navigation.findNavController(view).navigate(action1);
             }
@@ -53,7 +57,7 @@ public class UserAddPostFragment extends Fragment {
 
     }
     private void save() {
-        //progressbar.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.VISIBLE);
         sendBtn.setEnabled(false);
         cancelBtn.setEnabled(false);
         String new_post = post.getText().toString();

@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.wineapp.model.Model;
@@ -27,6 +28,7 @@ public class SignInFragment extends Fragment {
     User user;
     List<User> users;
     EditText name, password;
+    ProgressBar progressBar;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -34,11 +36,12 @@ public class SignInFragment extends Fragment {
         Button enterBtn = view.findViewById(R.id.register_sign_up_btn);
         name=view.findViewById(R.id.sign_in_username_et);
         password=view.findViewById(R.id.sign_in_password_et);
-        //enterBtn.setEnabled(false);
-
+        progressBar= view.findViewById(R.id.sign_in_progressbar);
+        progressBar.setVisibility(View.GONE);
         enterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                progressBar.setVisibility(View.VISIBLE);
                 users=Model.instance.getUsersList();
                 int positionUser=Model.instance.getUserPosition(name.getText().toString());
                 user=users.get(positionUser);
@@ -48,9 +51,12 @@ public class SignInFragment extends Fragment {
                 }
                 else if(ChekPassword(password.getText().toString())){
                     name.setBackgroundColor(Color.RED);
+                    progressBar.setVisibility(View.GONE);
                 }
-                else
+                else{
                     password.setBackgroundColor(Color.RED);
+                    progressBar.setVisibility(View.GONE);
+                }
             }
         });
         setHasOptionsMenu(true);
