@@ -21,7 +21,7 @@ import java.util.List;
 
 public class EditPostFragment extends Fragment {
     Post p;
-    int user;
+    User user;
     View view;
     EditText postTextEd;
     @Override
@@ -32,6 +32,7 @@ public class EditPostFragment extends Fragment {
         postTextEd=view.findViewById(R.id.edit_post_et);
         ImageButton sendPostBtn=view.findViewById(R.id.edit_post_save_btn);
         Button cancelBtn=view.findViewById(R.id.edit_post_cancel_btn);
+        Button deleteBtn=view.findViewById(R.id.edit_post_delete_btn);
         p=EditPostFragmentArgs.fromBundle(getArguments()).getPost();
         user=EditPostFragmentArgs.fromBundle(getArguments()).getUser();
         postTextEd.setText(p.getDetails());
@@ -41,6 +42,15 @@ public class EditPostFragment extends Fragment {
                 //progressBar.setVisibility(View.VISIBLE);
                 EditPostFragmentDirections.ActionEditPostFragmentToUserPageFragment action1 = EditPostFragmentDirections.actionEditPostFragmentToUserPageFragment(user);
                 Navigation.findNavController(view).navigate(action1);
+            }
+        });
+        deleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Model.instance.DeletePost(p,()->{
+                    EditPostFragmentDirections.ActionEditPostFragmentToUserPageFragment action1 = EditPostFragmentDirections.actionEditPostFragmentToUserPageFragment(user);
+                    Navigation.findNavController(view).navigate(action1);
+                });
             }
         });
         sendPostBtn.setOnClickListener(new View.OnClickListener() {

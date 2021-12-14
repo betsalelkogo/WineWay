@@ -32,7 +32,6 @@ public class UserPageFragment extends Fragment {
     View view;
     UserPageFragment.MyAdapter adapter;
     TextView userName, email;
-    int userPosition;
     User user;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -40,8 +39,7 @@ public class UserPageFragment extends Fragment {
         view = inflater.inflate(R.layout.fragment_user_page, container, false);
         userName=view.findViewById(R.id.user_page_name_tv);
         email=view.findViewById(R.id.user_page_email_tv);
-        userPosition=UserPageFragmentArgs.fromBundle(getArguments()).getUser();
-        user=Model.instance.getUser(userPosition);
+        user=UserPageFragmentArgs.fromBundle(getArguments()).getUser();
         Model.instance.getAllPosts(new Model.GetAllPostsListener(){
             @Override
             public void onComplete(List<Post> p) {
@@ -51,7 +49,6 @@ public class UserPageFragment extends Fragment {
                 //progressbar.setVisibility(View.GONE);
             }
         });
-//        data=Model.instance.getPostList();
         RecyclerView list = view.findViewById(R.id.user_page_post_list_tv);
         list.setHasFixedSize(true);
         list.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -62,7 +59,7 @@ public class UserPageFragment extends Fragment {
             public void onItemClick(int position, View v) {
                 //progressbar.setVisibility(View.VISIBLE);
                 Post p = data.get(position);
-                UserPageFragmentDirections.ActionUserPageFragmentToEditPostFragment action = UserPageFragmentDirections.actionUserPageFragmentToEditPostFragment(p,userPosition);
+                UserPageFragmentDirections.ActionUserPageFragmentToEditPostFragment action = UserPageFragmentDirections.actionUserPageFragmentToEditPostFragment(p,user);
                 Navigation.findNavController(v).navigate(action);
             }
         });
@@ -97,7 +94,7 @@ public class UserPageFragment extends Fragment {
                     Navigation.findNavController(view).navigate(action);
                     break;
                 case R.id.userPageListPost:
-                    UserPageFragmentDirections.ActionUserPageFragmentToListPostFragment action1=UserPageFragmentDirections.actionUserPageFragmentToListPostFragment(userPosition);
+                    UserPageFragmentDirections.ActionUserPageFragmentToListPostFragment action1=UserPageFragmentDirections.actionUserPageFragmentToListPostFragment(user);
                     Navigation.findNavController(view).navigate(action1);
                     break;
                 default:

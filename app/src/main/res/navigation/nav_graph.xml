@@ -11,9 +11,6 @@
         android:label="Post List"
         tools:layout="@layout/fragment_list_post">
         <action
-            android:id="@+id/action_listPostFragment_to_startAppFragment"
-            app:destination="@id/startAppFragment" />
-        <action
             android:id="@+id/action_listPostFragment_to_postDetailsFragment"
             app:destination="@id/postDetailsFragment" />
         <action
@@ -21,7 +18,7 @@
             app:destination="@id/userPageFragment" />
         <argument
             android:name="user"
-            app:argType="integer" />
+            app:argType="com.example.wineapp.model.User" />
     </fragment>
     <fragment
         android:id="@+id/userPageFragment"
@@ -42,7 +39,7 @@
             app:destination="@id/listPostFragment" />
         <argument
             android:name="user"
-            app:argType="integer" />
+            app:argType="com.example.wineapp.model.User" />
     </fragment>
     <fragment
         android:id="@+id/userAddPostFragment"
@@ -99,7 +96,7 @@
             app:argType="com.example.wineapp.model.Post" />
         <argument
             android:name="user"
-            app:argType="integer" />
+            app:argType="com.example.wineapp.model.User" />
     </fragment>
     <fragment
         android:id="@+id/postDetailsFragment"

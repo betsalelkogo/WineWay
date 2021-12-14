@@ -16,6 +16,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.wineapp.model.Model;
@@ -30,14 +31,21 @@ public class ListPostFragment extends Fragment {
     List<Post> data=new LinkedList<>();
     View view;
     MyAdapter adapter;
-    int userPosition;
     User user;
+    ImageButton userBtn;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_list_post, container, false);
-        userPosition=ListPostFragmentArgs.fromBundle(getArguments()).getUser();
-        user=Model.instance.getUser(userPosition);
+        user=ListPostFragmentArgs.fromBundle(getArguments()).getUser();
+        userBtn=view.findViewById(R.id.list_post_user_btn);
+        userBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ListPostFragmentDirections.ActionListPostFragmentToUserPageFragment action1=ListPostFragmentDirections.actionListPostFragmentToUserPageFragment(user);
+                Navigation.findNavController(view).navigate(action1);
+            }
+        });
         Model.instance.getAllPosts(new Model.GetAllPostsListener(){
             @Override
             public void onComplete(List<Post> p) {
@@ -63,26 +71,6 @@ public class ListPostFragment extends Fragment {
         setHasOptionsMenu(true);
         return view;
     }
-    @Override
-    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.wine_list_menu,menu);
-    }
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (!super.onOptionsItemSelected(item)) {
-            switch (item.getItemId()) {
-                case R.id.userPageFragment:
-                    ListPostFragmentDirections.ActionListPostFragmentToUserPageFragment action1=ListPostFragmentDirections.actionListPostFragmentToUserPageFragment(userPosition);
-                    Navigation.findNavController(view).navigate(action1);
-                    return true;
-                default:
-                    return false;
-            }
-        }
-        return true;
-    }
-
 
     static class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
 

@@ -44,7 +44,7 @@ public class UserAddPostFragment extends Fragment {
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UserAddPostFragmentDirections.ActionUserAddPostFragmentToUserPageFragment action1 = UserAddPostFragmentDirections.actionUserAddPostFragmentToUserPageFragment(userPosition);
+                UserAddPostFragmentDirections.ActionUserAddPostFragmentToUserPageFragment action1 = UserAddPostFragmentDirections.actionUserAddPostFragmentToUserPageFragment(user);
                 Navigation.findNavController(view).navigate(action1);
             }
         });
@@ -59,7 +59,7 @@ public class UserAddPostFragment extends Fragment {
         String new_post = post.getText().toString();
         Post p = new Post(user.getName(), new_post);
         Model.instance.addPost(p,()->{
-            UserAddPostFragmentDirections.ActionUserAddPostFragmentToUserPageFragment action1 = UserAddPostFragmentDirections.actionUserAddPostFragmentToUserPageFragment(userPosition);
+            UserAddPostFragmentDirections.ActionUserAddPostFragmentToUserPageFragment action1 = UserAddPostFragmentDirections.actionUserAddPostFragmentToUserPageFragment(user);
             Navigation.findNavController(view).navigate(action1);
         });
 

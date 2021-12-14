@@ -43,7 +43,7 @@ public class SignInFragment extends Fragment {
                 int positionUser=Model.instance.getUserPosition(name.getText().toString());
                 user=users.get(positionUser);
                 if(ChekPassword(password.getText().toString())&&ChekUserName(name.getText().toString())){
-                    SignInFragmentDirections.ActionSignInFragmentToListPostFragment action=SignInFragmentDirections.actionSignInFragmentToListPostFragment(positionUser);
+                    SignInFragmentDirections.ActionSignInFragmentToListPostFragment action=SignInFragmentDirections.actionSignInFragmentToListPostFragment(user);
                     Navigation.findNavController(v).navigate(action);
                 }
                 else if(ChekPassword(password.getText().toString())){
