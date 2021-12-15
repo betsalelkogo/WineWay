@@ -17,6 +17,7 @@ import android.widget.ProgressBar;
 import com.example.wineapp.model.Model;
 import com.example.wineapp.model.Post;
 import com.example.wineapp.model.User;
+import com.google.android.gms.maps.MapView;
 
 import java.util.List;
 
@@ -24,7 +25,8 @@ public class EditPostFragment extends Fragment {
     Post p;
     User user;
     View view;
-    EditText postTextEd;
+    EditText postTextEd, subjectEt;
+    MapView map;
     ProgressBar progressBar;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -36,6 +38,8 @@ public class EditPostFragment extends Fragment {
         Button cancelBtn=view.findViewById(R.id.edit_post_cancel_btn);
         Button deleteBtn=view.findViewById(R.id.edit_post_delete_btn);
         progressBar=view.findViewById(R.id.edit_post_progressbar);
+        map=view.findViewById(R.id.post_edit_map);
+        subjectEt=view.findViewById(R.id.edit_post_subject_et);
         progressBar.setVisibility(View.GONE);
         p=EditPostFragmentArgs.fromBundle(getArguments()).getPost();
         user=EditPostFragmentArgs.fromBundle(getArguments()).getUser();
@@ -64,6 +68,7 @@ public class EditPostFragment extends Fragment {
                 sendPostBtn.setEnabled(false);
                 cancelBtn.setEnabled(false);
                 p.setDetails(postTextEd.getText().toString());
+                p.setSubject(subjectEt.getText().toString());
                 Model.instance.addPost(p, () -> {
                     EditPostFragmentDirections.ActionEditPostFragmentToUserPageFragment action1 = EditPostFragmentDirections.actionEditPostFragmentToUserPageFragment(user);
                     Navigation.findNavController(view).navigate(action1);
@@ -72,6 +77,7 @@ public class EditPostFragment extends Fragment {
             }});
         setHasOptionsMenu(true);
         postTextEd.setText(p.getDetails());
+        subjectEt.setText(p.getSubject());
         return view;
     }
 }

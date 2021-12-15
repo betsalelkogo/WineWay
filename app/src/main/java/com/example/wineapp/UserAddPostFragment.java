@@ -16,6 +16,7 @@ import android.widget.ProgressBar;
 import com.example.wineapp.model.Model;
 import com.example.wineapp.model.Post;
 import com.example.wineapp.model.User;
+import com.google.android.gms.maps.MapView;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -28,6 +29,7 @@ public class UserAddPostFragment extends Fragment {
     ImageButton sendBtn;
     ProgressBar progressBar;
     User user;
+    MapView map;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -39,6 +41,7 @@ public class UserAddPostFragment extends Fragment {
         postEt=view.findViewById(R.id.user_add_new_post_et);
         subjectEt=view.findViewById(R.id.user_add_subject_post_et);
         progressBar=view.findViewById(R.id.user_add_new_post_progressbar);
+        map=view.findViewById(R.id.user_add_new_post_map);
         progressBar.setVisibility(View.GONE);
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
