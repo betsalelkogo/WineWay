@@ -1,13 +1,12 @@
 package com.example.wineapp;
 
-import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
-import android.view.Display;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +15,8 @@ import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+
 import com.example.wineapp.model.Model;
-import com.example.wineapp.model.Post;
 import com.example.wineapp.model.User;
 
 import java.util.LinkedList;
@@ -68,13 +67,21 @@ public class SignInFragment extends Fragment {
                         progressBar.setVisibility(View.GONE);
                     }
                 }
+                else {
+                    draw();
+                    progressBar.setVisibility(View.GONE);
+                }
             }
         });
         setHasOptionsMenu(true);
         return view;
     }
 
-
+    private void draw(){
+        name.setText("");
+        password.setText("");
+        Toast.makeText(MyApplication.getContext(), "Try again", Toast.LENGTH_SHORT).show();
+    }
     private boolean ChekPassword(String password){
         return password.equals(user.getPassword());
     }

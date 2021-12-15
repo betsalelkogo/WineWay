@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,6 +36,7 @@ public class ListPostFragment extends Fragment {
     User user;
     ImageButton userBtn;
     ProgressBar progressBar;
+    SwipeRefreshLayout swipeRefresh;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -43,14 +45,14 @@ public class ListPostFragment extends Fragment {
         userBtn=view.findViewById(R.id.list_post_user_btn);
         progressBar= view.findViewById(R.id.list_post_progressbar);
         progressBar.setVisibility(View.VISIBLE);
-        Model.instance.getAllPosts(new Model.GetAllPostsListener(){
+        swipeRefresh=view.findViewById(R.id.winelist_swipe_refresh);
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onComplete(List<Post> p) {
-                data = p;
-                adapter.notifyDataSetChanged();
-                progressBar.setVisibility(View.GONE);
+            public void onRefresh() {
+                refreshData();
             }
         });
+
         RecyclerView list = view.findViewById(R.id.winelist_list_rv);
         list.setHasFixedSize(true);
         list.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -74,7 +76,21 @@ public class ListPostFragment extends Fragment {
             }
         });
         setHasOptionsMenu(true);
+        refreshData();
         return view;
+    }
+    private void refreshData() {
+        Model.instance.getAllPosts(new Model.GetAllPostsListener(){
+            @Override
+            public void onComplete(List<Post> p) {
+                data = p;
+                adapter.notifyDataSetChanged();
+                progressBar.setVisibility(View.GONE);
+                if (swipeRefresh.isRefreshing()) {
+                    swipeRefresh.setRefreshing(false);
+                }
+            }
+        });
     }
 
      class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {

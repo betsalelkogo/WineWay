@@ -8,10 +8,7 @@ import java.util.List;
 public class Model {
     static final public Model instance = new Model();
     ModelFirebase modelFirebase = new ModelFirebase();
-    private  Model(){
-
-    }
-//////////////////////////////////////////////////////////////////////////////////
+    private  Model(){}
     public interface GetAllPostsListener{
         void onComplete(List<Post> data);
     }

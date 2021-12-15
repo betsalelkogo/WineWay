@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -36,6 +37,7 @@ public class UserPageFragment extends Fragment {
     TextView userName, email;
     User user;
     UserPageFragmentDirections.ActionUserPageFragmentToUserAddPostFragment action;
+    SwipeRefreshLayout swipeRefresh;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -44,16 +46,14 @@ public class UserPageFragment extends Fragment {
         email=view.findViewById(R.id.user_page_email_tv);
         progressbar= view.findViewById(R.id.user_page_progressbar);
         progressbar.setVisibility(View.VISIBLE);
-        user=UserPageFragmentArgs.fromBundle(getArguments()).getUser();
-        Model.instance.getAllPosts(new Model.GetAllPostsListener(){
+        swipeRefresh=view.findViewById(R.id.user_page_swipe_refresh);
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onComplete(List<Post> p) {
-                data = p;
-                adapter.notifyDataSetChanged();
-                Filter();
-                progressbar.setVisibility(View.GONE);
+            public void onRefresh() {
+                refreshData();
             }
         });
+        user=UserPageFragmentArgs.fromBundle(getArguments()).getUser();
         RecyclerView list = view.findViewById(R.id.user_page_post_list_tv);
         list.setHasFixedSize(true);
         list.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -73,8 +73,23 @@ public class UserPageFragment extends Fragment {
         email.setText(user.getEmail());
         setHasOptionsMenu(true);
         action=UserPageFragmentDirections.actionUserPageFragmentToUserAddPostFragment(user);
+        refreshData();
         return view;
 
+    }
+    private void refreshData() {
+        Model.instance.getAllPosts(new Model.GetAllPostsListener(){
+            @Override
+            public void onComplete(List<Post> p) {
+                data = p;
+                adapter.notifyDataSetChanged();
+                Filter();
+                progressbar.setVisibility(View.GONE);
+                if (swipeRefresh.isRefreshing()) {
+                    swipeRefresh.setRefreshing(false);
+                }
+            }
+        });
     }
     private void Filter(){
         for(int i=0;i<data.size();i++) {
