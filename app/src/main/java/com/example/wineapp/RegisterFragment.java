@@ -36,8 +36,9 @@ public class RegisterFragment extends Fragment {
             public void onClick(View v) {
                 progressBar.setVisibility(View.VISIBLE);
                 User user=new User(name.getText().toString(),password.getText().toString(),email.getText().toString());
-                Model.instance.getUsersList().add(user);
-                Navigation.findNavController(v).navigate(R.id.action_registerFragment_to_signInFragment);
+                Model.instance.addUser(user, ()->{
+                    Navigation.findNavController(v).navigate(R.id.action_registerFragment_to_signInFragment);
+                });
             }
         });
         setHasOptionsMenu(true);

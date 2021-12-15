@@ -19,7 +19,6 @@ import java.util.LinkedList;
 public class ModelFirebase {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-
     public void getAllPosts(Model.GetAllPostsListener listener) {
         db.collection("posts").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override

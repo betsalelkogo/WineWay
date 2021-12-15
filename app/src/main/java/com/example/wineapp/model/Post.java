@@ -12,22 +12,27 @@ import java.util.Map;
 
 @Entity
 public class Post implements Parcelable{
-    private String subject;
-    private String details;
     @PrimaryKey
     @NonNull
+    private int id_key;
+    private String subject;
+    private String details;
     private String name;
+    public static int counter=0;
     public Post(String name,String details,String subject){
         this.name=name;
         this.details=details;
         this.subject=subject;
+        this.id_key=counter;
+        counter++;
     }
 
 
     protected Post(Parcel in) {
         subject = in.readString();
-        name = in.readString();
         details = in.readString();
+        name = in.readString();
+        id_key = in.readInt();
     }
 
     public static final Creator<Post> CREATOR = new Creator<Post>() {
@@ -43,6 +48,8 @@ public class Post implements Parcelable{
     };
 
     public String getName(){return this.name;}
+    public int getId_key(){return this.id_key;}
+    public void setId_key(int id_key){this.id_key=id_key;}
     public String getSubject(){return this.subject;}
     public void setName(String name){this.name=name;}
     public void setSubject(String subject){this.subject=subject;}
@@ -72,6 +79,7 @@ public class Post implements Parcelable{
         return p;
     }
 
+
     @Override
     public int describeContents() {
         return 0;
@@ -80,7 +88,8 @@ public class Post implements Parcelable{
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(subject);
-        dest.writeString(name);
         dest.writeString(details);
+        dest.writeString(name);
+        dest.writeInt(id_key);
     }
 }

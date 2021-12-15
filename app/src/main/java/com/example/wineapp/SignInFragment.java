@@ -26,7 +26,7 @@ import java.util.List;
 
 public class SignInFragment extends Fragment {
     User user;
-    List<User> users;
+    List<User> users=new LinkedList<>();
     EditText name, password;
     ProgressBar progressBar;
     @Override
@@ -41,21 +41,32 @@ public class SignInFragment extends Fragment {
         enterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Model.instance.getAllUser(new Model.GetAllUserListener(){
+                    @Override
+                    public void onComplete(List<User> u) {
+                        users = u;
+                    }
+                });
+                Model.instance.getUserByName(name.getText().toString(), new Model.GetUserByNameListener() {
+                    @Override
+                    public void onComplete(User u) {
+                        user=u;
+                    }
+                });
                 progressBar.setVisibility(View.VISIBLE);
-                users=Model.instance.getUsersList();
-                int positionUser=Model.instance.getUserPosition(name.getText().toString());
-                user=users.get(positionUser);
-                if(ChekPassword(password.getText().toString())&&ChekUserName(name.getText().toString())){
-                    SignInFragmentDirections.ActionSignInFragmentToListPostFragment action=SignInFragmentDirections.actionSignInFragmentToListPostFragment(user);
-                    Navigation.findNavController(v).navigate(action);
-                }
-                else if(ChekPassword(password.getText().toString())){
-                    name.setBackgroundColor(Color.RED);
-                    progressBar.setVisibility(View.GONE);
-                }
-                else{
-                    password.setBackgroundColor(Color.RED);
-                    progressBar.setVisibility(View.GONE);
+                if(user!=null) {
+                    if(ChekPassword(password.getText().toString())&&ChekUserName(name.getText().toString())){
+                        SignInFragmentDirections.ActionSignInFragmentToListPostFragment action=SignInFragmentDirections.actionSignInFragmentToListPostFragment(user);
+                        Navigation.findNavController(v).navigate(action);
+                    }
+                    else if(ChekPassword(password.getText().toString())){
+                        name.setBackgroundColor(Color.RED);
+                        progressBar.setVisibility(View.GONE);
+                    }
+                    else{
+                        password.setBackgroundColor(Color.RED);
+                        progressBar.setVisibility(View.GONE);
+                    }
                 }
             }
         });

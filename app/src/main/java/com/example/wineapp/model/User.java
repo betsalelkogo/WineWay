@@ -7,10 +7,10 @@ import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-//@Entity
+@Entity
 public class User implements Parcelable {
-    //@PrimaryKey
-    //@NonNull
+    @PrimaryKey
+    @NonNull
     private String name;
     private String password;
     private String email;
