@@ -24,7 +24,7 @@ import java.util.List;
 
 
 public class SignInFragment extends Fragment {
-    User user;
+    User user=null;
     List<User> users=new LinkedList<>();
     EditText name, password;
     ProgressBar progressBar;
@@ -86,7 +86,12 @@ public class SignInFragment extends Fragment {
         Toast.makeText(MyApplication.getContext(), "Try again", Toast.LENGTH_SHORT).show();
     }
     private boolean ChekPassword(String password){
+        if(user==null)
+            return false;
         return password.equals(user.getPassword());
     }
-    private boolean ChekUserName(String name){return name.equals(user.getName());}
+    private boolean ChekUserName(String name){
+        if(user==null)
+            return false;
+    return name.equals(user.getName());}
 }

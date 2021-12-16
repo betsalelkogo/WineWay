@@ -8,12 +8,12 @@
 
     <ImageView
         android:id="@+id/user_add_new_post_photo_upload"
-        android:layout_width="176dp"
+        android:layout_width="0dp"
         android:layout_height="176dp"
         android:layout_marginTop="4dp"
         android:src="@drawable/uploadphoto"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.519"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -27,7 +27,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.487"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/user_add_new_post_photo_upload" />
+        app:layout_constraintTop_toBottomOf="@+id/user_add_new_post_photo_upload"
+        tools:ignore="SpeakableTextPresentCheck" />
 
     <TextView
         android:id="@+id/post_details_cave_name_tv"
@@ -65,7 +66,8 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/user_add_new_post_cancel_btn"
         app:layout_constraintTop_toBottomOf="@+id/user_add_new_post_et"
-        app:layout_constraintVertical_bias="0.305" />
+        app:layout_constraintVertical_bias="0.305"
+        tools:ignore="SpeakableTextPresentCheck" />
 
     <Button
         android:id="@+id/user_add_new_post_cancel_btn"
@@ -103,4 +105,14 @@
         app:layout_constraintHorizontal_bias="0.203"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/post_details_cave_name_tv" />
+
+    <ImageButton
+        android:id="@+id/user_add_post_edit_image_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@android:drawable/ic_menu_edit"
+        app:layout_constraintBottom_toBottomOf="@+id/user_add_new_post_photo_upload"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
 </androidx.constraintlayout.widget.ConstraintLayout>

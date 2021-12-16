@@ -34,15 +34,15 @@ public class ListPostFragment extends Fragment {
     View view;
     MyAdapter adapter;
     User user;
-    ImageButton userBtn;
+
     ProgressBar progressBar;
     SwipeRefreshLayout swipeRefresh;
+    ListPostFragmentDirections.ActionListPostFragmentToUserPageFragment action1;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_list_post, container, false);
         user=ListPostFragmentArgs.fromBundle(getArguments()).getUser();
-        userBtn=view.findViewById(R.id.list_post_user_btn);
         progressBar= view.findViewById(R.id.list_post_progressbar);
         progressBar.setVisibility(View.VISIBLE);
         swipeRefresh=view.findViewById(R.id.winelist_swipe_refresh);
@@ -67,14 +67,8 @@ public class ListPostFragment extends Fragment {
                 Navigation.findNavController(v).navigate(action);
             }
         });
-        userBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                progressBar.setVisibility(View.VISIBLE);
-                ListPostFragmentDirections.ActionListPostFragmentToUserPageFragment action1=ListPostFragmentDirections.actionListPostFragmentToUserPageFragment(user);
-                Navigation.findNavController(view).navigate(action1);
-            }
-        });
+        action1=ListPostFragmentDirections.actionListPostFragmentToUserPageFragment(user);
+
         setHasOptionsMenu(true);
         refreshData();
         return view;
@@ -92,7 +86,27 @@ public class ListPostFragment extends Fragment {
             }
         });
     }
-
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.wine_list_menu,menu);
+    }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        boolean result = true;
+        if (!super.onOptionsItemSelected(item)) {
+            switch (item.getItemId()) {
+                case R.id.userPage:
+                    progressBar.setVisibility(View.VISIBLE);
+                    Navigation.findNavController(view).navigate(action1);
+                    break;
+                default:
+                    result = false;
+                    break;
+            }
+        }
+        return result;
+    }
      class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
 
         OnItemClickListener listener;

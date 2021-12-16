@@ -1,16 +1,23 @@
 package com.example.wineapp;
 
+import static android.app.Activity.RESULT_OK;
+
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.example.wineapp.model.Model;
@@ -23,10 +30,12 @@ import java.util.List;
 
 
 public class UserAddPostFragment extends Fragment {
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
     View view;
     EditText postEt, subjectEt;
     Button cancelBtn;
-    ImageButton sendBtn;
+    ImageButton sendBtn, editPhoto;
+    ImageView postPhoto;
     ProgressBar progressBar;
     User user;
     MapView map;
@@ -42,7 +51,16 @@ public class UserAddPostFragment extends Fragment {
         subjectEt=view.findViewById(R.id.user_add_subject_post_et);
         progressBar=view.findViewById(R.id.user_add_new_post_progressbar);
         map=view.findViewById(R.id.user_add_new_post_map);
+        editPhoto=view.findViewById(R.id.user_add_post_edit_image_btn);
+        postPhoto=view.findViewById(R.id.user_add_new_post_photo_upload);
         progressBar.setVisibility(View.GONE);
+        editPhoto.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("TAG","editPhoto");
+                EditImage();
+            }
+        });
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,6 +76,22 @@ public class UserAddPostFragment extends Fragment {
         });
         setHasOptionsMenu(true);
         return view;
+    }
+
+    private void EditImage() {
+        Intent takePictureIntent=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if(takePictureIntent.resolveActivity(getActivity().getPackageManager())!=null){
+            startActivityForResult(takePictureIntent,REQUEST_IMAGE_CAPTURE);
+        }
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode,Intent data){
+        if(requestCode==REQUEST_IMAGE_CAPTURE&&resultCode==RESULT_OK){
+            Bundle extras=data.getExtras();
+            Bitmap imageBitmap=(Bitmap) extras.get("data");
+            postPhoto.setImageBitmap(imageBitmap);
+
+        }
     }
     private void save() {
         progressBar.setVisibility(View.VISIBLE);
