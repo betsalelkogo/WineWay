@@ -37,21 +37,11 @@ public class SignInFragment extends Fragment {
         password=view.findViewById(R.id.sign_in_password_et);
         progressBar= view.findViewById(R.id.sign_in_progressbar);
         progressBar.setVisibility(View.GONE);
+
         enterBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Model.instance.getAllUser(new Model.GetAllUserListener(){
-                    @Override
-                    public void onComplete(List<User> u) {
-                        users = u;
-                    }
-                });
-                Model.instance.getUserByName(name.getText().toString(), new Model.GetUserByNameListener() {
-                    @Override
-                    public void onComplete(User u) {
-                        user=u;
-                    }
-                });
+                getData();
                 progressBar.setVisibility(View.VISIBLE);
                 if(user!=null) {
                     if(ChekPassword(password.getText().toString())&&ChekUserName(name.getText().toString())){
@@ -76,7 +66,20 @@ public class SignInFragment extends Fragment {
         setHasOptionsMenu(true);
         return view;
     }
-
+    private void getData(){
+    Model.instance.getAllUser(new Model.GetAllUserListener(){
+        @Override
+        public void onComplete(List<User> u) {
+            users = u;
+        }
+    });
+    Model.instance.getUserByName(name.getText().toString(), new Model.GetUserByNameListener() {
+        @Override
+        public void onComplete(User u) {
+            user=u;
+        }
+    });
+}
     private void draw(){
         name.setText("");
         password.setText("");
