@@ -7,6 +7,9 @@ import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Entity
 public class User implements Parcelable {
     @PrimaryKey
@@ -63,5 +66,23 @@ public class User implements Parcelable {
         dest.writeString(name);
         dest.writeString(password);
         dest.writeString(email);
+    }
+    public Map<String,Object> toJson(){
+        Map<String, Object> json = new HashMap<>();
+        json.put("name", getName());
+        json.put("password", getPassword());
+        json.put("email", getEmail());
+        return json;
+    }
+
+    static User fromJson(Map<String,Object> json){
+        String password = (String)json.get("password");
+        if (password == null){
+            return null;
+        }
+        String name = (String)json.get("name");
+        String email = (String)json.get("email");
+        User u = new User(name,password,email);
+        return u;
     }
 }
