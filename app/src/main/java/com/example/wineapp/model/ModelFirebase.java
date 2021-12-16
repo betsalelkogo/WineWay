@@ -1,5 +1,8 @@
 package com.example.wineapp.model;
 
+import android.graphics.Bitmap;
+import android.net.Uri;
+import android.net.sip.SipSession;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -13,7 +16,11 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.util.LinkedList;
 
 public class ModelFirebase {
@@ -75,6 +82,32 @@ public class ModelFirebase {
                 }
             }
         });
+    }
+
+    public void uploadImage(Bitmap bitmap, String name, final Model.UploadImageListener listener){
+        FirebaseStorage storage=FirebaseStorage.getInstance();
+        final StorageReference imageRef=storage.getReference().child("image").child(name);
+        ByteArrayOutputStream baos =new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG,100,baos);
+        byte[] data= baos.toByteArray();
+        UploadTask uploadTask=imageRef.putBytes(data);
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                listener.onComplete(null);
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                imageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        listener.onComplete(uri.toString());
+                    }
+                });
+            }
+        });
+
     }
 
     public void deletePost(Post post, Model.DeletePostListener listener) {

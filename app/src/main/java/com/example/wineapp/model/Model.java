@@ -1,5 +1,7 @@
 package com.example.wineapp.model;
 
+import android.graphics.Bitmap;
+
 import com.example.wineapp.MyApplication;
 
 import java.util.LinkedList;
@@ -108,5 +110,11 @@ public class Model {
 //                listener.onComplete();
 //            });
 //        });
+    }
+    public interface UploadImageListener{
+        public void onComplete(String url);
+    }
+    public void uploadImage(Bitmap bitmap, String name, final UploadImageListener listener){
+        modelFirebase.uploadImage(bitmap,name,listener);
     }
 }

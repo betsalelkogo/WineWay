@@ -18,21 +18,23 @@ public class Post implements Parcelable{
     private String subject;
     private String details;
     private String name;
+    private String imageUrl;
     public static int counter=0;
-    public Post(String name,String details,String subject){
+    public Post(String name,String details,String subject,String imageUrl){
         this.name=name;
         this.details=details;
         this.subject=subject;
+        this.imageUrl=imageUrl;
         this.id_key=counter;
         counter++;
     }
 
-
     protected Post(Parcel in) {
+        id_key = in.readInt();
         subject = in.readString();
         details = in.readString();
         name = in.readString();
-        id_key = in.readInt();
+        imageUrl = in.readString();
     }
 
     public static final Creator<Post> CREATOR = new Creator<Post>() {
@@ -47,6 +49,12 @@ public class Post implements Parcelable{
         }
     };
 
+    public Post() {
+
+    }
+
+    public String getImageUrl(){return this.imageUrl;}
+    public void setImageUrl(String imageUrl){this.imageUrl=imageUrl;}
     public String getName(){return this.name;}
     public int getId_key(){return this.id_key;}
     public void setId_key(int id_key){this.id_key=id_key;}
@@ -65,8 +73,11 @@ public class Post implements Parcelable{
         json.put("name", getName());
         json.put("subject", getSubject());
         json.put("details", getDetails());
+        json.put("imageUrl", getImageUrl());
         return json;
     }
+
+
 
     static Post fromJson(Map<String,Object> json){
         String details = (String)json.get("details");
@@ -75,10 +86,10 @@ public class Post implements Parcelable{
         }
         String name = (String)json.get("name");
         String subject = (String)json.get("subject");
-        Post p = new Post(name,details,subject);
+        String imageUrl = (String)json.get("imageUrl");
+        Post p = new Post(name,details,subject,imageUrl);
         return p;
     }
-
 
     @Override
     public int describeContents() {
@@ -87,9 +98,10 @@ public class Post implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id_key);
         dest.writeString(subject);
         dest.writeString(details);
         dest.writeString(name);
-        dest.writeInt(id_key);
+        dest.writeString(imageUrl);
     }
 }

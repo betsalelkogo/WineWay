@@ -4,6 +4,7 @@ import static android.app.Activity.RESULT_OK;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -94,13 +95,28 @@ public class UserAddPostFragment extends Fragment {
         }
     }
     private void save() {
+        Post p = new Post();
         progressBar.setVisibility(View.VISIBLE);
         sendBtn.setEnabled(false);
         cancelBtn.setEnabled(false);
-        Post p = new Post(user.getName(), postEt.getText().toString(),subjectEt.getText().toString());
-        Model.instance.addPost(p,()->{
-            Navigation.findNavController(view).navigateUp();
-        });
+        p.setName(user.getName());
+        p.setSubject(subjectEt.getText().toString());
+        p.setDetails(postEt.getText().toString());
+        BitmapDrawable bitmapDrawable=(BitmapDrawable)postPhoto.getDrawable();
+        Bitmap bitmap=bitmapDrawable.getBitmap();
+        Model.instance.uploadImage(bitmap, user.getName(), new Model.UploadImageListener() {
+            @Override
+            public void onComplete(String url) {
+                if (url == null) {
+
+                } else {
+                    p.setImageUrl(url);
+                    Model.instance.addPost(p,()->{
+                    Navigation.findNavController(view).navigateUp();
+                    });
+                }
+            }});
+//
 
     }
 }
