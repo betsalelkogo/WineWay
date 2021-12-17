@@ -111,8 +111,11 @@ public class UserAddPostFragment extends Fragment {
 
                 } else {
                     p.setImageUrl(url);
-                    Model.instance.addPost(p,()->{
-                    Navigation.findNavController(view).navigateUp();
+                    Model.instance.addPost(p,new Model.AddPostListener(){
+                        @Override
+                        public void onComplete() {
+                            Navigation.findNavController(sendBtn).navigateUp();
+                        }
                     });
                 }
             }});
