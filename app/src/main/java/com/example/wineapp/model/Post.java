@@ -54,16 +54,25 @@ public class Post implements Parcelable{
     }
 
     public String getImageUrl(){return this.imageUrl;}
+
     public void setImageUrl(String imageUrl){this.imageUrl=imageUrl;}
+
     public String getName(){return this.name;}
-    public int getId_key(){return this.id_key;}
-    public void setId_key(int id_key){this.id_key=id_key;}
-    public String getSubject(){return this.subject;}
+
     public void setName(String name){this.name=name;}
+
+    public int getId_key(){return this.id_key;}
+
+    public void setId_key(int id_key){this.id_key=id_key;}
+
+    public String getSubject(){return this.subject;}
+
     public void setSubject(String subject){this.subject=subject;}
+
     public String getDetails() {
         return this.details;
     }
+
     public void setDetails(String details) {
         this.details = details;
     }

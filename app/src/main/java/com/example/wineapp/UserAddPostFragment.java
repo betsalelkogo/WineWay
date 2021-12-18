@@ -59,7 +59,7 @@ public class UserAddPostFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Log.d("TAG","editPhoto");
-                EditImage();
+                editPhoto();
             }
         });
         sendBtn.setOnClickListener(new View.OnClickListener() {
@@ -79,12 +79,13 @@ public class UserAddPostFragment extends Fragment {
         return view;
     }
 
-    private void EditImage() {
+    private void editPhoto() {
         Intent takePictureIntent=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if(takePictureIntent.resolveActivity(getActivity().getPackageManager())!=null){
             startActivityForResult(takePictureIntent,REQUEST_IMAGE_CAPTURE);
         }
     }
+    
     @Override
     public void onActivityResult(int requestCode, int resultCode,Intent data){
         if(requestCode==REQUEST_IMAGE_CAPTURE&&resultCode==RESULT_OK){
