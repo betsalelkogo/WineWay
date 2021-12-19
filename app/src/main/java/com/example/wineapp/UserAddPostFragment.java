@@ -103,7 +103,7 @@ public class UserAddPostFragment extends Fragment implements OnMapReadyCallback 
             startActivityForResult(takePictureIntent,REQUEST_IMAGE_CAPTURE);
         }
     }
-    
+
     @Override
     public void onActivityResult(int requestCode, int resultCode,Intent data){
         if(requestCode==REQUEST_IMAGE_CAPTURE&&resultCode==RESULT_OK){
@@ -173,7 +173,7 @@ public class UserAddPostFragment extends Fragment implements OnMapReadyCallback 
     @Override
     public void onMapReady(GoogleMap map) {
         map.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
-        map.setMyLocationEnabled(true);
+       // map.setMyLocationEnabled(true);
     }
 
     @Override
