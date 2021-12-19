@@ -39,8 +39,8 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1'
-    implementation 'com.google.android.gms:play-services-maps:18.0.0'
-    implementation 'com.google.android.gms:play-services-location:18.0.0'
+    implementation 'com.google.android.gms:play-services-maps:18.0.1'
+    implementation 'com.google.android.gms:play-services-location:19.0.0'
     annotationProcessor 'androidx.room:room-compiler:2.3.0'
     implementation 'androidx.room:room-common:2.3.0'
     implementation 'androidx.room:room-runtime:2.3.0'
@@ -58,3 +58,4 @@ dependencies {
     implementation "com.google.firebase:firebase-storage"
     implementation "com.squareup.picasso:picasso:2.71828"
 }
+apply plugin: "com.google.gms.google-services"

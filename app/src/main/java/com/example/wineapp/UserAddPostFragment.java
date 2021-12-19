@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -24,14 +25,19 @@ import android.widget.ProgressBar;
 import com.example.wineapp.model.Model;
 import com.example.wineapp.model.Post;
 import com.example.wineapp.model.User;
+import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.LinkedList;
 import java.util.List;
 
 
-public class UserAddPostFragment extends Fragment {
+public class UserAddPostFragment extends Fragment implements OnMapReadyCallback {
     private static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
     View view;
     EditText postEt, subjectEt;
     Button cancelBtn;
@@ -74,10 +80,23 @@ public class UserAddPostFragment extends Fragment {
                 Navigation.findNavController(view).navigate(action1);
             }
         });
+        InitialGoogleMap(savedInstanceState);
         setHasOptionsMenu(true);
+
         return view;
     }
+    private void InitialGoogleMap(Bundle savedInstanceState){
+        // *** IMPORTANT ***
+        // MapView requires that the Bundle you pass contain _ONLY_ MapView SDK
+        // objects or sub-Bundles.
+        Bundle mapViewBundle = null;
+        if (savedInstanceState != null) {
+            mapViewBundle = savedInstanceState.getBundle(MAPVIEW_BUNDLE_KEY);
+        }
+        map.onCreate(mapViewBundle);
 
+        map.getMapAsync(this);
+    }
     private void editPhoto() {
         Intent takePictureIntent=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if(takePictureIntent.resolveActivity(getActivity().getPackageManager())!=null){
@@ -119,5 +138,59 @@ public class UserAddPostFragment extends Fragment {
                     });
                 }
             }});
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Bundle mapViewBundle = outState.getBundle(MAPVIEW_BUNDLE_KEY);
+        if (mapViewBundle == null) {
+            mapViewBundle = new Bundle();
+            outState.putBundle(MAPVIEW_BUNDLE_KEY, mapViewBundle);
+        }
+
+        map.onSaveInstanceState(mapViewBundle);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        map.onResume();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        map.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        map.onStop();
+    }
+
+    @Override
+    public void onMapReady(GoogleMap map) {
+        map.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
+        map.setMyLocationEnabled(true);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        map.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        map.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        map.onLowMemory();
     }
 }
