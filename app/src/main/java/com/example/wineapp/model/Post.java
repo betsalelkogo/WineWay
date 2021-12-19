@@ -50,7 +50,8 @@ public class Post implements Parcelable{
     };
 
     public Post() {
-
+        this.id_key=counter;
+        counter++;
     }
 
     public String getImageUrl(){return this.imageUrl;}

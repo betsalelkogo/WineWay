@@ -23,6 +23,7 @@ import com.example.wineapp.model.Model;
 import com.example.wineapp.model.Post;
 import com.example.wineapp.model.User;
 import com.google.android.gms.maps.MapView;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -72,6 +73,7 @@ public class EditPostFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 progressBar.setVisibility(View.VISIBLE);
+                Post.counter--;
                 Model.instance.DeletePost(p,()->{
                     EditPostFragmentDirections.ActionEditPostFragmentToUserPageFragment action1 = EditPostFragmentDirections.actionEditPostFragmentToUserPageFragment(user);
                     Navigation.findNavController(view).navigate(action1);
@@ -86,8 +88,20 @@ public class EditPostFragment extends Fragment {
         setHasOptionsMenu(true);
         postTextEd.setText(p.getDetails());
         subjectEt.setText(p.getSubject());
-        //postPhoto.setImageBitmap();
+        postPhoto.setImageResource(R.drawable.win);
+        if(p.getImageUrl()!=null){
+            Picasso.get().load(p.getImageUrl()).into(postPhoto);
+        }
         return view;
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode,Intent data){
+        if(requestCode==REQUEST_IMAGE_CAPTURE&&resultCode==RESULT_OK){
+            Bundle extras=data.getExtras();
+            Bitmap imageBitmap=(Bitmap) extras.get("data");
+            postPhoto.setImageBitmap(imageBitmap);
+
+        }
     }
     private void editPhoto() {
         Intent takePictureIntent=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -97,7 +111,6 @@ public class EditPostFragment extends Fragment {
     }
     private void save() {
         progressBar.setVisibility(View.VISIBLE);
-        Model.instance.DeletePost(p, () -> { });
         sendPostBtn.setEnabled(false);
         cancelBtn.setEnabled(false);
         deleteBtn.setEnabled(false);
@@ -106,7 +119,7 @@ public class EditPostFragment extends Fragment {
         p.setDetails(postTextEd.getText().toString());
         BitmapDrawable bitmapDrawable=(BitmapDrawable)postPhoto.getDrawable();
         Bitmap bitmap=bitmapDrawable.getBitmap();
-        Model.instance.uploadImage(bitmap, user.getName(), new Model.UploadImageListener() {
+        Model.instance.uploadImage(bitmap, Integer.toString(p.getId_key()), new Model.UploadImageListener() {
             @Override
             public void onComplete(String url) {
                 if (url == null) {

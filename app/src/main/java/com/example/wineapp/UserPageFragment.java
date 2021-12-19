@@ -17,12 +17,14 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.wineapp.model.Model;
 import com.example.wineapp.model.Post;
 import com.example.wineapp.model.User;
+import com.squareup.picasso.Picasso;
 
 
 import java.util.LinkedList;
@@ -30,6 +32,7 @@ import java.util.List;
 
 
 public class UserPageFragment extends Fragment {
+    List<Post> alldata= new LinkedList<>();
     List<Post> data= new LinkedList<>();
     View view;
     Adapter adapter;
@@ -81,7 +84,7 @@ public class UserPageFragment extends Fragment {
         Model.instance.getAllPosts(new Model.GetAllPostsListener(){
             @Override
             public void onComplete(List<Post> p) {
-                data = p;
+                alldata = p;
                 adapter.notifyDataSetChanged();
                 Filter();
                 progressbar.setVisibility(View.GONE);
@@ -92,9 +95,10 @@ public class UserPageFragment extends Fragment {
         });
     }
     private void Filter(){
-        for(int i=0;i<data.size();i++) {
-            if (!data.get(i).getName().equals(user.getName()))
-                data.remove(i);
+        int size= alldata.size();
+        for(int i=0;i<size;i++) {
+            if (user.getName().compareTo(alldata.get(i).getName())==0)
+                data.add(alldata.get(i));
         }
     }
     @Override
@@ -148,6 +152,10 @@ public class UserPageFragment extends Fragment {
             Post p = data.get(position);
             holder.nameTv.setText(p.getSubject());
             holder.detailsTv.setText(p.getDetails());
+            holder.imageView.setImageResource(R.drawable.win);
+            if(p.getImageUrl()!=null){
+                Picasso.get().load(p.getImageUrl()).into(holder.imageView);
+            }
         }
 
         @Override
@@ -157,11 +165,12 @@ public class UserPageFragment extends Fragment {
     static class MyViewHolder extends RecyclerView.ViewHolder {
         TextView nameTv;
         TextView detailsTv;
-
+        ImageView imageView;
         public MyViewHolder(@NonNull View itemView, OnItemClickListener listener) {
             super(itemView);
             nameTv = itemView.findViewById(R.id.listrow_name_tv);
             detailsTv = itemView.findViewById(R.id.listrow_details_tv);
+            imageView=itemView.findViewById(R.id.listrow_avatar_imv);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

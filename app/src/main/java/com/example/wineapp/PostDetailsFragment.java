@@ -17,6 +17,7 @@ import com.example.wineapp.model.Post;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -48,5 +49,9 @@ public class PostDetailsFragment extends Fragment {
         progressBar.setVisibility(View.GONE);
         subjectEt.setText(p.getSubject());
         details.setText(p.getDetails());
+        photo.setImageResource(R.drawable.win);
+        if(p.getImageUrl()!=null){
+            Picasso.get().load(p.getImageUrl()).into(photo);
+        }
     }
 }

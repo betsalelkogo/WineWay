@@ -104,7 +104,7 @@ public class UserAddPostFragment extends Fragment {
         p.setDetails(postEt.getText().toString());
         BitmapDrawable bitmapDrawable=(BitmapDrawable)postPhoto.getDrawable();
         Bitmap bitmap=bitmapDrawable.getBitmap();
-        Model.instance.uploadImage(bitmap, user.getName(), new Model.UploadImageListener() {
+        Model.instance.uploadImage(bitmap, Integer.toString(p.getId_key()), new Model.UploadImageListener() {
             @Override
             public void onComplete(String url) {
                 if (url == null) {

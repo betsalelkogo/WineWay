@@ -18,12 +18,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.wineapp.model.Model;
 import com.example.wineapp.model.Post;
 import com.example.wineapp.model.User;
+import com.squareup.picasso.Picasso;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -129,6 +131,10 @@ public class ListPostFragment extends Fragment {
             Post p = data.get(position);
             holder.nameTv.setText(p.getSubject());
             holder.detailsTv.setText(p.getDetails());
+            holder.imageView.setImageResource(R.drawable.win);
+            if(p.getImageUrl()!=null){
+                Picasso.get().load(p.getImageUrl()).into(holder.imageView);
+            }
         }
 
         @Override
@@ -140,11 +146,12 @@ public class ListPostFragment extends Fragment {
     static class MyViewHolder extends RecyclerView.ViewHolder {
         TextView nameTv;
         TextView detailsTv;
-
+        ImageView imageView;
         public MyViewHolder(@NonNull View itemView, OnItemClickListener listener) {
             super(itemView);
             nameTv = itemView.findViewById(R.id.listrow_name_tv);
             detailsTv = itemView.findViewById(R.id.listrow_details_tv);
+            imageView=itemView.findViewById(R.id.listrow_avatar_imv);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
