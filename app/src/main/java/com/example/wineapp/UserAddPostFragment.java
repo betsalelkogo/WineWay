@@ -58,7 +58,6 @@ public class UserAddPostFragment extends Fragment {
         editPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("TAG","editPhoto");
                 editPhoto();
             }
         });
@@ -120,7 +119,5 @@ public class UserAddPostFragment extends Fragment {
                     });
                 }
             }});
-//
-
     }
 }
