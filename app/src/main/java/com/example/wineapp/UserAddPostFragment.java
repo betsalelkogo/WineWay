@@ -2,12 +2,17 @@ package com.example.wineapp;
 
 import static android.app.Activity.RESULT_OK;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -46,20 +51,21 @@ public class UserAddPostFragment extends Fragment implements OnMapReadyCallback 
     ProgressBar progressBar;
     User user;
     MapView map;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view= inflater.inflate(R.layout.fragment_user_add_post, container, false);
-        user=UserAddPostFragmentArgs.fromBundle(getArguments()).getUser();
-        sendBtn=view.findViewById(R.id.user_add_new_post_send_btn);
-        cancelBtn=view.findViewById(R.id.user_add_new_post_cancel_btn);
-        postEt=view.findViewById(R.id.user_add_new_post_et);
-        subjectEt=view.findViewById(R.id.user_add_subject_post_et);
-        progressBar=view.findViewById(R.id.user_add_new_post_progressbar);
-        map=view.findViewById(R.id.user_add_new_post_map);
-        editPhoto=view.findViewById(R.id.user_add_post_edit_image_btn);
-        postPhoto=view.findViewById(R.id.user_add_new_post_photo_upload);
+        view = inflater.inflate(R.layout.fragment_user_add_post, container, false);
+        user = UserAddPostFragmentArgs.fromBundle(getArguments()).getUser();
+        sendBtn = view.findViewById(R.id.user_add_new_post_send_btn);
+        cancelBtn = view.findViewById(R.id.user_add_new_post_cancel_btn);
+        postEt = view.findViewById(R.id.user_add_new_post_et);
+        subjectEt = view.findViewById(R.id.user_add_subject_post_et);
+        progressBar = view.findViewById(R.id.user_add_new_post_progressbar);
+        map = view.findViewById(R.id.user_add_new_post_map);
+        editPhoto = view.findViewById(R.id.user_add_post_edit_image_btn);
+        postPhoto = view.findViewById(R.id.user_add_new_post_photo_upload);
         progressBar.setVisibility(View.GONE);
         editPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,7 +77,8 @@ public class UserAddPostFragment extends Fragment implements OnMapReadyCallback 
             @Override
             public void onClick(View v) {
                 save();
-                }});
+            }
+        });
         cancelBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,7 +92,8 @@ public class UserAddPostFragment extends Fragment implements OnMapReadyCallback 
 
         return view;
     }
-    private void InitialGoogleMap(Bundle savedInstanceState){
+
+    private void InitialGoogleMap(Bundle savedInstanceState) {
         // *** IMPORTANT ***
         // MapView requires that the Bundle you pass contain _ONLY_ MapView SDK
         // objects or sub-Bundles.
@@ -97,22 +105,24 @@ public class UserAddPostFragment extends Fragment implements OnMapReadyCallback 
 
         map.getMapAsync(this);
     }
+
     private void editPhoto() {
-        Intent takePictureIntent=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if(takePictureIntent.resolveActivity(getActivity().getPackageManager())!=null){
-            startActivityForResult(takePictureIntent,REQUEST_IMAGE_CAPTURE);
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
         }
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode,Intent data){
-        if(requestCode==REQUEST_IMAGE_CAPTURE&&resultCode==RESULT_OK){
-            Bundle extras=data.getExtras();
-            Bitmap imageBitmap=(Bitmap) extras.get("data");
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
             postPhoto.setImageBitmap(imageBitmap);
 
         }
     }
+
     private void save() {
         Post p = new Post();
         progressBar.setVisibility(View.VISIBLE);
@@ -121,8 +131,8 @@ public class UserAddPostFragment extends Fragment implements OnMapReadyCallback 
         p.setName(user.getName());
         p.setSubject(subjectEt.getText().toString());
         p.setDetails(postEt.getText().toString());
-        BitmapDrawable bitmapDrawable=(BitmapDrawable)postPhoto.getDrawable();
-        Bitmap bitmap=bitmapDrawable.getBitmap();
+        BitmapDrawable bitmapDrawable = (BitmapDrawable) postPhoto.getDrawable();
+        Bitmap bitmap = bitmapDrawable.getBitmap();
         Model.instance.uploadImage(bitmap, Integer.toString(p.getId_key()), new Model.UploadImageListener() {
             @Override
             public void onComplete(String url) {
@@ -130,14 +140,15 @@ public class UserAddPostFragment extends Fragment implements OnMapReadyCallback 
 
                 } else {
                     p.setImageUrl(url);
-                    Model.instance.addPost(p,new Model.AddPostListener(){
+                    Model.instance.addPost(p, new Model.AddPostListener() {
                         @Override
                         public void onComplete() {
                             Navigation.findNavController(sendBtn).navigateUp();
                         }
                     });
                 }
-            }});
+            }
+        });
     }
 
     @Override
@@ -173,7 +184,11 @@ public class UserAddPostFragment extends Fragment implements OnMapReadyCallback 
     @Override
     public void onMapReady(GoogleMap map) {
         map.addMarker(new MarkerOptions().position(new LatLng(0, 0)).title("Marker"));
-       // map.setMyLocationEnabled(true);
+        if (ActivityCompat.checkSelfPermission(MyApplication.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) !=
+                PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MyApplication.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        map.setMyLocationEnabled(true);
     }
 
     @Override

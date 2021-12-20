@@ -19,15 +19,24 @@ public class Post implements Parcelable{
     private String details;
     private String name;
     private String imageUrl;
+    private String lang;
+    private String lant;
     public static int counter=0;
-    public Post(String name,String details,String subject,String imageUrl){
+    public Post(String name,String details,String subject,String imageUrl,String lang,String lant){
         this.name=name;
         this.details=details;
         this.subject=subject;
         this.imageUrl=imageUrl;
+        this.lang=lang;
+        this.lant=lant;
         this.id_key=counter;
         counter++;
     }
+
+
+    public Post() {
+    }
+
 
     protected Post(Parcel in) {
         id_key = in.readInt();
@@ -35,6 +44,8 @@ public class Post implements Parcelable{
         details = in.readString();
         name = in.readString();
         imageUrl = in.readString();
+        lang = in.readString();
+        lant = in.readString();
     }
 
     public static final Creator<Post> CREATOR = new Creator<Post>() {
@@ -48,11 +59,6 @@ public class Post implements Parcelable{
             return new Post[size];
         }
     };
-
-    public Post() {
-        this.id_key=counter;
-        counter++;
-    }
 
     public String getImageUrl(){return this.imageUrl;}
 
@@ -84,6 +90,8 @@ public class Post implements Parcelable{
         json.put("subject", getSubject());
         json.put("details", getDetails());
         json.put("imageUrl", getImageUrl());
+        json.put("lant", getLant());
+        json.put("lang", getLang());
         return json;
     }
 
@@ -97,8 +105,26 @@ public class Post implements Parcelable{
         String name = (String)json.get("name");
         String subject = (String)json.get("subject");
         String imageUrl = (String)json.get("imageUrl");
-        Post p = new Post(name,details,subject,imageUrl);
+        String lang = (String)json.get("lang");
+        String lant = (String)json.get("lant");
+        Post p = new Post(name,details,subject,imageUrl,lang,lant);
         return p;
+    }
+
+    public String getLang() {
+        return lang;
+    }
+
+    public void setLang(String lang) {
+        this.lang = lang;
+    }
+
+    public String getLant() {
+        return lant;
+    }
+
+    public void setLant(String lant) {
+        this.lant = lant;
     }
 
     @Override
@@ -113,5 +139,7 @@ public class Post implements Parcelable{
         dest.writeString(details);
         dest.writeString(name);
         dest.writeString(imageUrl);
+        dest.writeString(lang);
+        dest.writeString(lant);
     }
 }

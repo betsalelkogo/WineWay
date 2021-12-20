@@ -19,8 +19,8 @@
 
     <com.google.android.gms.maps.MapView
         android:id="@+id/user_add_new_post_map"
-        android:layout_width="356dp"
-        android:layout_height="113dp"
+        android:layout_width="358dp"
+        android:layout_height="166dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="8dp"
