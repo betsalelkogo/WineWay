@@ -33,7 +33,7 @@ import java.util.List;
 
 public class UserPageFragment extends Fragment {
     List<Post> alldata= new LinkedList<>();
-    List<Post> data= new LinkedList<>();
+    List<Post> data= null;
     View view;
     Adapter adapter;
     ProgressBar progressbar;
@@ -86,7 +86,7 @@ public class UserPageFragment extends Fragment {
             public void onComplete(List<Post> p) {
                 alldata = p;
                 adapter.notifyDataSetChanged();
-                Filter();
+                if(data==null) Filter();
                 progressbar.setVisibility(View.GONE);
                 if (swipeRefresh.isRefreshing()) {
                     swipeRefresh.setRefreshing(false);
@@ -95,8 +95,8 @@ public class UserPageFragment extends Fragment {
         });
     }
     private void Filter(){
-        int size= alldata.size();
-        for(int i=0;i<size;i++) {
+        data=new LinkedList<>();
+        for(int i=0;i<alldata.size();i++) {
             if (user.getName().compareTo(alldata.get(i).getName())==0)
                 data.add(alldata.get(i));
         }
@@ -159,7 +159,8 @@ public class UserPageFragment extends Fragment {
         }
 
         @Override
-        public int getItemCount() { return data.size(); }
+        public int getItemCount() { if(data==null) return 0;
+            return data.size();}
     }
 
     static class MyViewHolder extends RecyclerView.ViewHolder {
