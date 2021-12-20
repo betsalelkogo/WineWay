@@ -25,6 +25,7 @@ import com.example.wineapp.model.User;
 import com.google.android.gms.maps.MapView;
 import com.squareup.picasso.Picasso;
 
+
 import java.util.List;
 
 public class EditPostFragment extends Fragment {
