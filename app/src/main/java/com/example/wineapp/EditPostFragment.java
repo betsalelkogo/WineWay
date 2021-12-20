@@ -73,10 +73,12 @@ public class EditPostFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 progressBar.setVisibility(View.VISIBLE);
-                Post.counter--;
-                Model.instance.DeletePost(p,()->{
-                    EditPostFragmentDirections.ActionEditPostFragmentToUserPageFragment action1 = EditPostFragmentDirections.actionEditPostFragmentToUserPageFragment(user);
-                    Navigation.findNavController(view).navigate(action1);
+                Model.instance.DeletePost(p, new Model.DeletePostListener() {
+                    @Override
+                    public void onComplete() {
+                        EditPostFragmentDirections.ActionEditPostFragmentToUserPageFragment action1 = EditPostFragmentDirections.actionEditPostFragmentToUserPageFragment(user);
+                        Navigation.findNavController(view).navigate(action1);
+                    }
                 });
             }
         });
