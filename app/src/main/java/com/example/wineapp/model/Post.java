@@ -19,10 +19,10 @@ public class Post implements Parcelable{
     private String details;
     private String name;
     private String imageUrl;
-    private String lang;
-    private String lant;
+    private double lang;
+    private double lant;
     public static int counter=0;
-    public Post(String name,String details,String subject,String imageUrl,String lang,String lant){
+    public Post(String name,String details,String subject,String imageUrl,double lang,double lant){
         this.name=name;
         this.details=details;
         this.subject=subject;
@@ -44,8 +44,8 @@ public class Post implements Parcelable{
         details = in.readString();
         name = in.readString();
         imageUrl = in.readString();
-        lang = in.readString();
-        lant = in.readString();
+        lang = Double.parseDouble(in.readString());
+        lant = Double.parseDouble(in.readString());
     }
 
     public static final Creator<Post> CREATOR = new Creator<Post>() {
@@ -105,25 +105,25 @@ public class Post implements Parcelable{
         String name = (String)json.get("name");
         String subject = (String)json.get("subject");
         String imageUrl = (String)json.get("imageUrl");
-        String lang = (String)json.get("lang");
-        String lant = (String)json.get("lant");
+        double lang = (double)json.get("lang");
+        double lant = (double)json.get("lant");
         Post p = new Post(name,details,subject,imageUrl,lang,lant);
         return p;
     }
 
-    public String getLang() {
+    public double getLang() {
         return lang;
     }
 
-    public void setLang(String lang) {
+    public void setLang(double lang) {
         this.lang = lang;
     }
 
-    public String getLant() {
+    public double getLant() {
         return lant;
     }
 
-    public void setLant(String lant) {
+    public void setLant(double lant) {
         this.lant = lant;
     }
 
@@ -139,7 +139,7 @@ public class Post implements Parcelable{
         dest.writeString(details);
         dest.writeString(name);
         dest.writeString(imageUrl);
-        dest.writeString(lang);
-        dest.writeString(lant);
+        dest.writeDouble(lang);
+        dest.writeDouble(lant);
     }
 }

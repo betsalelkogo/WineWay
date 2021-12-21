@@ -181,7 +181,7 @@ public class EditPostFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap map) {
-        map.addMarker(new MarkerOptions().position(new LatLng(Integer.parseInt(p.getLant()), Integer.parseInt(p.getLang()))).title("Marker"));
+        map.addMarker(new MarkerOptions().position(new LatLng(p.getLant(),p.getLang())).title(p.getSubject()));
         if (ActivityCompat.checkSelfPermission(MyApplication.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) !=
                 PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MyApplication.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;

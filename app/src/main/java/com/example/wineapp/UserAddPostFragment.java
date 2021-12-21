@@ -52,7 +52,8 @@ public class UserAddPostFragment extends Fragment implements OnMapReadyCallback 
     ProgressBar progressBar;
     User user;
     MapView map;
-
+    Location lastKnownLocation;
+    Post p = new Post();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -125,13 +126,15 @@ public class UserAddPostFragment extends Fragment implements OnMapReadyCallback 
     }
 
     private void save() {
-        Post p = new Post();
         progressBar.setVisibility(View.VISIBLE);
         sendBtn.setEnabled(false);
         cancelBtn.setEnabled(false);
         p.setName(user.getName());
         p.setSubject(subjectEt.getText().toString());
         p.setDetails(postEt.getText().toString());
+        p.setLang(lastKnownLocation.getLongitude());
+        p.setLant(lastKnownLocation.getLatitude());
+
         BitmapDrawable bitmapDrawable = (BitmapDrawable) postPhoto.getDrawable();
         Bitmap bitmap = bitmapDrawable.getBitmap();
         Model.instance.uploadImage(bitmap, Integer.toString(p.getId_key()), new Model.UploadImageListener() {
@@ -193,8 +196,8 @@ public class UserAddPostFragment extends Fragment implements OnMapReadyCallback 
         }
         map.setMyLocationEnabled(true);
         LocationManager mLocationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        Location lastKnownLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        map.addMarker(new MarkerOptions().position(new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude())).title("Marker"));
+        lastKnownLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        map.addMarker(new MarkerOptions().position(new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude())).title(p.getSubject()));
     }
 
     @Override
