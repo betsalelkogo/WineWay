@@ -24,10 +24,12 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.picasso.Picasso;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class PostDetailsFragment extends Fragment implements OnMapReadyCallback {
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
+    Post[] allpost;
     Post p;
     TextView subjectEt, details;
     ImageView photo;
@@ -39,6 +41,7 @@ public class PostDetailsFragment extends Fragment implements OnMapReadyCallback 
 
         View view = inflater.inflate(R.layout.fragment_post_details, container, false);
         p= PostDetailsFragmentArgs.fromBundle(getArguments()).getPost();
+        allpost=PostDetailsFragmentArgs.fromBundle(getArguments()).getListPost();
         subjectEt=view.findViewById(R.id.post_details_cave_name_tv);
         details=view.findViewById(R.id.post_detail_tv);
         photo=view.findViewById(R.id.post_detail_wineryPicture);
@@ -105,10 +108,13 @@ public class PostDetailsFragment extends Fragment implements OnMapReadyCallback 
 
     @Override
     public void onMapReady(GoogleMap map) {
-        map.addMarker(new MarkerOptions().position(new LatLng(p.getLant(), p.getLang())).title(p.getSubject()));
+
         if (ActivityCompat.checkSelfPermission(MyApplication.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) !=
                 PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MyApplication.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
+        }
+        for(int i=0;i<allpost.length;i++){
+            map.addMarker(new MarkerOptions().position(new LatLng(allpost[i].getLant(), allpost[i].getLang())).title(allpost[i].getSubject()));
         }
         map.setMyLocationEnabled(true);
     }

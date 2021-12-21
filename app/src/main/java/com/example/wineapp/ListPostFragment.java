@@ -65,7 +65,9 @@ public class ListPostFragment extends Fragment {
             public void onItemClick(int position, View v) {
                 progressBar.setVisibility(View.VISIBLE);
                 Post p = data.get(position);
-                ListPostFragmentDirections.ActionListPostFragmentToPostDetailsFragment action = ListPostFragmentDirections.actionListPostFragmentToPostDetailsFragment(p);
+                Post[] posts;
+                posts=data.toArray(new Post[data.size()]);
+                ListPostFragmentDirections.ActionListPostFragmentToPostDetailsFragment action = ListPostFragmentDirections.actionListPostFragmentToPostDetailsFragment(p,posts);
                 Navigation.findNavController(v).navigate(action);
             }
         });
