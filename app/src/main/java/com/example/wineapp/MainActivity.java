@@ -57,6 +57,20 @@ public class MainActivity extends AppCompatActivity {
         }
         return true;
     }
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            // Location
+            case 123: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                }
+                break;
+            }
+        }
+    }
 
 //    private void getLastKnownLocation() {
 //        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) !=

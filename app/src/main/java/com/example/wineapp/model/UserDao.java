@@ -20,6 +20,6 @@ public interface UserDao {
     @Delete
     void delete(User user);
 
-    @Query("SELECT * FROM User WHERE name=:name ")
-    User getUserByName(String name);
+    @Query("SELECT * FROM User WHERE email=:email ")
+    User getUserByEmail(String email);
 }

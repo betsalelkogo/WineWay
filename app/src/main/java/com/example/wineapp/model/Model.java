@@ -90,10 +90,10 @@ public class Model {
     public interface GetUserByNameListener{
         void onComplete(User user);
     }
-    public void getUserByName(String userName,GetUserByNameListener listener) {
-        modelFirebase.getUserByName(userName,listener);
+    public void getUserByEmail(String userEmail,GetUserByNameListener listener) {
+        modelFirebase.getUserByEmail(userEmail,listener);
 //        MyApplication.executorService.execute(()->{
-//            User user = AppLocalDB.db.userDao().getUserByName(userName);
+//            User user = AppLocalDB.db.userDao().getUserByEmail(userEmail);
 //            MyApplication.mainHandler.post(()->{
 //                listener.onComplete(user);
 //            });

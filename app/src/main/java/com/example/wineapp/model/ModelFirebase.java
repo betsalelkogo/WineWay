@@ -154,7 +154,7 @@ public class ModelFirebase {
 
     public void addUser(User user, Model.AddUserListener listener) {
         db.collection("users")
-                .document(user.getName()).set(user.toJson())
+                .document(user.getEmail()).set(user.toJson())
                 .addOnSuccessListener((successListener)-> {
                     listener.onComplete();
                 })
@@ -163,8 +163,8 @@ public class ModelFirebase {
                 });
     }
 
-    public void getUserByName(String userName, Model.GetUserByNameListener listener) {
-        DocumentReference docRef = db.collection("users").document(userName);
+    public void getUserByEmail(String userEmail, Model.GetUserByNameListener listener) {
+        DocumentReference docRef = db.collection("users").document(userEmail);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
