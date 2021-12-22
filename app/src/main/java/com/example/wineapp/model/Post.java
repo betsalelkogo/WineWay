@@ -86,6 +86,7 @@ public class Post implements Parcelable{
 
     public Map<String,Object> toJson(){
         Map<String, Object> json = new HashMap<>();
+        json.put("id_key", getId_key());
         json.put("name", getName());
         json.put("subject", getSubject());
         json.put("details", getDetails());
@@ -107,7 +108,9 @@ public class Post implements Parcelable{
         String imageUrl = (String)json.get("imageUrl");
         double lang = (double)json.get("lang");
         double lant = (double)json.get("lant");
+        int id_key=(int)json.get("id_key");
         Post p = new Post(name,details,subject,imageUrl,lang,lant);
+        p.setId_key(id_key);
         return p;
     }
 
