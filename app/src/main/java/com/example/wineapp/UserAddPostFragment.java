@@ -46,8 +46,8 @@ public class UserAddPostFragment extends Fragment implements OnMapReadyCallback 
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
     View view;
     EditText postEt, subjectEt;
-    Button cancelBtn;
-    ImageButton sendBtn, editPhoto;
+    Button cancelBtn,sendBtn;
+    ImageButton editPhoto;
     ImageView postPhoto;
     ProgressBar progressBar;
     User user;

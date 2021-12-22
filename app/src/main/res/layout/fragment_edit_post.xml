@@ -16,6 +16,7 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
     <ImageButton
         android:id="@+id/edit_post_image_btn"
         android:layout_width="wrap_content"
@@ -73,17 +74,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_post_name_tv" />
 
-    <ImageButton
-        android:id="@+id/edit_post_save_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/sendicon"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/edit_post_delete_btn"
-        app:layout_constraintTop_toBottomOf="@+id/edit_post_et" />
-
     <Button
         android:id="@+id/edit_post_cancel_btn"
         android:layout_width="wrap_content"
@@ -105,6 +95,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/edit_post_cancel_btn"
         app:layout_constraintTop_toBottomOf="@+id/edit_post_et" />
+
     <ProgressBar
         android:id="@+id/edit_post_progressbar"
         style="?android:attr/progressBarStyle"
@@ -114,5 +105,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/edit_post_save_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="upload"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/edit_post_delete_btn"
+        app:layout_constraintTop_toBottomOf="@+id/edit_post_et" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

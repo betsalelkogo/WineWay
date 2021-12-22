@@ -56,23 +56,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/user_add_subject_post_et" />
 
-    <ImageButton
-        android:id="@+id/user_add_new_post_send_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/sendicon"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/user_add_new_post_cancel_btn"
-        app:layout_constraintTop_toBottomOf="@+id/user_add_new_post_et"
-        app:layout_constraintVertical_bias="0.305"
-        tools:ignore="SpeakableTextPresentCheck" />
-
     <Button
         android:id="@+id/user_add_new_post_cancel_btn"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
         android:text="CANCEL"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/user_add_new_post_send_btn"
@@ -115,4 +104,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/user_add_new_post_send_btn"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:text="Upload"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/user_add_new_post_cancel_btn"
+        app:layout_constraintTop_toBottomOf="@+id/user_add_new_post_et"
+        app:layout_constraintVertical_bias="0.371" />
 </androidx.constraintlayout.widget.ConstraintLayout>

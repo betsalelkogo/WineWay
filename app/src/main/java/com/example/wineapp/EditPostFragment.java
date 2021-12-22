@@ -45,8 +45,8 @@ public class EditPostFragment extends Fragment implements OnMapReadyCallback {
     EditText postTextEd, subjectEt;
     MapView map;
     ProgressBar progressBar;
-    ImageButton sendPostBtn,editPhoto;
-    Button cancelBtn, deleteBtn;
+    ImageButton editPhoto;
+    Button cancelBtn, deleteBtn,sendPostBtn;
     ImageView postPhoto;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
