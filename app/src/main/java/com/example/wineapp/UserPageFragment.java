@@ -66,8 +66,9 @@ public class UserPageFragment extends Fragment {
             @Override
             public void onItemClick(int position, View v) {
                 progressbar.setVisibility(View.VISIBLE);
-                Post p = data.get(position);
-                UserPageFragmentDirections.ActionUserPageFragmentToEditPostFragment action = UserPageFragmentDirections.actionUserPageFragmentToEditPostFragment(p,user);
+                Post[] posts;
+                posts=data.toArray(new Post[data.size()]);
+                UserPageFragmentDirections.ActionUserPageFragmentToEditPostFragment action = UserPageFragmentDirections.actionUserPageFragmentToEditPostFragment(posts,user,position);
                 Navigation.findNavController(v).navigate(action);
             }
         });
