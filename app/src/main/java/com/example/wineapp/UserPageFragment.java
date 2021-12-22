@@ -87,7 +87,7 @@ public class UserPageFragment extends Fragment {
             public void onComplete(List<Post> p) {
                 alldata = p;
                 adapter.notifyDataSetChanged();
-                if(data==null) Filter();
+                Filter();
                 progressbar.setVisibility(View.GONE);
                 if (swipeRefresh.isRefreshing()) {
                     swipeRefresh.setRefreshing(false);

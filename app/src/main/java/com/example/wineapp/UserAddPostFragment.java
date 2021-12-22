@@ -124,7 +124,6 @@ public class UserAddPostFragment extends Fragment implements OnMapReadyCallback 
 
         }
     }
-
     private void save() {
         progressBar.setVisibility(View.VISIBLE);
         sendBtn.setEnabled(false);
@@ -134,9 +133,9 @@ public class UserAddPostFragment extends Fragment implements OnMapReadyCallback 
         p.setDetails(postEt.getText().toString());
         p.setLang(lastKnownLocation.getLongitude());
         p.setLant(lastKnownLocation.getLatitude());
-
-        BitmapDrawable bitmapDrawable = (BitmapDrawable) postPhoto.getDrawable();
-        Bitmap bitmap = bitmapDrawable.getBitmap();
+        BitmapDrawable bitmapDrawable=(BitmapDrawable)postPhoto.getDrawable();
+        Bitmap bitmap=bitmapDrawable.getBitmap();
+//        if(p.getId_key()==null) p.setId_key("0");
         Model.instance.uploadImage(bitmap, p.getId_key(), new Model.UploadImageListener() {
             @Override
             public void onComplete(String url) {
@@ -144,15 +143,14 @@ public class UserAddPostFragment extends Fragment implements OnMapReadyCallback 
 
                 } else {
                     p.setImageUrl(url);
-                    Model.instance.addPost(p, new Model.AddPostListener() {
+                    Model.instance.addPost(p,new Model.AddPostListener(){
                         @Override
                         public void onComplete() {
                             Navigation.findNavController(sendBtn).navigateUp();
                         }
                     });
                 }
-            }
-        });
+            }});
     }
 
     @Override

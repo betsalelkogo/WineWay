@@ -55,7 +55,7 @@ public class ModelFirebase {
 
     public void addPost(Post post, Model.AddPostListener listener) {
         db.collection("posts")
-                .document(post.getId_key()).set(post.toJson())
+                .document().set(post.toJson())
                 .addOnSuccessListener((successListener)-> {
                     listener.onComplete();
                 })
@@ -87,7 +87,11 @@ public class ModelFirebase {
 
     public void uploadImage(Bitmap bitmap, String name, final Model.UploadImageListener listener){
         FirebaseStorage storage=FirebaseStorage.getInstance();
-        final StorageReference imageRef=storage.getReference().child("image").child(name);
+        final StorageReference imageRef;
+        if(name==null)
+            imageRef=storage.getReference().child("image");
+        else
+            imageRef=storage.getReference().child("image").child(name);
         ByteArrayOutputStream baos =new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG,100,baos);
         byte[] data= baos.toByteArray();
