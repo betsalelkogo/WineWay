@@ -14,14 +14,14 @@ import java.util.Map;
 public class Post implements Parcelable{
     @PrimaryKey
     @NonNull
-    private int id_key;
+    private String id_key;
     private String subject;
     private String details;
     private String name;
     private String imageUrl;
     private double lang;
     private double lant;
-    public static int counter=0;
+
     public Post(String name,String details,String subject,String imageUrl,double lang,double lant){
         this.name=name;
         this.details=details;
@@ -29,8 +29,6 @@ public class Post implements Parcelable{
         this.imageUrl=imageUrl;
         this.lang=lang;
         this.lant=lant;
-        this.id_key=counter;
-        counter++;
     }
 
 
@@ -39,13 +37,13 @@ public class Post implements Parcelable{
 
 
     protected Post(Parcel in) {
-        id_key = in.readInt();
+        id_key = in.readString();
         subject = in.readString();
         details = in.readString();
         name = in.readString();
         imageUrl = in.readString();
-        lang = Double.parseDouble(in.readString());
-        lant = Double.parseDouble(in.readString());
+        lang = in.readDouble();
+        lant = in.readDouble();
     }
 
     public static final Creator<Post> CREATOR = new Creator<Post>() {
@@ -68,9 +66,9 @@ public class Post implements Parcelable{
 
     public void setName(String name){this.name=name;}
 
-    public int getId_key(){return this.id_key;}
+    public String getId_key(){return this.id_key;}
 
-    public void setId_key(int id_key){this.id_key=id_key;}
+    public void setId_key(String id_key){this.id_key=id_key;}
 
     public String getSubject(){return this.subject;}
 
@@ -86,7 +84,6 @@ public class Post implements Parcelable{
 
     public Map<String,Object> toJson(){
         Map<String, Object> json = new HashMap<>();
-        json.put("id_key", getId_key());
         json.put("name", getName());
         json.put("subject", getSubject());
         json.put("details", getDetails());
@@ -108,9 +105,7 @@ public class Post implements Parcelable{
         String imageUrl = (String)json.get("imageUrl");
         double lang = (double)json.get("lang");
         double lant = (double)json.get("lant");
-        int id_key=(int)json.get("id_key");
         Post p = new Post(name,details,subject,imageUrl,lang,lant);
-        p.setId_key(id_key);
         return p;
     }
 
@@ -137,7 +132,7 @@ public class Post implements Parcelable{
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(id_key);
+        dest.writeString(id_key);
         dest.writeString(subject);
         dest.writeString(details);
         dest.writeString(name);

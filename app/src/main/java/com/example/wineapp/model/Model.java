@@ -2,9 +2,6 @@ package com.example.wineapp.model;
 
 import android.graphics.Bitmap;
 
-import com.example.wineapp.MyApplication;
-
-import java.util.LinkedList;
 import java.util.List;
 
 public class Model {

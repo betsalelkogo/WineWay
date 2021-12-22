@@ -137,7 +137,7 @@ public class UserAddPostFragment extends Fragment implements OnMapReadyCallback 
 
         BitmapDrawable bitmapDrawable = (BitmapDrawable) postPhoto.getDrawable();
         Bitmap bitmap = bitmapDrawable.getBitmap();
-        Model.instance.uploadImage(bitmap, Integer.toString(p.getId_key()), new Model.UploadImageListener() {
+        Model.instance.uploadImage(bitmap, p.getId_key(), new Model.UploadImageListener() {
             @Override
             public void onComplete(String url) {
                 if (url == null) {

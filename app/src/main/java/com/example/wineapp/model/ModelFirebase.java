@@ -34,6 +34,7 @@ public class ModelFirebase {
                 if(task.isSuccessful()){
                     for (QueryDocumentSnapshot doc: task.getResult()){
                         Post p = Post.fromJson(doc.getData());
+                        p.setId_key(doc.getId());
                         if (p != null) {
                             studentsList.add(p);
                         }
@@ -54,7 +55,7 @@ public class ModelFirebase {
 
     public void addPost(Post post, Model.AddPostListener listener) {
         db.collection("posts")
-                .document(Integer.toString(post.getId_key())).set(post.toJson())
+                .document(post.getId_key()).set(post.toJson())
                 .addOnSuccessListener((successListener)-> {
                     listener.onComplete();
                 })
@@ -110,8 +111,8 @@ public class ModelFirebase {
 
     }
 
-    public void deletePost(Post post, Model.DeletePostListener listener) {
-        db.collection("posts").document(Integer.toString(post.getId_key()))
+    public void deletePost(Post post,Model.DeletePostListener listener) {
+        db.collection("posts").document(post.getId_key())
                 .delete()
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
