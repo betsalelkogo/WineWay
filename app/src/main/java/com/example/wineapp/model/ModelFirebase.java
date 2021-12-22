@@ -25,7 +25,7 @@ import java.util.LinkedList;
 
 public class ModelFirebase {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
-
+    static int counter=0;
     public void getAllPosts(Model.GetAllPostsListener listener) {
         db.collection("posts").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
@@ -88,8 +88,9 @@ public class ModelFirebase {
     public void uploadImage(Bitmap bitmap, String name, final Model.UploadImageListener listener){
         FirebaseStorage storage=FirebaseStorage.getInstance();
         final StorageReference imageRef;
-        if(name==null)
-            imageRef=storage.getReference().child("image");
+        if(name==null){
+            imageRef=storage.getReference().child("image"+counter);
+            counter++;}
         else
             imageRef=storage.getReference().child("image").child(name);
         ByteArrayOutputStream baos =new ByteArrayOutputStream();
