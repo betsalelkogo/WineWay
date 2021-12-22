@@ -21,6 +21,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.picasso.Picasso;
 
@@ -35,6 +36,7 @@ public class PostDetailsFragment extends Fragment implements OnMapReadyCallback 
     ImageView photo;
     MapView map;
     ProgressBar progressBar;
+    MarkerOptions[] marker;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -42,6 +44,7 @@ public class PostDetailsFragment extends Fragment implements OnMapReadyCallback 
         View view = inflater.inflate(R.layout.fragment_post_details, container, false);
         p= PostDetailsFragmentArgs.fromBundle(getArguments()).getPost();
         allpost=PostDetailsFragmentArgs.fromBundle(getArguments()).getListPost();
+        marker= new MarkerOptions[allpost.length];
         subjectEt=view.findViewById(R.id.post_details_cave_name_tv);
         details=view.findViewById(R.id.post_detail_tv);
         photo=view.findViewById(R.id.post_detail_wineryPicture);
@@ -64,8 +67,8 @@ public class PostDetailsFragment extends Fragment implements OnMapReadyCallback 
             mapViewBundle = savedInstanceState.getBundle(MAPVIEW_BUNDLE_KEY);
         }
         map.onCreate(mapViewBundle);
-
         map.getMapAsync(this);
+
     }
     private void updateDisplay() {
         progressBar.setVisibility(View.GONE);
@@ -111,12 +114,36 @@ public class PostDetailsFragment extends Fragment implements OnMapReadyCallback 
 
         if (ActivityCompat.checkSelfPermission(MyApplication.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) !=
                 PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MyApplication.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
+            ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.ACCESS_FINE_LOCATION},123);
         }
         for(int i=0;i<allpost.length;i++){
-            map.addMarker(new MarkerOptions().position(new LatLng(allpost[i].getLant(), allpost[i].getLang())).title(allpost[i].getSubject()));
+            marker[i]=new MarkerOptions().position(new LatLng(allpost[i].getLant(), allpost[i].getLang())).title(allpost[i].getSubject());
+            map.addMarker(marker[i]);
         }
         map.setMyLocationEnabled(true);
+        map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(@NonNull Marker marker) {
+                progressBar.setVisibility(View.VISIBLE);
+                for(int i=0;i<allpost.length;i++){
+                    if (marker.getTitle().equals(allpost[i].getSubject())){
+                        updatePost(i);
+                    }
+                }
+                return false;
+            }
+        });
+
+    }
+
+    private void updatePost(int i) {
+        subjectEt.setText(allpost[i].getSubject());
+        progressBar.setVisibility(View.GONE);
+        details.setText(allpost[i].getDetails());
+        photo.setImageResource(R.drawable.win);
+        if(allpost[i].getImageUrl()!=null){
+            Picasso.get().load(allpost[i].getImageUrl()).into(photo);
+        }
     }
 
     @Override

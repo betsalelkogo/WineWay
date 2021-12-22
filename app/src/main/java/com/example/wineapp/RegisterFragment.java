@@ -43,19 +43,23 @@ public class RegisterFragment extends Fragment {
         signUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!validate()){
+                    Toast.makeText(getActivity(), "Please check your input", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 progressBar.setVisibility(View.VISIBLE);
                 mAuth.createUserWithEmailAndPassword(email.getText().toString(), password.getText().toString())
                         .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
-                                    // Sign in success, update UI with the signed-in user's information
+                                    // Sign up success, update UI with the signed-in user's information
                                     User user=new User(name.getText().toString(),password.getText().toString(),email.getText().toString());
                                     Model.instance.addUser(user, ()->{
                                         Navigation.findNavController(v).navigate(R.id.action_registerFragment_to_signInFragment);
                                     });
                                 } else {
-                                    // If sign in fails, display a message to the user.
+                                    // If sign up fails, display a message to the user.
                                     Toast.makeText(getActivity(), task.getException().getMessage(),
                                             Toast.LENGTH_SHORT).show();
                                     progressBar.setVisibility(View.GONE);
@@ -66,5 +70,8 @@ public class RegisterFragment extends Fragment {
         });
         setHasOptionsMenu(true);
         return view;
+    }
+    private boolean validate() {
+        return (name.getText().length() > 2 && confirmPassword.getText().length() > 5&&email.getText().length() > 2 && password.getText().length() > 5);
     }
 }
