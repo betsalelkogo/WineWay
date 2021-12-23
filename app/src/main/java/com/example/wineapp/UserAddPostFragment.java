@@ -52,7 +52,7 @@ public class UserAddPostFragment extends Fragment implements OnMapReadyCallback 
     ProgressBar progressBar;
     User user;
     MapView map;
-    Location lastKnownLocation;
+    LatLng lastKnownLocation;
     Post p = new Post();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -131,8 +131,8 @@ public class UserAddPostFragment extends Fragment implements OnMapReadyCallback 
         p.setName(user.getName());
         p.setSubject(subjectEt.getText().toString());
         p.setDetails(postEt.getText().toString());
-        p.setLang(lastKnownLocation.getLongitude());
-        p.setLant(lastKnownLocation.getLatitude());
+        p.setLang(lastKnownLocation.longitude);
+        p.setLant(lastKnownLocation.latitude);
         BitmapDrawable bitmapDrawable=(BitmapDrawable)postPhoto.getDrawable();
         Bitmap bitmap=bitmapDrawable.getBitmap();
 //        if(p.getId_key()==null) p.setId_key("0");
@@ -190,9 +190,16 @@ public class UserAddPostFragment extends Fragment implements OnMapReadyCallback 
             // TODO: Create interface for callback result
         }
         map.setMyLocationEnabled(true);
-        LocationManager mLocationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-        lastKnownLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-        map.addMarker(new MarkerOptions().position(new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude())).title(p.getSubject()));
+        map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(@NonNull LatLng latLng) {
+                lastKnownLocation=new LatLng(latLng.latitude,latLng.longitude);
+                map.addMarker(new MarkerOptions().position(new LatLng(latLng.latitude,latLng.longitude)).title(p.getSubject()));
+            }
+        });
+//        LocationManager mLocationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
+//        lastKnownLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+//        map.addMarker(new MarkerOptions().position(new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude())).title(p.getSubject()));
     }
 
     @Override
