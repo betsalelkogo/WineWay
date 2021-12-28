@@ -19,6 +19,9 @@
         <argument
             android:name="user"
             app:argType="com.example.wineapp.model.User" />
+        <action
+            android:id="@+id/action_listPostFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
     </fragment>
     <fragment
         android:id="@+id/userPageFragment"
@@ -115,5 +118,26 @@
         <argument
             android:name="listPost"
             app:argType="com.example.wineapp.model.Post[]" />
+    </fragment>
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="com.example.wineapp.MapFragment"
+        android:label="fragment_map"
+        tools:layout="@layout/fragment_map" >
+        <action
+            android:id="@+id/action_mapFragment_to_listPostFragment"
+            app:destination="@id/listPostFragment" />
+        <action
+            android:id="@+id/action_mapFragment_to_postDetailsFragment"
+            app:destination="@id/postDetailsFragment" />
+        <action
+            android:id="@+id/action_mapFragment_to_userPageFragment"
+            app:destination="@id/userPageFragment" />
+        <argument
+            android:name="listPost"
+            app:argType="com.example.wineapp.model.Post[]" />
+        <argument
+            android:name="user"
+            app:argType="com.example.wineapp.model.User" />
     </fragment>
 </navigation>

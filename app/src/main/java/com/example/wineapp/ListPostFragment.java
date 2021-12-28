@@ -36,10 +36,11 @@ public class ListPostFragment extends Fragment {
     View view;
     MyAdapter adapter;
     User user;
-
+    Post[] posts;
     ProgressBar progressBar;
     SwipeRefreshLayout swipeRefresh;
     ListPostFragmentDirections.ActionListPostFragmentToUserPageFragment action1;
+    ListPostFragmentDirections.ActionListPostFragmentToMapFragment action11;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -55,6 +56,7 @@ public class ListPostFragment extends Fragment {
             }
         });
 
+        posts=data.toArray(new Post[data.size()]);
         RecyclerView list = view.findViewById(R.id.winelist_list_rv);
         list.setHasFixedSize(true);
         list.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -65,12 +67,11 @@ public class ListPostFragment extends Fragment {
             public void onItemClick(int position, View v) {
                 progressBar.setVisibility(View.VISIBLE);
                 Post p = data.get(position);
-                Post[] posts;
-                posts=data.toArray(new Post[data.size()]);
                 ListPostFragmentDirections.ActionListPostFragmentToPostDetailsFragment action = ListPostFragmentDirections.actionListPostFragmentToPostDetailsFragment(p,posts);
                 Navigation.findNavController(v).navigate(action);
             }
         });
+        action11=ListPostFragmentDirections.actionListPostFragmentToMapFragment(posts,user);
         action1=ListPostFragmentDirections.actionListPostFragmentToUserPageFragment(user);
 
         setHasOptionsMenu(true);
@@ -103,6 +104,10 @@ public class ListPostFragment extends Fragment {
                 case R.id.userPage:
                     progressBar.setVisibility(View.VISIBLE);
                     Navigation.findNavController(view).navigate(action1);
+                    break;
+                case R.id.map_list:
+                    progressBar.setVisibility(View.VISIBLE);
+                    Navigation.findNavController(view).navigate(action11);
                     break;
                 default:
                     result = false;
