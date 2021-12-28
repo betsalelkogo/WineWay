@@ -125,6 +125,11 @@ public class UserPageFragment extends Fragment {
                     UserPageFragmentDirections.ActionUserPageFragmentToListPostFragment action1=UserPageFragmentDirections.actionUserPageFragmentToListPostFragment(user);
                     Navigation.findNavController(view).navigate(action1);
                     break;
+                case R.id.userPageMapPost:
+                    progressbar.setVisibility(View.VISIBLE);
+                    UserPageFragmentDirections.ActionUserPageFragmentToMapFragment action12=UserPageFragmentDirections.actionUserPageFragmentToMapFragment(alldata.toArray(new Post[alldata.size()]),user);
+                    Navigation.findNavController(view).navigate(action12);
+                    break;
                 default:
                     result = false;
                     break;

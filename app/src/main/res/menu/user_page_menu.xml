@@ -15,4 +15,8 @@
         android:id="@+id/userPageListPost"
         android:title="Post List"
         app:showAsAction="always" />
+    <item
+        android:id="@+id/userPageMapPost"
+        android:title="Map List"
+        app:showAsAction="always" />
 </menu>
