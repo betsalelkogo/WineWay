@@ -56,7 +56,7 @@ public class ListPostFragment extends Fragment {
             }
         });
 
-        posts=data.toArray(new Post[data.size()]);
+
         RecyclerView list = view.findViewById(R.id.winelist_list_rv);
         list.setHasFixedSize(true);
         list.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -67,13 +67,11 @@ public class ListPostFragment extends Fragment {
             public void onItemClick(int position, View v) {
                 progressBar.setVisibility(View.VISIBLE);
                 Post p = data.get(position);
+                posts=data.toArray(new Post[data.size()]);
                 ListPostFragmentDirections.ActionListPostFragmentToPostDetailsFragment action = ListPostFragmentDirections.actionListPostFragmentToPostDetailsFragment(p,posts);
                 Navigation.findNavController(v).navigate(action);
             }
         });
-        action11=ListPostFragmentDirections.actionListPostFragmentToMapFragment(posts,user);
-        action1=ListPostFragmentDirections.actionListPostFragmentToUserPageFragment(user);
-
         setHasOptionsMenu(true);
         refreshData();
         return view;
@@ -102,10 +100,13 @@ public class ListPostFragment extends Fragment {
         if (!super.onOptionsItemSelected(item)) {
             switch (item.getItemId()) {
                 case R.id.userPage:
+                    action1=ListPostFragmentDirections.actionListPostFragmentToUserPageFragment(user);
                     progressBar.setVisibility(View.VISIBLE);
                     Navigation.findNavController(view).navigate(action1);
                     break;
                 case R.id.map_list:
+                    posts=data.toArray(new Post[data.size()]);
+                    action11=ListPostFragmentDirections.actionListPostFragmentToMapFragment(posts,user);
                     progressBar.setVisibility(View.VISIBLE);
                     Navigation.findNavController(view).navigate(action11);
                     break;

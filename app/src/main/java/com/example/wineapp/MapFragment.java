@@ -30,11 +30,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class MapFragment extends Fragment {
     View view;
     Post[] allpost;
-    Post p;
     MarkerOptions[] marker;
     ProgressBar progressBar;
     User user;
     MapFragmentDirections.ActionMapFragmentToUserPageFragment action1;
+    MapFragmentDirections.ActionMapFragmentToListPostFragment action;
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
         @Override
         public void onMapReady(GoogleMap googleMap) {
@@ -50,22 +50,24 @@ public class MapFragment extends Fragment {
             googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(@NonNull Marker marker) {
-                    progressBar.setVisibility(View.VISIBLE);
+//                    progressBar.setVisibility(View.VISIBLE);
                     for(int i=0;i<allpost.length;i++){
-                        if (marker.getTitle().equals(allpost[i].getSubject())){
+                        if (marker.getTitle().compareTo(allpost[i].getSubject())==0){
                             PostDetails(i);
                         }
                     }
                     return false;
                 }
             });
-            LatLng latlang = new LatLng(allpost[0].getLant(),allpost[0].getLang());
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(latlang));
+            if(allpost.length>0){
+                LatLng latlang = new LatLng(allpost[0].getLant(),allpost[0].getLang());
+                googleMap.moveCamera(CameraUpdateFactory.newLatLng(latlang));
+            }
         }
     };
 
     private void PostDetails(int i) {
-        MapFragmentDirections.ActionMapFragmentToPostDetailsFragment action=MapFragmentDirections.actionMapFragmentToPostDetailsFragment(allpost[i], null);
+        MapFragmentDirections.ActionMapFragmentToPostDetailsFragment action=MapFragmentDirections.actionMapFragmentToPostDetailsFragment(allpost[i], allpost);
         Navigation.findNavController(view).navigate(action);
     }
 
@@ -80,6 +82,7 @@ public class MapFragment extends Fragment {
         marker= new MarkerOptions[allpost.length];
         setHasOptionsMenu(true);
         action1=MapFragmentDirections.actionMapFragmentToUserPageFragment(user);
+        action=MapFragmentDirections.actionMapFragmentToListPostFragment(user);
         return view;
     }
 
@@ -95,7 +98,7 @@ public class MapFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.wine_list_menu,menu);
+        inflater.inflate(R.menu.map_list_menu,menu);
     }
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
@@ -103,8 +106,12 @@ public class MapFragment extends Fragment {
         if (!super.onOptionsItemSelected(item)) {
             switch (item.getItemId()) {
                 case R.id.userPage:
-                    progressBar.setVisibility(View.VISIBLE);
+                    //progressBar.setVisibility(View.VISIBLE);
                     Navigation.findNavController(view).navigate(action1);
+                    break;
+                case R.id.post_list:
+                    //progressBar.setVisibility(View.VISIBLE);
+                    Navigation.findNavController(view).navigate(action);
                     break;
                 default:
                     result = false;
