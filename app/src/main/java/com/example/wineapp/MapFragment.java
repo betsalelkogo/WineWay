@@ -31,7 +31,6 @@ public class MapFragment extends Fragment {
     View view;
     Post[] allpost;
     MarkerOptions[] marker;
-    ProgressBar progressBar;
     User user;
     MapFragmentDirections.ActionMapFragmentToUserPageFragment action1;
     MapFragmentDirections.ActionMapFragmentToListPostFragment action;
@@ -50,7 +49,6 @@ public class MapFragment extends Fragment {
             googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(@NonNull Marker marker) {
-//                    progressBar.setVisibility(View.VISIBLE);
                     for(int i=0;i<allpost.length;i++){
                         if (marker.getTitle().compareTo(allpost[i].getSubject())==0){
                             PostDetails(i);

@@ -32,6 +32,7 @@ import android.widget.Toast;
 import com.example.wineapp.model.Model;
 import com.example.wineapp.model.Post;
 import com.example.wineapp.model.User;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -201,11 +202,10 @@ public class UserAddPostFragment extends Fragment implements OnMapReadyCallback 
             public void onMapClick(@NonNull LatLng latLng) {
                 lastKnownLocation=new LatLng(latLng.latitude,latLng.longitude);
                 map.addMarker(new MarkerOptions().position(new LatLng(latLng.latitude,latLng.longitude)).title(p.getSubject()));
+
             }
         });
-//        LocationManager mLocationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-//        lastKnownLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-//        map.addMarker(new MarkerOptions().position(new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude())).title(p.getSubject()));
+        map.moveCamera(CameraUpdateFactory.newLatLng(lastKnownLocation));
     }
 
     @Override
