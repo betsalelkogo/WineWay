@@ -104,7 +104,8 @@ public class EditPostFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onClick(View v) {
                 save();
-            }});
+            }
+        });
         setHasOptionsMenu(true);
         postTextEd.setText(p.getDetails());
         subjectEt.setText(p.getSubject());
