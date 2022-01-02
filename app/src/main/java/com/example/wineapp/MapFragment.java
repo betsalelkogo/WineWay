@@ -27,10 +27,10 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapFragment extends Fragment {
-    View view;
-    Post[] allpost;
     MarkerOptions[] marker;
     User user;
+    View view;
+    Post[] allpost;
     MapFragmentDirections.ActionMapFragmentToUserPageFragment action1;
     MapFragmentDirections.ActionMapFragmentToListPostFragment action;
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
