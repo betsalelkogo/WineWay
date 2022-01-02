@@ -14,7 +14,7 @@ import java.util.Map;
 public class Post implements Parcelable{
     @PrimaryKey
     @NonNull
-    private String id_key;
+    private String id_key=null;
     private String subject;
     private String details;
     private String name;

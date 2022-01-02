@@ -54,7 +54,8 @@ public class ModelFirebase {
     }
 
     public void addPost(Post post, Model.AddPostListener listener) {
-        db.collection("posts")
+        if(post.getId_key()==null){
+            db.collection("posts")
                 .document().set(post.toJson())
                 .addOnSuccessListener((successListener)-> {
                     listener.onComplete();
@@ -62,6 +63,17 @@ public class ModelFirebase {
                 .addOnFailureListener((e)-> {
                     Log.d("TAG", e.getMessage());
                 });
+        }
+        else{
+            db.collection("posts")
+                    .document(post.getId_key()).set(post.toJson())
+                    .addOnSuccessListener((successListener)-> {
+                        listener.onComplete();
+                    })
+                    .addOnFailureListener((e)-> {
+                        Log.d("TAG", e.getMessage());
+                    });
+        }
     }
 
     public void getPostByName(String postName, Model.GetPostByNameListener listener) {

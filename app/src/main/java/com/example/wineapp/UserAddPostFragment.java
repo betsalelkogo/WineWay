@@ -27,10 +27,12 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.example.wineapp.model.Model;
 import com.example.wineapp.model.Post;
 import com.example.wineapp.model.User;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -52,7 +54,7 @@ public class UserAddPostFragment extends Fragment implements OnMapReadyCallback 
     ProgressBar progressBar;
     User user;
     MapView map;
-    LatLng lastKnownLocation;
+    LatLng lastKnownLocation=null;
     Post p = new Post();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -78,6 +80,10 @@ public class UserAddPostFragment extends Fragment implements OnMapReadyCallback 
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!validate()){
+                    Toast.makeText(getActivity(), "Please check your input", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 save();
             }
         });
@@ -135,7 +141,6 @@ public class UserAddPostFragment extends Fragment implements OnMapReadyCallback 
         p.setLant(lastKnownLocation.latitude);
         BitmapDrawable bitmapDrawable=(BitmapDrawable)postPhoto.getDrawable();
         Bitmap bitmap=bitmapDrawable.getBitmap();
-//        if(p.getId_key()==null) p.setId_key("0");
         Model.instance.uploadImage(bitmap, p.getId_key(), new Model.UploadImageListener() {
             @Override
             public void onComplete(String url) {
@@ -152,7 +157,9 @@ public class UserAddPostFragment extends Fragment implements OnMapReadyCallback 
                 }
             }});
     }
-
+    private boolean validate() {
+        return (subjectEt.getText().length() > 2 && postEt.getText().length() > 2&&lastKnownLocation!=null);
+    }
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -195,11 +202,10 @@ public class UserAddPostFragment extends Fragment implements OnMapReadyCallback 
             public void onMapClick(@NonNull LatLng latLng) {
                 lastKnownLocation=new LatLng(latLng.latitude,latLng.longitude);
                 map.addMarker(new MarkerOptions().position(new LatLng(latLng.latitude,latLng.longitude)).title(p.getSubject()));
+
             }
         });
-//        LocationManager mLocationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-//        lastKnownLocation = mLocationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-//        map.addMarker(new MarkerOptions().position(new LatLng(lastKnownLocation.getLatitude(), lastKnownLocation.getLongitude())).title(p.getSubject()));
+        map.moveCamera(CameraUpdateFactory.newLatLng(lastKnownLocation));
     }
 
     @Override

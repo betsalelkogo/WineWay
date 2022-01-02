@@ -27,6 +27,7 @@ import android.widget.ProgressBar;
 import com.example.wineapp.model.Model;
 import com.example.wineapp.model.Post;
 import com.example.wineapp.model.User;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -104,7 +105,8 @@ public class EditPostFragment extends Fragment implements OnMapReadyCallback {
             @Override
             public void onClick(View v) {
                 save();
-            }});
+            }
+        });
         setHasOptionsMenu(true);
         postTextEd.setText(p.getDetails());
         subjectEt.setText(p.getSubject());
@@ -196,6 +198,7 @@ public class EditPostFragment extends Fragment implements OnMapReadyCallback {
         for(int i=0;i<allpost.length;i++){
             marker[i]=new MarkerOptions().position(new LatLng(allpost[i].getLant(), allpost[i].getLang())).title(allpost[i].getSubject());
             map.addMarker(marker[i]);
+            map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(allpost[0].getLant(), allpost[0].getLang())));
         }
         map.setMyLocationEnabled(true);
         map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
@@ -210,6 +213,7 @@ public class EditPostFragment extends Fragment implements OnMapReadyCallback {
                 return false;
             }
         });
+
     }
     private void updatePost(int i) {
         subjectEt.setText(allpost[i].getSubject());
