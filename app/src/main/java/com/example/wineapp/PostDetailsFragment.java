@@ -31,21 +31,17 @@ import java.util.List;
 
 public class PostDetailsFragment extends Fragment implements OnMapReadyCallback {
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
-    Post[] allpost;
     Post p;
     TextView subjectEt, details;
     ImageView photo;
     MapView map;
     ProgressBar progressBar;
-    MarkerOptions[] marker;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_post_details, container, false);
         p= PostDetailsFragmentArgs.fromBundle(getArguments()).getPost();
-        allpost=PostDetailsFragmentArgs.fromBundle(getArguments()).getListPost();
-        marker= new MarkerOptions[allpost.length];
         subjectEt=view.findViewById(R.id.post_details_cave_name_tv);
         details=view.findViewById(R.id.post_detail_tv);
         photo=view.findViewById(R.id.post_detail_wineryPicture);
@@ -88,7 +84,6 @@ public class PostDetailsFragment extends Fragment implements OnMapReadyCallback 
             mapViewBundle = new Bundle();
             outState.putBundle(MAPVIEW_BUNDLE_KEY, mapViewBundle);
         }
-
         map.onSaveInstanceState(mapViewBundle);
     }
 
@@ -117,34 +112,19 @@ public class PostDetailsFragment extends Fragment implements OnMapReadyCallback 
                 PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MyApplication.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.ACCESS_FINE_LOCATION},123);
         }
-        for(int i=0;i<allpost.length;i++){
-            marker[i]=new MarkerOptions().position(new LatLng(allpost[i].getLant(), allpost[i].getLang())).title(allpost[i].getSubject());
-            map.addMarker(marker[i]);
-            map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(allpost[0].getLant(), allpost[0].getLang())));
-        }
+        MarkerOptions marker=new MarkerOptions().position(new LatLng(p.getLant(), p.getLang())).title(p.getSubject());
+        map.addMarker(marker);
+        map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(p.getLant(), p.getLang())));
         map.setMyLocationEnabled(true);
-        map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(@NonNull Marker marker) {
-                progressBar.setVisibility(View.VISIBLE);
-                for(int i=0;i<allpost.length;i++){
-                    if (marker.getTitle().equals(allpost[i].getSubject())){
-                        updatePost(i);
-                    }
-                }
-                return false;
-            }
-        });
-
     }
 
-    private void updatePost(int i) {
-        subjectEt.setText(allpost[i].getSubject());
+    private void updatePost() {
+        subjectEt.setText(p.getSubject());
         progressBar.setVisibility(View.GONE);
-        details.setText(allpost[i].getDetails());
+        details.setText(p.getDetails());
         photo.setImageResource(R.drawable.win);
-        if(allpost[i].getImageUrl()!=null){
-            Picasso.get().load(allpost[i].getImageUrl()).into(photo);
+        if(p.getImageUrl()!=null){
+            Picasso.get().load(p.getImageUrl()).into(photo);
         }
     }
 
