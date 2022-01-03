@@ -205,7 +205,8 @@ public class UserAddPostFragment extends Fragment implements OnMapReadyCallback 
 
             }
         });
-        map.moveCamera(CameraUpdateFactory.newLatLng(lastKnownLocation));
+        if(lastKnownLocation!=null)
+            map.moveCamera(CameraUpdateFactory.newLatLng(lastKnownLocation));
     }
 
     @Override
