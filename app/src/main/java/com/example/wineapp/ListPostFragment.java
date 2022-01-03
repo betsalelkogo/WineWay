@@ -2,25 +2,24 @@ package com.example.wineapp;
 
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.view.ViewGroup;
-import android.widget.ImageButton;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.example.wineapp.model.Model;
 import com.example.wineapp.model.Post;
 import com.example.wineapp.model.User;
@@ -28,7 +27,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReferenceArray;
 
 public class ListPostFragment extends Fragment {
     List<Post> data=new LinkedList<>();
@@ -48,6 +46,7 @@ public class ListPostFragment extends Fragment {
         progressBar= view.findViewById(R.id.list_post_progressbar);
         progressBar.setVisibility(View.VISIBLE);
         swipeRefresh=view.findViewById(R.id.winelist_swipe_refresh);
+
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -58,9 +57,12 @@ public class ListPostFragment extends Fragment {
 
         RecyclerView list = view.findViewById(R.id.winelist_list_rv);
         list.setHasFixedSize(true);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         list.setLayoutManager(new LinearLayoutManager(getContext()));
         adapter = new MyAdapter();
         list.setAdapter(adapter);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(list.getContext(), linearLayoutManager.getOrientation());
+        list.addItemDecoration(dividerItemDecoration);
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(int position, View v) {
