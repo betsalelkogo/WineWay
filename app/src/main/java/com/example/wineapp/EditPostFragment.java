@@ -51,7 +51,6 @@ public class EditPostFragment extends Fragment implements OnMapReadyCallback {
     ImageButton editPhoto;
     Button cancelBtn, deleteBtn,sendPostBtn;
     ImageView postPhoto;
-    int position;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
