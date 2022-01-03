@@ -84,10 +84,10 @@ public class Model {
 //        });
     }
 
-    public interface GetUserByNameListener{
+    public interface GetUserByEmailListener{
         void onComplete(User user);
     }
-    public void getUserByEmail(String userEmail,GetUserByNameListener listener) {
+    public void getUserByEmail(String userEmail,GetUserByEmailListener listener) {
         modelFirebase.getUserByEmail(userEmail,listener);
 //        MyApplication.executorService.execute(()->{
 //            User user = AppLocalDB.db.userDao().getUserByEmail(userEmail);

@@ -54,7 +54,7 @@ public class RegisterFragment extends Fragment {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
                                     // Sign up success, update UI with the signed-in user's information
-                                    User user=new User(name.getText().toString(),password.getText().toString(),email.getText().toString());
+                                    User user=new User(name.getText().toString(),password.getText().toString(),email.getText().toString(),"");
                                     Model.instance.addUser(user, ()->{
                                         Navigation.findNavController(v).navigate(R.id.action_registerFragment_to_signInFragment);
                                     });

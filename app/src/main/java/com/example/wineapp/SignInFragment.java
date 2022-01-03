@@ -72,7 +72,7 @@ public class SignInFragment extends Fragment {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser userAuth = mAuth.getCurrentUser();
-                            Model.instance.getUserByEmail(userAuth.getEmail(), new Model.GetUserByNameListener() {
+                            Model.instance.getUserByEmail(userAuth.getEmail(), new Model.GetUserByEmailListener() {
                                 @Override
                                 public void onComplete(User u) {
                                     user = u;

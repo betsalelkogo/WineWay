@@ -181,7 +181,7 @@ public class ModelFirebase {
                 });
     }
 
-    public void getUserByEmail(String userEmail, Model.GetUserByNameListener listener) {
+    public void getUserByEmail(String userEmail, Model.GetUserByEmailListener listener) {
         DocumentReference docRef = db.collection("users").document(userEmail);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override

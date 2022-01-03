@@ -1,6 +1,11 @@
 package com.example.wineapp;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.app.MediaRouteButton;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -11,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,6 +24,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -33,6 +40,7 @@ import java.util.List;
 
 
 public class UserPageFragment extends Fragment {
+    private static final int REQUEST_IMAGE_CAPTURE = 1;
     List<Post> alldata= new LinkedList<>();
     List<Post> data= null;
     View view;
@@ -42,6 +50,8 @@ public class UserPageFragment extends Fragment {
     User user;
     UserPageFragmentDirections.ActionUserPageFragmentToUserAddPostFragment action;
     SwipeRefreshLayout swipeRefresh;
+    ImageButton photoUser;
+    ImageView userImage;
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -51,10 +61,19 @@ public class UserPageFragment extends Fragment {
         progressbar= view.findViewById(R.id.user_page_progressbar);
         progressbar.setVisibility(View.VISIBLE);
         swipeRefresh=view.findViewById(R.id.user_page_swipe_refresh);
+        photoUser=view.findViewById(R.id.user_add_page_image_btn);
+        userImage=view.findViewById(R.id.user_page_image);
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 refreshData();
+            }
+        });
+        photoUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editPhoto();
+
             }
         });
         user=UserPageFragmentArgs.fromBundle(getArguments()).getUser();
@@ -75,13 +94,21 @@ public class UserPageFragment extends Fragment {
             }
         });
 
-        userName.setText(user.getName());
-        email.setText(user.getEmail());
+        updateUserPage();
         setHasOptionsMenu(true);
         action=UserPageFragmentDirections.actionUserPageFragmentToUserAddPostFragment(user);
         refreshData();
         return view;
 
+    }
+    private void updateUserPage() {
+        userName.setText(user.getName());
+        email.setText(user.getEmail());
+        progressbar.setVisibility(View.GONE);
+        userImage.setImageResource(R.drawable.userpage);
+        if(user.getImageUrl().length()>2){
+            Picasso.get().load(user.getImageUrl()).into(userImage);
+        }
     }
     private void refreshData() {
         Model.instance.getAllPosts(new Model.GetAllPostsListener(){
@@ -102,6 +129,35 @@ public class UserPageFragment extends Fragment {
         for(int i=0;i<alldata.size();i++) {
             if (user.getName().compareTo(alldata.get(i).getName())==0)
                 data.add(alldata.get(i));
+        }
+    }
+    private void editPhoto() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bundle extras = data.getExtras();
+            Bitmap imageBitmap = (Bitmap) extras.get("data");
+            userImage.setImageBitmap(imageBitmap);
+            BitmapDrawable bitmapDrawable=(BitmapDrawable)userImage.getDrawable();
+            Bitmap bitmap=bitmapDrawable.getBitmap();
+            Model.instance.uploadImage(bitmap, user.getEmail(), new Model.UploadImageListener() {
+                @Override
+                public void onComplete(String url) {
+                    if (url == null) {
+
+                    } else {
+                        user.setImageUrl(url);
+                        Model.instance.addUser(user,()->{
+                            return;
+                        });
+                    }
+                }});
         }
     }
     @Override
