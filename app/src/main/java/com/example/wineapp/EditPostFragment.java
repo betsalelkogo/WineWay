@@ -68,7 +68,7 @@ public class EditPostFragment extends Fragment implements OnMapReadyCallback {
         postPhoto=view.findViewById(R.id.edit_post_wineryPicture);
         progressBar.setVisibility(View.GONE);
         user=EditPostFragmentArgs.fromBundle(getArguments()).getUser();
-        position=EditPostFragmentArgs.fromBundle(getArguments()).getPosition();
+        p=EditPostFragmentArgs.fromBundle(getArguments()).getPost();
         editPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

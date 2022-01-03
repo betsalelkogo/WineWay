@@ -99,7 +99,7 @@
             app:destination="@id/userPageFragment" />
         <argument
             android:name="Post"
-            app:argType="com.example.wineapp.model.Post[]" />
+            app:argType="com.example.wineapp.model.Post" />
         <argument
             android:name="user"
             app:argType="com.example.wineapp.model.User" />
