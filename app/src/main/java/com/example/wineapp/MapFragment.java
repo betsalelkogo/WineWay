@@ -48,12 +48,19 @@ public class MapFragment extends Fragment {
             googleMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(@NonNull Marker marker) {
+                    marker.getTitle();
+                    return false;
+                }
+            });
+            googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+                @Override
+                public void onInfoWindowClick(Marker arg0) {
                     for(int i=0;i<allpost.length;i++){
-                        if (marker.getTitle().compareTo(allpost[i].getSubject())==0){
+                        if (arg0.getTitle().compareTo(allpost[i].getSubject())==0){
                             PostDetails(i);
                         }
                     }
-                    return false;
+
                 }
             });
             if(allpost.length>0){
