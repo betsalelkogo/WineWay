@@ -64,7 +64,7 @@ public class MapFragment extends Fragment {
     };
 
     private void PostDetails(int i) {
-        MapFragmentDirections.ActionMapFragmentToPostDetailsFragment action=MapFragmentDirections.actionMapFragmentToPostDetailsFragment(allpost[i], allpost);
+        MapFragmentDirections.ActionMapFragmentToPostDetailsFragment action=MapFragmentDirections.actionMapFragmentToPostDetailsFragment(allpost[i]);
         Navigation.findNavController(view).navigate(action);
     }
 
