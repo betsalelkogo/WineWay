@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -59,9 +60,12 @@ public class UserPageFragment extends Fragment {
         user=UserPageFragmentArgs.fromBundle(getArguments()).getUser();
         RecyclerView list = view.findViewById(R.id.user_page_post_list_tv);
         list.setHasFixedSize(true);
-        list.setLayoutManager(new LinearLayoutManager(getContext()));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+        list.setLayoutManager(linearLayoutManager);
         adapter = new Adapter();
         list.setAdapter(adapter);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(list.getContext(), linearLayoutManager.getOrientation());
+        list.addItemDecoration(dividerItemDecoration);
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(int position, View v) {

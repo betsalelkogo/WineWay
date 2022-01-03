@@ -58,7 +58,7 @@ public class ListPostFragment extends Fragment {
         RecyclerView list = view.findViewById(R.id.winelist_list_rv);
         list.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
-        list.setLayoutManager(new LinearLayoutManager(getContext()));
+        list.setLayoutManager(linearLayoutManager);
         adapter = new MyAdapter();
         list.setAdapter(adapter);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(list.getContext(), linearLayoutManager.getOrientation());
