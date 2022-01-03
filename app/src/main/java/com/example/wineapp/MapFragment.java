@@ -28,8 +28,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MapFragment extends Fragment {
     MarkerOptions[] marker;
-    User user;
     View view;
+    User user;
     Post[] allpost;
     MapFragmentDirections.ActionMapFragmentToUserPageFragment action1;
     MapFragmentDirections.ActionMapFragmentToListPostFragment action;
