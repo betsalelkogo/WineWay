@@ -58,7 +58,7 @@ public class MapFragment extends Fragment {
             });
             if(allpost.length>0){
                 LatLng latlang = new LatLng(allpost[0].getLant(),allpost[0].getLang());
-                googleMap.moveCamera(CameraUpdateFactory.newLatLng(latlang));
+                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latlang,7.5F));
             }
         }
     };

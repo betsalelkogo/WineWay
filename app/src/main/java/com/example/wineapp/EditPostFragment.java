@@ -7,6 +7,7 @@ import static android.app.Activity.RESULT_OK;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
+import android.location.LocationManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -51,6 +52,7 @@ public class EditPostFragment extends Fragment implements OnMapReadyCallback {
     ImageButton editPhoto;
     Button cancelBtn, deleteBtn,sendPostBtn;
     ImageView postPhoto;
+    LatLng location;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -129,6 +131,8 @@ public class EditPostFragment extends Fragment implements OnMapReadyCallback {
         p.setName(user.getName());
         p.setSubject(subjectEt.getText().toString());
         p.setDetails(postTextEd.getText().toString());
+        p.setLang(location.longitude);
+        p.setLant(location.latitude);
         BitmapDrawable bitmapDrawable=(BitmapDrawable)postPhoto.getDrawable();
         Bitmap bitmap=bitmapDrawable.getBitmap();
         Model.instance.uploadImage(bitmap, p.getId_key(), new Model.UploadImageListener() {
@@ -184,11 +188,28 @@ public class EditPostFragment extends Fragment implements OnMapReadyCallback {
                 PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MyApplication.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-
-        MarkerOptions marker=new MarkerOptions().position(new LatLng(p.getLant(), p.getLang())).title(p.getSubject());
+        location=new LatLng(p.getLant(), p.getLang());
+        MarkerOptions marker=new MarkerOptions().position(location).title(p.getSubject());
+        marker.draggable(true);
         map.addMarker(marker);
-        map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(p.getLant(), p.getLang())));
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(p.getLant(), p.getLang()),7.5F));
         map.setMyLocationEnabled(true);
+        map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+            @Override
+            public void onMarkerDrag(@NonNull Marker marker) {
+                location= marker.getPosition();
+            }
+
+            @Override
+            public void onMarkerDragEnd(@NonNull Marker marker) {
+                location= marker.getPosition();
+            }
+
+            @Override
+            public void onMarkerDragStart(@NonNull Marker marker) {
+                location= marker.getPosition();
+            }
+        });
     }
     private void updatePost() {
         subjectEt.setText(p.getSubject());

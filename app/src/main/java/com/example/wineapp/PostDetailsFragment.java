@@ -114,18 +114,8 @@ public class PostDetailsFragment extends Fragment implements OnMapReadyCallback 
         }
         MarkerOptions marker=new MarkerOptions().position(new LatLng(p.getLant(), p.getLang())).title(p.getSubject());
         map.addMarker(marker);
-        map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(p.getLant(), p.getLang())));
+        map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(p.getLant(), p.getLang()),7.5F));
         map.setMyLocationEnabled(true);
-    }
-
-    private void updatePost() {
-        subjectEt.setText(p.getSubject());
-        progressBar.setVisibility(View.GONE);
-        details.setText(p.getDetails());
-        photo.setImageResource(R.drawable.win);
-        if(p.getImageUrl()!=null){
-            Picasso.get().load(p.getImageUrl()).into(photo);
-        }
     }
 
     @Override
