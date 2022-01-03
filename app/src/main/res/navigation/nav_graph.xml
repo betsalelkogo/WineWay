@@ -118,9 +118,6 @@
         <action
             android:id="@+id/action_postDetailsFragment_to_listPostFragment"
             app:destination="@id/listPostFragment" />
-        <argument
-            android:name="listPost"
-            app:argType="com.example.wineapp.model.Post[]" />
     </fragment>
     <fragment
         android:id="@+id/mapFragment"

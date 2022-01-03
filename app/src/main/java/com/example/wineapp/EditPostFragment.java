@@ -42,7 +42,6 @@ import java.util.List;
 public class EditPostFragment extends Fragment implements OnMapReadyCallback {
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
-    Post[] allpost;
     Post p;
     User user;
     View view;
@@ -52,7 +51,6 @@ public class EditPostFragment extends Fragment implements OnMapReadyCallback {
     ImageButton editPhoto;
     Button cancelBtn, deleteBtn,sendPostBtn;
     ImageView postPhoto;
-    MarkerOptions[] marker;
     int position;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -69,11 +67,8 @@ public class EditPostFragment extends Fragment implements OnMapReadyCallback {
         subjectEt=view.findViewById(R.id.edit_post_subject_et);
         postPhoto=view.findViewById(R.id.edit_post_wineryPicture);
         progressBar.setVisibility(View.GONE);
-        allpost=EditPostFragmentArgs.fromBundle(getArguments()).getPost();
         user=EditPostFragmentArgs.fromBundle(getArguments()).getUser();
         position=EditPostFragmentArgs.fromBundle(getArguments()).getPosition();
-        p=allpost[position];
-        marker= new MarkerOptions[allpost.length];
         editPhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -108,12 +103,7 @@ public class EditPostFragment extends Fragment implements OnMapReadyCallback {
             }
         });
         setHasOptionsMenu(true);
-        postTextEd.setText(p.getDetails());
-        subjectEt.setText(p.getSubject());
-        postPhoto.setImageResource(R.drawable.win);
-        if(p.getImageUrl()!=null){
-            Picasso.get().load(p.getImageUrl()).into(postPhoto);
-        }
+        updatePost();
         InitialGoogleMap(savedInstanceState);
         return view;
     }
@@ -195,33 +185,19 @@ public class EditPostFragment extends Fragment implements OnMapReadyCallback {
                 PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MyApplication.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        for(int i=0;i<allpost.length;i++){
-            marker[i]=new MarkerOptions().position(new LatLng(allpost[i].getLant(), allpost[i].getLang())).title(allpost[i].getSubject());
-            map.addMarker(marker[i]);
-            map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(allpost[0].getLant(), allpost[0].getLang())));
-        }
-        map.setMyLocationEnabled(true);
-        map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
-            @Override
-            public boolean onMarkerClick(@NonNull Marker marker) {
-                progressBar.setVisibility(View.VISIBLE);
-                for(int i=0;i<allpost.length;i++){
-                    if (marker.getTitle().equals(allpost[i].getSubject())){
-                        updatePost(i);
-                    }
-                }
-                return false;
-            }
-        });
 
+        MarkerOptions marker=new MarkerOptions().position(new LatLng(p.getLant(), p.getLang())).title(p.getSubject());
+        map.addMarker(marker);
+        map.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(p.getLant(), p.getLang())));
+        map.setMyLocationEnabled(true);
     }
-    private void updatePost(int i) {
-        subjectEt.setText(allpost[i].getSubject());
+    private void updatePost() {
+        subjectEt.setText(p.getSubject());
         progressBar.setVisibility(View.GONE);
-        postTextEd.setText(allpost[i].getDetails());
+        postTextEd.setText(p.getDetails());
         postPhoto.setImageResource(R.drawable.win);
-        if(allpost[i].getImageUrl()!=null){
-            Picasso.get().load(allpost[i].getImageUrl()).into(postPhoto);
+        if(p.getImageUrl()!=null){
+            Picasso.get().load(p.getImageUrl()).into(postPhoto);
         }
     }
     @Override
