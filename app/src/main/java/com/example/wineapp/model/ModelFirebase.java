@@ -97,14 +97,14 @@ public class ModelFirebase {
         });
     }
 
-    public void uploadImage(Bitmap bitmap, String name, final Model.UploadImageListener listener){
+    public void uploadImage(Bitmap bitmap, String id_key, final Model.UploadImageListener listener){
         FirebaseStorage storage=FirebaseStorage.getInstance();
         final StorageReference imageRef;
-        if(name==null){
+        if(id_key==null){
             imageRef=storage.getReference().child("image"+counter);
             counter++;}
         else
-            imageRef=storage.getReference().child("image").child(name);
+            imageRef=storage.getReference().child("image").child(id_key);
         ByteArrayOutputStream baos =new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG,100,baos);
         byte[] data= baos.toByteArray();
