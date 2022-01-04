@@ -57,7 +57,7 @@
         tools:ignore="SpeakableTextPresentCheck" />
     <ProgressBar
         android:id="@+id/post_details_progressbar"
-        style="?android:attr/progressBarStyle"
+        style="@android:style/Widget.ProgressBar"
         android:layout_width="99dp"
         android:layout_height="95dp"
         app:layout_constraintBottom_toBottomOf="parent"

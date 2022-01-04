@@ -61,7 +61,7 @@
         app:layout_constraintTop_toBottomOf="@+id/sign_in_username_et" />
     <ProgressBar
         android:id="@+id/sign_in_progressbar"
-        style="?android:attr/progressBarStyle"
+        style="@android:style/Widget.ProgressBar"
         android:layout_width="99dp"
         android:layout_height="95dp"
         app:layout_constraintBottom_toBottomOf="parent"

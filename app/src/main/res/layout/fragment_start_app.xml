@@ -59,4 +59,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+
+    <ProgressBar
+        android:id="@+id/start_app_progressBar"
+        style="@android:style/Widget.ProgressBar"
+        android:layout_width="113dp"
+        android:layout_height="103dp"
+        android:isScrollContainer="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.492" />
 </androidx.constraintlayout.widget.ConstraintLayout>
