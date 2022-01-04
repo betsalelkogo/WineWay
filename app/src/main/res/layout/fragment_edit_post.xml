@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".EditPostFragment">
 
-    <ImageView
+    <com.google.android.material.imageview.ShapeableImageView
         android:id="@+id/edit_post_wineryPicture"
         android:layout_width="0dp"
         android:layout_height="176dp"
@@ -18,6 +18,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
+        android:adjustViewBounds="true"
+        app:shapeAppearanceOverlay="@style/roundimageview"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageButton

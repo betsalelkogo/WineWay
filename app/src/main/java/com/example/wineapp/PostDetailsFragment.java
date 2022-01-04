@@ -45,6 +45,7 @@ public class PostDetailsFragment extends Fragment implements OnMapReadyCallback 
         subjectEt=view.findViewById(R.id.post_details_cave_name_tv);
         details=view.findViewById(R.id.post_detail_tv);
         photo=view.findViewById(R.id.post_detail_wineryPicture);
+
         map=view.findViewById(R.id.post_details_map);
         progressBar=view.findViewById(R.id.post_details_progressbar);
         progressBar.setVisibility(View.VISIBLE);
