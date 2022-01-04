@@ -70,6 +70,9 @@
         <action
             android:id="@+id/action_startAppFragment_to_signInFragment"
             app:destination="@id/signInFragment" />
+        <action
+            android:id="@+id/action_startAppFragment_to_listPostFragment"
+            app:destination="@id/listPostFragment" />
     </fragment>
     <fragment
         android:id="@+id/registerFragment"

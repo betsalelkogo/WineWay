@@ -32,6 +32,7 @@ import android.widget.TextView;
 import com.example.wineapp.model.Model;
 import com.example.wineapp.model.Post;
 import com.example.wineapp.model.User;
+import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 
 
@@ -172,6 +173,7 @@ public class UserPageFragment extends Fragment {
             switch (item.getItemId()) {
                 case R.id.userPageLogout:
                     progressbar.setVisibility(View.VISIBLE);
+                    FirebaseAuth.getInstance().signOut();
                     Navigation.findNavController(view).navigate(R.id.action_userPageFragment_to_startAppFragment);
                     break;
                 case R.id.userPageAddPost:
