@@ -1,4 +1,4 @@
-package com.example.wineapp;
+package com.example.wineapp.UI;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,6 +16,9 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+
+import com.example.wineapp.MyApplication;
+import com.example.wineapp.R;
 import com.example.wineapp.model.Post;
 import com.example.wineapp.model.User;
 import com.google.android.gms.maps.CameraUpdateFactory;

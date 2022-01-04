@@ -1,4 +1,4 @@
-package com.example.wineapp;
+package com.example.wineapp.UI;
 
 import android.os.Bundle;
 
@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 
+import com.example.wineapp.R;
 import com.example.wineapp.model.Model;
 import com.example.wineapp.model.User;
 import com.google.firebase.auth.FirebaseAuth;

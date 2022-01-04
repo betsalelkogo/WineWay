@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/listPostFragment"
-        android:name="com.example.wineapp.ListPostFragment"
+        android:name="com.example.wineapp.UI.ListPostFragment"
         android:label="Post List"
         tools:layout="@layout/fragment_list_post">
         <action
@@ -25,7 +25,7 @@
     </fragment>
     <fragment
         android:id="@+id/userPageFragment"
-        android:name="com.example.wineapp.UserPageFragment"
+        android:name="com.example.wineapp.UI.UserPageFragment"
         android:label="User Home Page"
         tools:layout="@layout/fragment_user_page">
         <action
@@ -49,7 +49,7 @@
     </fragment>
     <fragment
         android:id="@+id/userAddPostFragment"
-        android:name="com.example.wineapp.UserAddPostFragment"
+        android:name="com.example.wineapp.UI.UserAddPostFragment"
         android:label="Add New Post"
         tools:layout="@layout/fragment_user_add_post" >
         <action
@@ -61,7 +61,7 @@
     </fragment>
     <fragment
         android:id="@+id/startAppFragment"
-        android:name="com.example.wineapp.StartAppFragment"
+        android:name="com.example.wineapp.UI.StartAppFragment"
         android:label="WineWay"
         tools:layout="@layout/fragment_start_app">
         <action
@@ -76,7 +76,7 @@
     </fragment>
     <fragment
         android:id="@+id/registerFragment"
-        android:name="com.example.wineapp.RegisterFragment"
+        android:name="com.example.wineapp.UI.RegisterFragment"
         android:label="WineWay Register"
         tools:layout="@layout/fragment_register">
         <action
@@ -85,7 +85,7 @@
     </fragment>
     <fragment
         android:id="@+id/signInFragment"
-        android:name="com.example.wineapp.SignInFragment"
+        android:name="com.example.wineapp.UI.SignInFragment"
         android:label="WineWay Sign In"
         tools:layout="@layout/fragment_sign_in">
         <action
@@ -94,7 +94,7 @@
     </fragment>
     <fragment
         android:id="@+id/editPostFragment"
-        android:name="com.example.wineapp.EditPostFragment"
+        android:name="com.example.wineapp.UI.EditPostFragment"
         android:label="Edit My Post"
         tools:layout="@layout/fragment_edit_post">
         <action
@@ -112,7 +112,7 @@
     </fragment>
     <fragment
         android:id="@+id/postDetailsFragment"
-        android:name="com.example.wineapp.PostDetailsFragment"
+        android:name="com.example.wineapp.UI.PostDetailsFragment"
         android:label="Post details"
         tools:layout="@layout/fragment_post_details">
         <argument
@@ -124,7 +124,7 @@
     </fragment>
     <fragment
         android:id="@+id/mapFragment"
-        android:name="com.example.wineapp.MapFragment"
+        android:name="com.example.wineapp.UI.MapFragment"
         android:label="Map "
         tools:layout="@layout/fragment_map">
         <action

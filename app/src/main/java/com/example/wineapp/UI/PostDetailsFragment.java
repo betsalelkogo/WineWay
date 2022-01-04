@@ -1,4 +1,4 @@
-package com.example.wineapp;
+package com.example.wineapp.UI;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -14,6 +14,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.wineapp.MyApplication;
+import com.example.wineapp.R;
 import com.example.wineapp.model.Constants;
 import com.example.wineapp.model.Post;
 import com.google.android.gms.maps.CameraUpdateFactory;

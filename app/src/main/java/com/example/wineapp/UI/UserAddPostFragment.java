@@ -1,4 +1,4 @@
-package com.example.wineapp;
+package com.example.wineapp.UI;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -25,6 +25,8 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.wineapp.MyApplication;
+import com.example.wineapp.R;
 import com.example.wineapp.model.Constants;
 import com.example.wineapp.model.Model;
 import com.example.wineapp.model.Post;

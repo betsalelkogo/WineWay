@@ -1,4 +1,4 @@
-package com.example.wineapp;
+package com.example.wineapp.UI;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -18,6 +18,8 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 
+import com.example.wineapp.MyApplication;
+import com.example.wineapp.R;
 import com.example.wineapp.model.Model;
 import com.example.wineapp.model.User;
 import com.google.android.gms.tasks.OnCompleteListener;
