@@ -30,7 +30,11 @@ public class StartAppFragment extends Fragment {
         progressBar=view.findViewById(R.id.start_app_progressBar);
         progressBar.setVisibility(View.GONE);
         user= FirebaseAuth.getInstance().getCurrentUser();
+        registerBtn= view.findViewById(R.id.start_app_register_btn);
+        signInBtn = view.findViewById(R.id.start_app_signin_btn);
         if (user != null) {
+            registerBtn.setEnabled(false);
+            signInBtn.setEnabled(false);
             progressBar.setVisibility(View.VISIBLE);
             Model.instance.getUserByEmail(user.getEmail(), new Model.GetUserByEmailListener() {
                 @Override
@@ -40,8 +44,6 @@ public class StartAppFragment extends Fragment {
                 }
             });
         }
-        registerBtn= view.findViewById(R.id.start_app_register_btn);
-        signInBtn = view.findViewById(R.id.start_app_signin_btn);
         registerBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

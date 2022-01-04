@@ -31,7 +31,6 @@ public class MapFragment extends Fragment {
     View view;
     User user;
     Post[] allpost;
-    ProgressBar progressBar;
     MapFragmentDirections.ActionMapFragmentToUserPageFragment action1;
     MapFragmentDirections.ActionMapFragmentToListPostFragment action;
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
@@ -68,12 +67,12 @@ public class MapFragment extends Fragment {
                 LatLng latlang = new LatLng(allpost[0].getLant(),allpost[0].getLang());
                 googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latlang,7.5F));
             }
-            progressBar.setVisibility(View.GONE);
+
         }
     };
 
     private void PostDetails(int i) {
-        progressBar.setVisibility(View.VISIBLE);
+
         MapFragmentDirections.ActionMapFragmentToPostDetailsFragment action=MapFragmentDirections.actionMapFragmentToPostDetailsFragment(allpost[i]);
         Navigation.findNavController(view).navigate(action);
     }
@@ -84,8 +83,6 @@ public class MapFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         view=inflater.inflate(R.layout.fragment_map, container, false);
-        progressBar=view.findViewById(R.id.map_progressBar);
-        progressBar.setVisibility(View.VISIBLE);
         allpost=MapFragmentArgs.fromBundle(getArguments()).getListPost();
         user= MapFragmentArgs.fromBundle(getArguments()).getUser();
         marker= new MarkerOptions[allpost.length];
@@ -115,11 +112,11 @@ public class MapFragment extends Fragment {
         if (!super.onOptionsItemSelected(item)) {
             switch (item.getItemId()) {
                 case R.id.userPage:
-                    progressBar.setVisibility(View.VISIBLE);
+
                     Navigation.findNavController(view).navigate(action1);
                     break;
                 case R.id.post_list:
-                    progressBar.setVisibility(View.VISIBLE);
+
                     Navigation.findNavController(view).navigate(action);
                     break;
                 default:
