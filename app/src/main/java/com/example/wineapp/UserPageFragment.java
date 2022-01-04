@@ -2,7 +2,6 @@ package com.example.wineapp;
 
 import static android.app.Activity.RESULT_OK;
 
-import android.app.MediaRouteButton;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -17,7 +16,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -29,6 +27,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.example.wineapp.model.Constants;
 import com.example.wineapp.model.Model;
 import com.example.wineapp.model.Post;
 import com.example.wineapp.model.User;
@@ -41,7 +40,6 @@ import java.util.List;
 
 
 public class UserPageFragment extends Fragment {
-    private static final int REQUEST_IMAGE_CAPTURE = 1;
     List<Post> alldata= new LinkedList<>();
     List<Post> data= null;
     View view;
@@ -135,13 +133,13 @@ public class UserPageFragment extends Fragment {
     private void editPhoto() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            startActivityForResult(takePictureIntent, Constants.REQUEST_IMAGE_CAPTURE);
         }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+        if (requestCode == Constants.REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             userImage.setImageBitmap(imageBitmap);

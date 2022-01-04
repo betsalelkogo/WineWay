@@ -39,7 +39,6 @@ public class RegisterFragment extends Fragment {
         progressBar=view.findViewById(R.id.register_progressbar);
         progressBar.setVisibility(View.GONE);
         mAuth = FirebaseAuth.getInstance();
-
         signUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

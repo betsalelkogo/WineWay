@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 
@@ -15,22 +14,17 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.example.wineapp.model.Model;
+import com.example.wineapp.model.Constants;
 import com.example.wineapp.model.Post;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.picasso.Picasso;
 
-import java.util.LinkedList;
-import java.util.List;
-
 public class PostDetailsFragment extends Fragment implements OnMapReadyCallback {
-    private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
     Post p;
     TextView subjectEt, details;
     ImageView photo;
@@ -45,7 +39,6 @@ public class PostDetailsFragment extends Fragment implements OnMapReadyCallback 
         subjectEt=view.findViewById(R.id.post_details_cave_name_tv);
         details=view.findViewById(R.id.post_detail_tv);
         photo=view.findViewById(R.id.post_detail_wineryPicture);
-
         map=view.findViewById(R.id.post_details_map);
         progressBar=view.findViewById(R.id.post_details_progressbar);
         progressBar.setVisibility(View.VISIBLE);
@@ -57,16 +50,12 @@ public class PostDetailsFragment extends Fragment implements OnMapReadyCallback 
         return view;
     }
     private void InitialGoogleMap(Bundle savedInstanceState) {
-        // *** IMPORTANT ***
-        // MapView requires that the Bundle you pass contain _ONLY_ MapView SDK
-        // objects or sub-Bundles.
         Bundle mapViewBundle = null;
         if (savedInstanceState != null) {
-            mapViewBundle = savedInstanceState.getBundle(MAPVIEW_BUNDLE_KEY);
+            mapViewBundle = savedInstanceState.getBundle(Constants.MAPVIEW_BUNDLE_KEY);
         }
         map.onCreate(mapViewBundle);
         map.getMapAsync(this);
-
     }
     private void updateDisplay() {
         progressBar.setVisibility(View.GONE);
@@ -80,10 +69,10 @@ public class PostDetailsFragment extends Fragment implements OnMapReadyCallback 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        Bundle mapViewBundle = outState.getBundle(MAPVIEW_BUNDLE_KEY);
+        Bundle mapViewBundle = outState.getBundle(Constants.MAPVIEW_BUNDLE_KEY);
         if (mapViewBundle == null) {
             mapViewBundle = new Bundle();
-            outState.putBundle(MAPVIEW_BUNDLE_KEY, mapViewBundle);
+            outState.putBundle(Constants.MAPVIEW_BUNDLE_KEY, mapViewBundle);
         }
         map.onSaveInstanceState(mapViewBundle);
     }

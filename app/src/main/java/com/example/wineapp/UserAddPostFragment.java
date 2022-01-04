@@ -3,13 +3,10 @@ package com.example.wineapp;
 import static android.app.Activity.RESULT_OK;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
-import android.location.Location;
-import android.location.LocationManager;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -18,7 +15,6 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.wineapp.model.Constants;
 import com.example.wineapp.model.Model;
 import com.example.wineapp.model.Post;
 import com.example.wineapp.model.User;
@@ -39,13 +36,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.LinkedList;
-import java.util.List;
-
 
 public class UserAddPostFragment extends Fragment implements OnMapReadyCallback {
-    private static final int REQUEST_IMAGE_CAPTURE = 1;
-    private static final String MAPVIEW_BUNDLE_KEY = "MapViewBundleKey";
     View view;
     EditText postEt, subjectEt;
     Button cancelBtn,sendBtn;
@@ -107,7 +99,7 @@ public class UserAddPostFragment extends Fragment implements OnMapReadyCallback 
         // objects or sub-Bundles.
         Bundle mapViewBundle = null;
         if (savedInstanceState != null) {
-            mapViewBundle = savedInstanceState.getBundle(MAPVIEW_BUNDLE_KEY);
+            mapViewBundle = savedInstanceState.getBundle(Constants.MAPVIEW_BUNDLE_KEY);
         }
         map.onCreate(mapViewBundle);
 
@@ -117,13 +109,13 @@ public class UserAddPostFragment extends Fragment implements OnMapReadyCallback 
     private void editPhoto() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+            startActivityForResult(takePictureIntent, Constants.REQUEST_IMAGE_CAPTURE);
         }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+        if (requestCode == Constants.REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             postPhoto.setImageBitmap(imageBitmap);
@@ -163,10 +155,10 @@ public class UserAddPostFragment extends Fragment implements OnMapReadyCallback 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        Bundle mapViewBundle = outState.getBundle(MAPVIEW_BUNDLE_KEY);
+        Bundle mapViewBundle = outState.getBundle(Constants.MAPVIEW_BUNDLE_KEY);
         if (mapViewBundle == null) {
             mapViewBundle = new Bundle();
-            outState.putBundle(MAPVIEW_BUNDLE_KEY, mapViewBundle);
+            outState.putBundle(Constants.MAPVIEW_BUNDLE_KEY, mapViewBundle);
         }
 
         map.onSaveInstanceState(mapViewBundle);

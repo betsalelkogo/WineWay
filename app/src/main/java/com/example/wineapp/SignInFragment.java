@@ -62,7 +62,6 @@ public class SignInFragment extends Fragment {
     }
 
     private void validateUser() {
-
         mAuth.signInWithEmailAndPassword(email.getText().toString(), password.getText().toString())
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override

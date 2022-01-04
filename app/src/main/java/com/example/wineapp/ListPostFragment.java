@@ -46,15 +46,12 @@ public class ListPostFragment extends Fragment {
         progressBar= view.findViewById(R.id.list_post_progressbar);
         progressBar.setVisibility(View.VISIBLE);
         swipeRefresh=view.findViewById(R.id.winelist_swipe_refresh);
-
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 refreshData();
             }
         });
-
-
         RecyclerView list = view.findViewById(R.id.winelist_list_rv);
         list.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());

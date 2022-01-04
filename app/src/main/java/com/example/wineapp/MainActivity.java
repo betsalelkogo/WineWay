@@ -60,34 +60,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             // Location
             case 123: {
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-
                 }
                 break;
             }
         }
     }
-
-//    private void getLastKnownLocation() {
-//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) !=
-//                PackageManager.PERMISSION_GRANTED &&
-//                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) !=
-//                        PackageManager.PERMISSION_GRANTED) {
-//            return;
-//        }
-//        fusedLocationProviderClient.getLastLocation().addOnCompleteListener(new OnCompleteListener<Location>() {
-//            @Override
-//            public void onComplete(@NonNull Task<Location> task) {
-//                if(task.isSuccessful()){
-//                    Location location=task.getResult();
-//                    GeoPoint geoPoint=new GeoPoint(location.getLatitude(),location.getLongitude());
-//
-//                }
-//            }
-//        });
-//    }
 }
