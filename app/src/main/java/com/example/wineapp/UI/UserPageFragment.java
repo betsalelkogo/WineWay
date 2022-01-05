@@ -7,16 +7,6 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.Navigation;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -29,6 +19,17 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.example.wineapp.OnItemClickListener;
 import com.example.wineapp.R;
 import com.example.wineapp.model.Constants;
@@ -37,7 +38,6 @@ import com.example.wineapp.model.Post;
 import com.example.wineapp.model.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
-
 
 import java.util.LinkedList;
 import java.util.List;
@@ -110,6 +110,18 @@ public class UserPageFragment extends Fragment {
         return view;
 
     }
+
+    public class UserPageViewModel extends ViewModel
+    {
+        LiveData<List<User>> data;
+        User user;
+        public LiveData<List<User>> getData()
+        {
+            return data;
+        }
+
+    }
+
     private void updateUserPage() {
         userName.setText(user.getName());
         email.setText(user.getEmail());
