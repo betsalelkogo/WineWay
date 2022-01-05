@@ -61,6 +61,13 @@ public class Model {
         });
     }
 
+    public void addUser(User user, AddUserListener listener){
+        modelFirebase.addUser(user, () ->{
+            listener.onComplete();
+        });
+
+    }
+
     public void getPostByName(String postId,GetPostByNameListener listener) {
         MyApplication.executorService.execute(()->{
             Post p = AppLocalDB.db.postDao().getPostByName(postId);
@@ -75,15 +82,7 @@ public class Model {
             listener.onComplete();
         });
     }
-    public void addUser(User user, AddUserListener listener){
-       modelFirebase.addUser(user,listener);
-//        MyApplication.executorService.execute(()->{
-//            AppLocalDB.db.userDao().insertAll(user);
-//            MyApplication.mainHandler.post(()->{
-//                listener.onComplete();
-//            });
-//        });
-    }
+
     public void getUserByEmail(String userEmail,GetUserByEmailListener listener) {
         modelFirebase.getUserByEmail(userEmail,listener);
 //        MyApplication.executorService.execute(()->{

@@ -2,7 +2,6 @@ package com.example.wineapp.model;
 
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.net.sip.SipSession;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -104,6 +103,27 @@ public class ModelFirebase {
         });
     }
 
+    public void getUserByEmail(String userEmail, Model.GetUserByEmailListener listener) {
+        DocumentReference docRef = db.collection("users").document(userEmail);
+        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        User u = User.fromJson(document.getData());
+                        listener.onComplete(u);
+                    } else {
+                        listener.onComplete(null);
+                    }
+                } else {
+                    Log.d("TAG", "get failed with ", task.getException());
+                    listener.onComplete(null);
+                }
+            }
+        });
+    }
+
     public void uploadImage(Bitmap bitmap, String id_key, final Model.UploadImageListener listener){
         FirebaseStorage storage=FirebaseStorage.getInstance();
         final StorageReference imageRef;
@@ -187,25 +207,6 @@ public class ModelFirebase {
                 });
     }
 
-    public void getUserByEmail(String userEmail, Model.GetUserByEmailListener listener) {
-        DocumentReference docRef = db.collection("users").document(userEmail);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        User u = User.fromJson(document.getData());
-                        listener.onComplete(u);
-                    } else {
-                        listener.onComplete(null);
-                    }
-                } else {
-                    Log.d("TAG", "get failed with ", task.getException());
-                    listener.onComplete(null);
-                }
-            }
-        });
-    }
+
 
 }

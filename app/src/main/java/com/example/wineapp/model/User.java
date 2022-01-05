@@ -18,6 +18,7 @@ public class User implements Parcelable {
     private String password;
     private String email;
     private String imageUrl;
+
     public User(String name,String password,String email,String imageUrl){
         this.name=name;
         this.password=password;
@@ -46,16 +47,21 @@ public class User implements Parcelable {
     };
 
     public String getName(){return this.name;}
+
     public void setName(String name){this.name=name;}
+
     public String getEmail() {
         return this.email;
     }
+
     public void setPassword(String password) {
         this.password = password;
     }
+
     public String getPassword() {
         return password;
     }
+
     public void setEmail(String email) {
         this.email=email;
     }
@@ -95,10 +101,10 @@ public class User implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(name);
-        dest.writeString(password);
-        dest.writeString(email);
-        dest.writeString(imageUrl);
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(name);
+        parcel.writeString(password);
+        parcel.writeString(email);
+        parcel.writeString(imageUrl);
     }
 }
