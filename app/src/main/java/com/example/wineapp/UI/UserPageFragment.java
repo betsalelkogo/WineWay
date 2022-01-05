@@ -119,7 +119,12 @@ public class UserPageFragment extends Fragment {
         {
             return data;
         }
-
+        
+        public void setUser(User user)
+        {
+            this.user = user;
+            data = Model.instance.getUserByEmail(this.user.getEmail());
+        }
     }
 
     private void updateUserPage() {
