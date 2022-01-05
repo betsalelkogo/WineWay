@@ -1,6 +1,7 @@
 package com.example.wineapp.UI;
 
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -14,6 +15,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -31,7 +34,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class ListPostFragment extends Fragment {
-    List<Post> data=new LinkedList<>();
+    ListPostFragmentViewModel viewModel;
     View view;
     MyAdapter adapter;
     User user;
@@ -41,17 +44,25 @@ public class ListPostFragment extends Fragment {
     ListPostFragmentDirections.ActionListPostFragmentToUserPageFragment action1;
     ListPostFragmentDirections.ActionListPostFragmentToMapFragment action11;
     @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        viewModel = new ViewModelProvider(this).get(ListPostFragmentViewModel.class);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_list_post, container, false);
         user=ListPostFragmentArgs.fromBundle(getArguments()).getUser();
         progressBar= view.findViewById(R.id.list_post_progressbar);
-        progressBar.setVisibility(View.VISIBLE);
+        progressBar.setVisibility(View.GONE);
         swipeRefresh=view.findViewById(R.id.winelist_swipe_refresh);
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                refreshData();
+                swipeRefresh.setRefreshing(true);
+                Model.instance.reloadPostsList();
+                swipeRefresh.setRefreshing(false);
             }
         });
         RecyclerView list = view.findViewById(R.id.winelist_list_rv);
@@ -66,28 +77,21 @@ public class ListPostFragment extends Fragment {
             @Override
             public void onItemClick(int position, View v) {
                 progressBar.setVisibility(View.VISIBLE);
-                Post p = data.get(position);
+                Post p = viewModel.getData().getValue().get(position);
                 ListPostFragmentDirections.ActionListPostFragmentToPostDetailsFragment action = ListPostFragmentDirections.actionListPostFragmentToPostDetailsFragment(p);
                 Navigation.findNavController(v).navigate(action);
             }
         });
         setHasOptionsMenu(true);
-        refreshData();
-        return view;
-    }
-    private void refreshData() {
-        Model.instance.getAllPosts(new Model.GetAllPostsListener(){
+        viewModel.getData().observe(getViewLifecycleOwner(), new Observer<List<Post>>() {
             @Override
-            public void onComplete(List<Post> p) {
-                data = p;
+            public void onChanged(List<Post> posts) {
                 adapter.notifyDataSetChanged();
-                progressBar.setVisibility(View.GONE);
-                if (swipeRefresh.isRefreshing()) {
-                    swipeRefresh.setRefreshing(false);
-                }
             }
         });
+        return view;
     }
+
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
@@ -104,7 +108,7 @@ public class ListPostFragment extends Fragment {
                     Navigation.findNavController(view).navigate(action1);
                     break;
                 case R.id.map_list:
-                    posts=data.toArray(new Post[data.size()]);
+                    posts=viewModel.getData().getValue().toArray(new Post[viewModel.getData().getValue().size()]);
                     action11=ListPostFragmentDirections.actionListPostFragmentToMapFragment(posts,user);
                     progressBar.setVisibility(View.VISIBLE);
                     Navigation.findNavController(view).navigate(action11);
@@ -135,7 +139,7 @@ public class ListPostFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            Post p = data.get(position);
+            Post p = viewModel.getData().getValue().get(position);
             holder.nameTv.setText(p.getSubject());
             holder.detailsTv.setText(p.getDetails());
             holder.imageView.setImageResource(R.drawable.win);
@@ -146,7 +150,8 @@ public class ListPostFragment extends Fragment {
 
         @Override
         public int getItemCount() {
-            return data.size();
+            if (viewModel.getData().getValue() == null) return 0;
+            return viewModel.getData().getValue().size();
         }
     }
 

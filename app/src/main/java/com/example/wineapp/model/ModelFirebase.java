@@ -14,6 +14,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
@@ -26,23 +27,29 @@ import java.util.LinkedList;
 public class ModelFirebase {
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     static int counter=0;
-    public void getAllPosts(Model.GetAllPostsListener listener) {
+    public ModelFirebase(){
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setPersistenceEnabled(true)
+                .build();
+        db.setFirestoreSettings(settings);
+    }
+    public void getAllPosts(Long since,Model.GetAllPostsListener listener) {
         db.collection("posts").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                LinkedList<Post> studentsList = new LinkedList<Post>();
+                LinkedList<Post> postList = new LinkedList<Post>();
                 if(task.isSuccessful()){
                     for (QueryDocumentSnapshot doc: task.getResult()){
                         Post p = Post.fromJson(doc.getData());
                         p.setId_key(doc.getId());
                         if (p != null) {
-                            studentsList.add(p);
+                            postList.add(p);
                         }
                     }
                 }else{
 
                 }
-                listener.onComplete(studentsList);
+                listener.onComplete(postList);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -127,7 +134,6 @@ public class ModelFirebase {
         });
 
     }
-
     public void deletePost(Post post,Model.DeletePostListener listener) {
         db.collection("posts").document(post.getId_key())
                 .delete()
@@ -202,20 +208,4 @@ public class ModelFirebase {
         });
     }
 
-    public void deleteUser(User user, Model.DeleteUserListener listener) {
-        db.collection("users").document(user.getName())
-                .delete()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        listener.onComplete();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-
-                    }
-                });
-    }
 }

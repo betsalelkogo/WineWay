@@ -2,77 +2,78 @@ package com.example.wineapp.model;
 
 import android.graphics.Bitmap;
 
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
+import com.example.wineapp.MyApplication;
+
 import java.util.List;
 
 public class Model {
     static final public Model instance = new Model();
+    MutableLiveData<List<Post>> postsListLd = new MutableLiveData<List<Post>>();
     ModelFirebase modelFirebase = new ModelFirebase();
-    private  Model(){}
-    public interface GetAllPostsListener{
-        void onComplete(List<Post> data);
+    private  Model(){
+        reloadPostsList();
     }
-    public void getAllPosts(GetAllPostsListener listener){
-        modelFirebase.getAllPosts(listener);
-//        MyApplication.executorService.execute(()->{
-//            List<Post> data = AppLocalDB.db.postDao().getAll();
-//            MyApplication.mainHandler.post(()->{
-//                listener.onComplete(data);
-//            });
-//        });
+    public LiveData<List<Post>> getAll() {
+        return postsListLd;
+    }
+    public void reloadPostsList() {
+        //1. get local last update
+        Long localLastUpdate = Post.getLocalLastUpdated();
+        //2. get all students record since local last update from firebase
+        modelFirebase.getAllPosts(localLastUpdate,(list)->{
+            if(list !=null){
+                MyApplication.executorService.execute(()->{
+                    //3. update local last update date
+                    //4. add new records to the local db
+                    Long lLastUpdate = new Long(0);
+                    for(Post p : list){
+                        if(!p.isDeleted()) {
+                            AppLocalDB.db.postDao().insertAll(p);
+                        }
+                        else {
+                            AppLocalDB.db.postDao().delete(p);
+                        }
+                        if (p.getLastUpdated() > lLastUpdate){
+                            lLastUpdate = p.getLastUpdated();
+                        }
+                    }
+                    Post.setLocalLastUpdated(lLastUpdate);
+                    //5. return all records to the caller
+                    List<Post> stList = AppLocalDB.db.postDao().getAll();
+                    for (Post p: stList){
+                        if(p.isDeleted()){
+                            AppLocalDB.db.postDao().delete(p);
+                        }
+                    }
+                    postsListLd.postValue(stList);
+                });
+            }
+        });
     }
 
-    public interface AddPostListener{
-        void onComplete();
-    }
     public void addPost(Post post, AddPostListener listener){
-        modelFirebase.addPost(post,listener);
-//        MyApplication.executorService.execute(()->{
-//            AppLocalDB.db.postDao().insertAll(post);
-//            MyApplication.mainHandler.post(()->{
-//                listener.onComplete();
-//            });
-//        });
+        modelFirebase.addPost(post,()->{
+            reloadPostsList();
+            listener.onComplete();
+        });
     }
 
-    public interface GetPostByNameListener{
-        void onComplete(Post post);
-    }
     public void getPostByName(String postId,GetPostByNameListener listener) {
-        modelFirebase.getPostByName(postId,listener);
-//        MyApplication.executorService.execute(()->{
-//            Post post = AppLocalDB.db.postDao().getPostByName(postId);
-//            MyApplication.mainHandler.post(()->{
-//                listener.onComplete(post);
-//            });
-//        });
-    }
-    public interface DeletePostListener{
-        void onComplete();
+        MyApplication.executorService.execute(()->{
+            Post p = AppLocalDB.db.postDao().getPostByName(postId);
+            MyApplication.mainHandler.post(()->{
+                listener.onComplete(p);
+            });
+        });
     }
     public void DeletePost(Post post, DeletePostListener listener){
-        modelFirebase.deletePost(post,listener);
-//        MyApplication.executorService.execute(()->{
-//            AppLocalDB.db.postDao().delete(post);
-//            MyApplication.mainHandler.post(()->{
-//                listener.onComplete();
-//            });
-//        });
-    }
-    public interface GetAllUserListener{
-        void onComplete(List<User> data);
-    }
-    public void getAllUser(GetAllUserListener listener){
-        modelFirebase.getAllUser(listener);
-//        MyApplication.executorService.execute(()->{
-//            List<User> data = AppLocalDB.db.userDao().getAll();
-//            MyApplication.mainHandler.post(()->{
-//                listener.onComplete(data);
-//            });
-//        });
-    }
-
-    public interface AddUserListener{
-        void onComplete();
+        post.setDeleted(true);
+        addPost(post,()->{
+            listener.onComplete();
+        });
     }
     public void addUser(User user, AddUserListener listener){
        modelFirebase.addUser(user,listener);
@@ -83,10 +84,6 @@ public class Model {
 //            });
 //        });
     }
-
-    public interface GetUserByEmailListener{
-        void onComplete(User user);
-    }
     public void getUserByEmail(String userEmail,GetUserByEmailListener listener) {
         modelFirebase.getUserByEmail(userEmail,listener);
 //        MyApplication.executorService.execute(()->{
@@ -96,22 +93,31 @@ public class Model {
 //            });
 //        });
     }
-    public interface DeleteUserListener{
-        void onComplete();
-    }
-    public void DeleteUser(User user, DeleteUserListener listener){
-        modelFirebase.deleteUser(user,listener);
-//        MyApplication.executorService.execute(()->{
-//            AppLocalDB.db.userDao().delete(user);
-//            MyApplication.mainHandler.post(()->{
-//                listener.onComplete();
-//            });
-//        });
-    }
-    public interface UploadImageListener{
-        public void onComplete(String url);
-    }
     public void uploadImage(Bitmap bitmap, String name, final UploadImageListener listener){
         modelFirebase.uploadImage(bitmap,name,listener);
+    }
+    public interface UploadImageListener{
+        void onComplete(String url);
+    }
+    public interface GetAllPostsListener{
+        void onComplete(List<Post> data);
+    }
+    public interface GetUserByEmailListener{
+        void onComplete(User user);
+    }
+    public interface AddPostListener{
+        void onComplete();
+    }
+    public interface AddUserListener{
+        void onComplete();
+    }
+    public interface GetAllUserListener{
+        void onComplete(List<User> data);
+    }
+    public interface GetPostByNameListener{
+        void onComplete(Post post);
+    }
+    public interface DeletePostListener{
+        void onComplete();
     }
 }

@@ -1,17 +1,25 @@
 package com.example.wineapp.model;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+
+import com.example.wineapp.MyApplication;
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.FieldValue;
 
 import java.util.HashMap;
 import java.util.Map;
 
 @Entity
 public class Post implements Parcelable{
+    public final static String LAST_UPDATED = "LAST_UPDATE";
     @PrimaryKey
     @NonNull
     private String id_key=null;
@@ -21,6 +29,8 @@ public class Post implements Parcelable{
     private String imageUrl;
     private double lang;
     private double lant;
+    private boolean isDeleted;
+    private Long lastUpdated = new Long(0);
 
     public Post(String name,String details,String subject,String imageUrl,double lang,double lant){
         this.name=name;
@@ -29,12 +39,11 @@ public class Post implements Parcelable{
         this.imageUrl=imageUrl;
         this.lang=lang;
         this.lant=lant;
+        this.isDeleted=false;
     }
-
 
     public Post() {
     }
-
 
     protected Post(Parcel in) {
         id_key = in.readString();
@@ -44,6 +53,12 @@ public class Post implements Parcelable{
         imageUrl = in.readString();
         lang = in.readDouble();
         lant = in.readDouble();
+        isDeleted = in.readByte() != 0;
+        if (in.readByte() == 0) {
+            lastUpdated = null;
+        } else {
+            lastUpdated = in.readLong();
+        }
     }
 
     public static final Creator<Post> CREATOR = new Creator<Post>() {
@@ -90,6 +105,8 @@ public class Post implements Parcelable{
         json.put("imageUrl", getImageUrl());
         json.put("lant", getLant());
         json.put("lang", getLang());
+        json.put("isDeleted", isDeleted());
+        json.put(LAST_UPDATED, FieldValue.serverTimestamp());
         return json;
     }
 
@@ -105,10 +122,25 @@ public class Post implements Parcelable{
         String imageUrl = (String)json.get("imageUrl");
         double lang = (double)json.get("lang");
         double lant = (double)json.get("lant");
+        boolean isDeleted = (boolean)json.get("isDeleted");
         Post p = new Post(name,details,subject,imageUrl,lang,lant);
+        p.setDeleted(isDeleted);
+        Timestamp ts = (Timestamp)json.get(LAST_UPDATED);
+        p.setLastUpdated(new Long(ts.getSeconds()));
         return p;
     }
+    static Long getLocalLastUpdated(){
+        Long localLastUpdate = MyApplication.getContext().getSharedPreferences("TAG", Context.MODE_PRIVATE)
+                .getLong("POSTS_LAST_UPDATE",0);
+        return localLastUpdate;
+    }
 
+    static void setLocalLastUpdated(Long date){
+        SharedPreferences.Editor editor = MyApplication.getContext()
+                .getSharedPreferences("TAG", Context.MODE_PRIVATE).edit();
+        editor.putLong("POSTS_LAST_UPDATE",date);
+        editor.commit();
+    }
     public double getLang() {
         return lang;
     }
@@ -125,19 +157,42 @@ public class Post implements Parcelable{
         this.lant = lant;
     }
 
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
+    }
+
+    public Long getLastUpdated() {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated(Long lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
+
     @Override
     public int describeContents() {
         return 0;
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id_key);
-        dest.writeString(subject);
-        dest.writeString(details);
-        dest.writeString(name);
-        dest.writeString(imageUrl);
-        dest.writeDouble(lang);
-        dest.writeDouble(lant);
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(id_key);
+        parcel.writeString(subject);
+        parcel.writeString(details);
+        parcel.writeString(name);
+        parcel.writeString(imageUrl);
+        parcel.writeDouble(lang);
+        parcel.writeDouble(lant);
+        parcel.writeByte((byte) (isDeleted ? 1 : 0));
+        if (lastUpdated == null) {
+            parcel.writeByte((byte) 0);
+        } else {
+            parcel.writeByte((byte) 1);
+            parcel.writeLong(lastUpdated);
+        }
     }
 }

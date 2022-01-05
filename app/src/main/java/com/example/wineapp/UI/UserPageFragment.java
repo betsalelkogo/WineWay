@@ -2,6 +2,7 @@ package com.example.wineapp.UI;
 
 import static android.app.Activity.RESULT_OK;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -42,6 +44,7 @@ import java.util.List;
 
 
 public class UserPageFragment extends Fragment {
+    ListPostFragmentViewModel viewModel;
     List<Post> alldata= new LinkedList<>();
     List<Post> data= null;
     View view;
@@ -53,6 +56,11 @@ public class UserPageFragment extends Fragment {
     SwipeRefreshLayout swipeRefresh;
     ImageButton photoUser;
     ImageView userImage;
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        viewModel = new ViewModelProvider(this).get(ListPostFragmentViewModel.class);
+    }
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -112,18 +120,13 @@ public class UserPageFragment extends Fragment {
         }
     }
     private void refreshData() {
-        Model.instance.getAllPosts(new Model.GetAllPostsListener(){
-            @Override
-            public void onComplete(List<Post> p) {
-                alldata = p;
-                adapter.notifyDataSetChanged();
-                Filter();
-                progressbar.setVisibility(View.GONE);
-                if (swipeRefresh.isRefreshing()) {
-                    swipeRefresh.setRefreshing(false);
-                }
-            }
-        });
+        alldata=viewModel.getData().getValue();
+        adapter.notifyDataSetChanged();
+        Filter();
+        progressbar.setVisibility(View.GONE);
+        if (swipeRefresh.isRefreshing()) {
+            swipeRefresh.setRefreshing(false);
+        }
     }
     private void Filter(){
         data=new LinkedList<>();
