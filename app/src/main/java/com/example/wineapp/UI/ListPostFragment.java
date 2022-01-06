@@ -38,7 +38,6 @@ public class ListPostFragment extends Fragment {
     View view;
     MyAdapter adapter;
     User user;
-    Post[] posts;
     ProgressBar progressBar;
     SwipeRefreshLayout swipeRefresh;
     ListPostFragmentDirections.ActionListPostFragmentToUserPageFragment action1;
@@ -108,8 +107,7 @@ public class ListPostFragment extends Fragment {
                     Navigation.findNavController(view).navigate(action1);
                     break;
                 case R.id.map_list:
-                    posts=viewModel.getData().getValue().toArray(new Post[viewModel.getData().getValue().size()]);
-                    action11=ListPostFragmentDirections.actionListPostFragmentToMapFragment(posts,user);
+                    action11=ListPostFragmentDirections.actionListPostFragmentToMapFragment(user);
                     progressBar.setVisibility(View.VISIBLE);
                     Navigation.findNavController(view).navigate(action11);
                     break;

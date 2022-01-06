@@ -137,9 +137,6 @@
             android:id="@+id/action_mapFragment_to_userPageFragment"
             app:destination="@id/userPageFragment" />
         <argument
-            android:name="listPost"
-            app:argType="com.example.wineapp.model.Post[]" />
-        <argument
             android:name="user"
             app:argType="com.example.wineapp.model.User" />
     </fragment>

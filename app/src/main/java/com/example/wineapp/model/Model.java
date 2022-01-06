@@ -68,13 +68,8 @@ public class Model {
 
     }
 
-    public void getPostByName(String postId,GetPostByNameListener listener) {
-        MyApplication.executorService.execute(()->{
-            Post p = AppLocalDB.db.postDao().getPostByName(postId);
-            MyApplication.mainHandler.post(()->{
-                listener.onComplete(p);
-            });
-        });
+    public LiveData<List<Post>> getPostByName(String postName) {
+        return postsListLd;
     }
     public void DeletePost(Post post, DeletePostListener listener){
         post.setDeleted(true);

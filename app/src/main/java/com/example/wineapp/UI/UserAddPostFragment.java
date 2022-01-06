@@ -91,7 +91,6 @@ public class UserAddPostFragment extends Fragment implements OnMapReadyCallback 
         });
         InitialGoogleMap(savedInstanceState);
         setHasOptionsMenu(true);
-
         return view;
     }
 

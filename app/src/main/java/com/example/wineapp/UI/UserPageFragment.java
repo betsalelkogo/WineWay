@@ -22,6 +22,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
@@ -44,8 +45,7 @@ import java.util.List;
 
 
 public class UserPageFragment extends Fragment {
-    ListPostFragmentViewModel viewModel;
-    List<Post> alldata= new LinkedList<>();
+    UserPageFragmentViewModel viewModel;
     List<Post> data= null;
     View view;
     Adapter adapter;
@@ -59,7 +59,7 @@ public class UserPageFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        viewModel = new ViewModelProvider(this).get(ListPostFragmentViewModel.class);
+        viewModel = new ViewModelProvider(this).get(UserPageFragmentViewModel.class);
     }
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -102,31 +102,19 @@ public class UserPageFragment extends Fragment {
                 Navigation.findNavController(v).navigate(action);
             }
         });
-
         updateUserPage();
         setHasOptionsMenu(true);
         action=UserPageFragmentDirections.actionUserPageFragmentToUserAddPostFragment(user);
         refreshData();
+        viewModel.getData().observe(getViewLifecycleOwner(), new Observer<List<Post>>() {
+            @Override
+            public void onChanged(List<Post> posts) {
+                adapter.notifyDataSetChanged();
+            }
+        });
         return view;
 
     }
-
-    public class UserPageViewModel extends ViewModel
-    {
-        LiveData<List<User>> data;
-        User user;
-        public LiveData<List<User>> getData()
-        {
-            return data;
-        }
-        
-        public void setUser(User user)
-        {
-            this.user = user;
-            data = Model.instance.getUserByEmail(this.user.getEmail());
-        }
-    }
-
     private void updateUserPage() {
         userName.setText(user.getName());
         email.setText(user.getEmail());
@@ -137,8 +125,6 @@ public class UserPageFragment extends Fragment {
         }
     }
     private void refreshData() {
-        alldata=viewModel.getData().getValue();
-        adapter.notifyDataSetChanged();
         Filter();
         progressbar.setVisibility(View.GONE);
         if (swipeRefresh.isRefreshing()) {
@@ -147,9 +133,9 @@ public class UserPageFragment extends Fragment {
     }
     private void Filter(){
         data=new LinkedList<>();
-        for(int i=0;i<alldata.size();i++) {
-            if (user.getName().compareTo(alldata.get(i).getName())==0)
-                data.add(alldata.get(i));
+        for(int i=0;i<viewModel.getData().getValue().size();i++) {
+            if (user.getName().compareTo(viewModel.getData().getValue().get(i).getName())==0)
+                data.add(viewModel.getData().getValue().get(i));
         }
     }
     private void editPhoto() {
@@ -207,7 +193,7 @@ public class UserPageFragment extends Fragment {
                     break;
                 case R.id.userPageMapPost:
                     progressbar.setVisibility(View.VISIBLE);
-                    UserPageFragmentDirections.ActionUserPageFragmentToMapFragment action12=UserPageFragmentDirections.actionUserPageFragmentToMapFragment(alldata.toArray(new Post[alldata.size()]),user);
+                    UserPageFragmentDirections.ActionUserPageFragmentToMapFragment action12=UserPageFragmentDirections.actionUserPageFragmentToMapFragment(user);
                     Navigation.findNavController(view).navigate(action12);
                     break;
                 default:

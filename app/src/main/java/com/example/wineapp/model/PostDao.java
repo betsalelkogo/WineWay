@@ -15,7 +15,7 @@ public interface PostDao {
     @Query("select * from Post")
     List<Post> getAll();
 
-    @Query("SELECT * FROM Post WHERE post_details=:post_details")
+    @Query("SELECT * FROM Post WHERE details=:post_details")
     LiveData<List<Post>> getData(String post_details);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

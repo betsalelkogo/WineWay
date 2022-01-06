@@ -4,9 +4,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -33,9 +35,14 @@ public class MapFragment extends Fragment {
     MarkerOptions[] marker;
     View view;
     User user;
-    Post[] allpost;
+    ListPostFragmentViewModel viewModel;
     MapFragmentDirections.ActionMapFragmentToUserPageFragment action1;
     MapFragmentDirections.ActionMapFragmentToListPostFragment action;
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        viewModel = new ViewModelProvider(this).get(ListPostFragmentViewModel.class);
+    }
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
         @Override
         public void onMapReady(GoogleMap googleMap) {
@@ -43,8 +50,8 @@ public class MapFragment extends Fragment {
                     PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MyApplication.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.ACCESS_FINE_LOCATION},123);
             }
-            for(int i=0;i<allpost.length;i++){
-                marker[i]=new MarkerOptions().position(new LatLng(allpost[i].getLant(), allpost[i].getLang())).title(allpost[i].getSubject());
+            for(int i=0;i<viewModel.getData().getValue().size();i++){
+                marker[i]=new MarkerOptions().position(new LatLng(viewModel.getData().getValue().get(i).getLant(), viewModel.getData().getValue().get(i).getLang())).title(viewModel.getData().getValue().get(i).getSubject());
                 googleMap.addMarker(marker[i]);
             }
             googleMap.setMyLocationEnabled(true);
@@ -58,16 +65,16 @@ public class MapFragment extends Fragment {
             googleMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
                 @Override
                 public void onInfoWindowClick(Marker arg0) {
-                    for(int i=0;i<allpost.length;i++){
-                        if (arg0.getTitle().compareTo(allpost[i].getSubject())==0){
+                    for(int i=0;i<viewModel.getData().getValue().size();i++){
+                        if (arg0.getTitle().compareTo(viewModel.getData().getValue().get(i).getSubject())==0){
                             PostDetails(i);
                         }
                     }
 
                 }
             });
-            if(allpost.length>0){
-                LatLng latlang = new LatLng(allpost[0].getLant(),allpost[0].getLang());
+            if(viewModel.getData().getValue().size()>0){
+                LatLng latlang = new LatLng(viewModel.getData().getValue().get(0).getLant(),viewModel.getData().getValue().get(0).getLang());
                 googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latlang,7.5F));
             }
 
@@ -75,8 +82,7 @@ public class MapFragment extends Fragment {
     };
 
     private void PostDetails(int i) {
-
-        MapFragmentDirections.ActionMapFragmentToPostDetailsFragment action=MapFragmentDirections.actionMapFragmentToPostDetailsFragment(allpost[i]);
+        MapFragmentDirections.ActionMapFragmentToPostDetailsFragment action=MapFragmentDirections.actionMapFragmentToPostDetailsFragment(viewModel.getData().getValue().get(i));
         Navigation.findNavController(view).navigate(action);
     }
 
@@ -86,12 +92,12 @@ public class MapFragment extends Fragment {
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         view=inflater.inflate(R.layout.fragment_map, container, false);
-        allpost=MapFragmentArgs.fromBundle(getArguments()).getListPost();
         user= MapFragmentArgs.fromBundle(getArguments()).getUser();
-        marker= new MarkerOptions[allpost.length];
+        marker= new MarkerOptions[viewModel.getData().getValue().size()];
         setHasOptionsMenu(true);
         action1=MapFragmentDirections.actionMapFragmentToUserPageFragment(user);
         action=MapFragmentDirections.actionMapFragmentToListPostFragment(user);
+
         return view;
     }
 
