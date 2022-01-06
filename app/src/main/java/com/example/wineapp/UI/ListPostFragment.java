@@ -28,6 +28,7 @@ import com.example.wineapp.R;
 import com.example.wineapp.model.Model;
 import com.example.wineapp.model.Post;
 import com.example.wineapp.model.User;
+import com.example.wineapp.model.adapter.MyAdapter;
 import com.squareup.picasso.Picasso;
 
 import java.util.LinkedList;
@@ -42,6 +43,7 @@ public class ListPostFragment extends Fragment {
     SwipeRefreshLayout swipeRefresh;
     ListPostFragmentDirections.ActionListPostFragmentToUserPageFragment action1;
     ListPostFragmentDirections.ActionListPostFragmentToMapFragment action11;
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -52,26 +54,36 @@ public class ListPostFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_list_post, container, false);
-        user=ListPostFragmentArgs.fromBundle(getArguments()).getUser();
-        progressBar= view.findViewById(R.id.list_post_progressbar);
-        progressBar.setVisibility(View.GONE);
-        swipeRefresh=view.findViewById(R.id.winelist_swipe_refresh);
+        user = ListPostFragmentArgs.fromBundle(getArguments()).getUser();
+        progressBar = view.findViewById(R.id.list_post_progressbar);
+        swipeRefresh = view.findViewById(R.id.winelist_swipe_refresh);
         swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 swipeRefresh.setRefreshing(true);
                 Model.instance.reloadPostsList();
+                adapter.notifyDataSetChanged();
                 swipeRefresh.setRefreshing(false);
             }
         });
         RecyclerView list = view.findViewById(R.id.winelist_list_rv);
+        adapter = new MyAdapter();
+        list.setAdapter(adapter);
         list.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         list.setLayoutManager(linearLayoutManager);
-        adapter = new MyAdapter();
-        list.setAdapter(adapter);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(list.getContext(), linearLayoutManager.getOrientation());
         list.addItemDecoration(dividerItemDecoration);
+        setHasOptionsMenu(true);
+        viewModel.getData().observe(getViewLifecycleOwner(), new Observer<List<Post>>() {
+            @Override
+            public void onChanged(List<Post> posts) {
+                adapter.setFragment(ListPostFragment.this);
+                adapter.setData(posts);
+                adapter.notifyDataSetChanged();
+            }
+        });
+        progressBar.setVisibility(View.GONE);
         adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(int position, View v) {
@@ -81,33 +93,27 @@ public class ListPostFragment extends Fragment {
                 Navigation.findNavController(v).navigate(action);
             }
         });
-        setHasOptionsMenu(true);
-        viewModel.getData().observe(getViewLifecycleOwner(), new Observer<List<Post>>() {
-            @Override
-            public void onChanged(List<Post> posts) {
-                adapter.notifyDataSetChanged();
-            }
-        });
         return view;
     }
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.wine_list_menu,menu);
+        inflater.inflate(R.menu.wine_list_menu, menu);
     }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         boolean result = true;
         if (!super.onOptionsItemSelected(item)) {
             switch (item.getItemId()) {
                 case R.id.userPage:
-                    action1=ListPostFragmentDirections.actionListPostFragmentToUserPageFragment(user);
+                    action1 = ListPostFragmentDirections.actionListPostFragmentToUserPageFragment(user);
                     progressBar.setVisibility(View.VISIBLE);
                     Navigation.findNavController(view).navigate(action1);
                     break;
                 case R.id.map_list:
-                    action11=ListPostFragmentDirections.actionListPostFragmentToMapFragment(user);
+                    action11 = ListPostFragmentDirections.actionListPostFragmentToMapFragment(user);
                     progressBar.setVisibility(View.VISIBLE);
                     Navigation.findNavController(view).navigate(action11);
                     break;
@@ -117,60 +123,5 @@ public class ListPostFragment extends Fragment {
             }
         }
         return result;
-    }
-     class MyAdapter extends RecyclerView.Adapter<MyViewHolder> {
-
-        OnItemClickListener listener;
-
-         public void setOnItemClickListener(OnItemClickListener listener) {
-            this.listener = listener;
-        }
-
-
-        @NonNull
-        @Override
-        public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = getLayoutInflater().inflate(R.layout.post_wine_list_row, parent, false);
-            MyViewHolder holder = new MyViewHolder(view, listener);
-            return holder;
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-            Post p = viewModel.getData().getValue().get(position);
-            holder.nameTv.setText(p.getSubject());
-            holder.detailsTv.setText(p.getDetails());
-            holder.imageView.setImageResource(R.drawable.win);
-            if(p.getImageUrl()!=null){
-                Picasso.get().load(p.getImageUrl()).into(holder.imageView);
-            }
-        }
-
-        @Override
-        public int getItemCount() {
-            if (viewModel.getData().getValue() == null) return 0;
-            return viewModel.getData().getValue().size();
-        }
-    }
-
-    static class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView nameTv;
-        TextView detailsTv;
-        ImageView imageView;
-        public MyViewHolder(@NonNull View itemView, OnItemClickListener listener) {
-            super(itemView);
-            nameTv = itemView.findViewById(R.id.listrow_name_tv);
-            detailsTv = itemView.findViewById(R.id.listrow_details_tv);
-            imageView=itemView.findViewById(R.id.listrow_avatar_imv);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int pos = getAdapterPosition();
-                    if (listener != null) {
-                        listener.onItemClick(pos, v);
-                    }
-                }
-            });
-        }
     }
 }
