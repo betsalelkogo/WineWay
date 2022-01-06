@@ -65,6 +65,8 @@ public class UserPageFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_user_page, container, false);
+        user=UserPageFragmentArgs.fromBundle(getArguments()).getUser();
+        viewModel.setData(user);
         userName=view.findViewById(R.id.user_page_name_tv);
         email=view.findViewById(R.id.user_page_email_tv);
         progressbar= view.findViewById(R.id.user_page_progressbar);
@@ -72,12 +74,6 @@ public class UserPageFragment extends Fragment {
         swipeRefresh=view.findViewById(R.id.user_page_swipe_refresh);
         photoUser=view.findViewById(R.id.user_add_page_image_btn);
         userImage=view.findViewById(R.id.user_page_image);
-        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                refreshData();
-            }
-        });
         photoUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -85,7 +81,6 @@ public class UserPageFragment extends Fragment {
 
             }
         });
-        user=UserPageFragmentArgs.fromBundle(getArguments()).getUser();
         RecyclerView list = view.findViewById(R.id.user_page_post_list_tv);
         list.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
@@ -105,12 +100,19 @@ public class UserPageFragment extends Fragment {
         updateUserPage();
         setHasOptionsMenu(true);
         action=UserPageFragmentDirections.actionUserPageFragmentToUserAddPostFragment(user);
+        swipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                swipeRefresh.setRefreshing(false);
+            }
+        });
         viewModel.getData().observe(getViewLifecycleOwner(), new Observer<List<Post>>() {
             @Override
             public void onChanged(List<Post> posts) {
                 adapter.setFragment(UserPageFragment.this);
-                Filter();
                 adapter.setData(viewModel.getData().getValue());
+                progressbar.setVisibility(View.GONE);
+                swipeRefresh.setRefreshing(false);
                 adapter.notifyDataSetChanged();
             }
         });
@@ -125,21 +127,20 @@ public class UserPageFragment extends Fragment {
             Picasso.get().load(user.getImageUrl()).into(userImage);
         }
     }
-    private void refreshData() {
-        swipeRefresh.setRefreshing(true);
-        Model.instance.reloadPostsList();
-        Filter();
-        adapter.notifyDataSetChanged();
-        swipeRefresh.setRefreshing(false);
-    }
-    private void Filter(){
-        LiveData<List<Post>> data = viewModel.getData();
-        for(int i=0;i<data.getValue().size();i++) {
-            if (user.getName().compareTo(data.getValue().get(i).getName())!=0)
-                viewModel.getData().getValue().remove(i);
-        }
-        viewModel.setData(data);
-    }
+//    private void refreshData() {
+//        swipeRefresh.setRefreshing(true);
+//        Model.instance.reloadPostsList();
+//        adapter.notifyDataSetChanged();
+//        swipeRefresh.setRefreshing(false);
+//    }
+//    private void Filter(){
+//        LiveData<List<Post>> data = viewModel.getData();
+//        for(int i=0;i<data.getValue().size();i++) {
+//            if (user.getName().compareTo(data.getValue().get(i).getName())!=0)
+//                viewModel.getData().getValue().remove(i);
+//        }
+//
+//    }
     private void editPhoto() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {

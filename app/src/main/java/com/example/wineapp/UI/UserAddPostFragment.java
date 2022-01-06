@@ -3,6 +3,9 @@ package com.example.wineapp.UI;
 import static android.app.Activity.RESULT_OK;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -11,6 +14,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -25,6 +29,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.example.wineapp.MainActivity;
 import com.example.wineapp.MyApplication;
 import com.example.wineapp.R;
 import com.example.wineapp.model.Constants;
@@ -38,8 +43,18 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.InputStream;
+
 
 public class UserAddPostFragment extends Fragment implements OnMapReadyCallback {
+    private Button btnSelectImage;
+    private Bitmap bitmap;
+    private File destination = null;
+    private InputStream inputStreamImg;
+    private String imgPath = null;
+    private final int PICK_IMAGE_CAMERA = 1, PICK_IMAGE_GALLERY = 2;
     View view;
     EditText postEt, subjectEt;
     Button cancelBtn,sendBtn;
@@ -94,6 +109,20 @@ public class UserAddPostFragment extends Fragment implements OnMapReadyCallback 
         return view;
     }
 
+//    public void callCamera() {
+//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+//            startActivityForResult(takePictureIntent, Constants.REQUEST_IMAGE_CAPTURE);
+//        }
+//    }
+//    public void callGallery() {
+//        Intent intent = new Intent(Intent.ACTION_PICK,
+//                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+//            startActivityForResult(intent, Constants.REQUEST_IMAGE_CAPTURE);
+//        }
+//    }
+
     private void InitialGoogleMap(Bundle savedInstanceState) {
         // *** IMPORTANT ***
         // MapView requires that the Bundle you pass contain _ONLY_ MapView SDK
@@ -112,6 +141,7 @@ public class UserAddPostFragment extends Fragment implements OnMapReadyCallback 
         if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
             startActivityForResult(takePictureIntent, Constants.REQUEST_IMAGE_CAPTURE);
         }
+
     }
 
     @Override
@@ -120,7 +150,6 @@ public class UserAddPostFragment extends Fragment implements OnMapReadyCallback 
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             postPhoto.setImageBitmap(imageBitmap);
-
         }
     }
     private void save() {
