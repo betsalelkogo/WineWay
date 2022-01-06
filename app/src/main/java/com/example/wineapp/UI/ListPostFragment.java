@@ -93,6 +93,7 @@ public class ListPostFragment extends Fragment {
                 Navigation.findNavController(v).navigate(action);
             }
         });
+        Model.instance.reloadPostsList();
         return view;
     }
 

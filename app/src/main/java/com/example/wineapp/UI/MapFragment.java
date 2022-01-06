@@ -21,6 +21,7 @@ import android.widget.ProgressBar;
 
 import com.example.wineapp.MyApplication;
 import com.example.wineapp.R;
+import com.example.wineapp.model.Model;
 import com.example.wineapp.model.Post;
 import com.example.wineapp.model.User;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -97,7 +98,7 @@ public class MapFragment extends Fragment {
         setHasOptionsMenu(true);
         action1=MapFragmentDirections.actionMapFragmentToUserPageFragment(user);
         action=MapFragmentDirections.actionMapFragmentToListPostFragment(user);
-
+        Model.instance.reloadPostsList();
         return view;
     }
 

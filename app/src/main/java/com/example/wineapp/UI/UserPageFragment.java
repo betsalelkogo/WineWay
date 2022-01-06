@@ -47,7 +47,6 @@ import java.util.List;
 
 public class UserPageFragment extends Fragment {
     UserPageFragmentViewModel viewModel;
-    List<Post> data= null;
     View view;
     MyAdapter adapter;
     ProgressBar progressbar;
@@ -99,26 +98,23 @@ public class UserPageFragment extends Fragment {
             @Override
             public void onItemClick(int position, View v) {
                 progressbar.setVisibility(View.VISIBLE);
-                UserPageFragmentDirections.ActionUserPageFragmentToEditPostFragment action = UserPageFragmentDirections.actionUserPageFragmentToEditPostFragment(data.get(position),user,position);
+                UserPageFragmentDirections.ActionUserPageFragmentToEditPostFragment action = UserPageFragmentDirections.actionUserPageFragmentToEditPostFragment(viewModel.getData().getValue().get(position),user,position);
                 Navigation.findNavController(v).navigate(action);
             }
         });
         updateUserPage();
         setHasOptionsMenu(true);
         action=UserPageFragmentDirections.actionUserPageFragmentToUserAddPostFragment(user);
-
         viewModel.getData().observe(getViewLifecycleOwner(), new Observer<List<Post>>() {
             @Override
             public void onChanged(List<Post> posts) {
-                data=posts;
                 adapter.setFragment(UserPageFragment.this);
                 Filter();
-                adapter.setData(data);
+                adapter.setData(viewModel.getData().getValue());
                 adapter.notifyDataSetChanged();
             }
         });
         return view;
-
     }
     private void updateUserPage() {
         userName.setText(user.getName());
@@ -130,18 +126,19 @@ public class UserPageFragment extends Fragment {
         }
     }
     private void refreshData() {
+        swipeRefresh.setRefreshing(true);
+        Model.instance.reloadPostsList();
         Filter();
-        progressbar.setVisibility(View.GONE);
-        if (swipeRefresh.isRefreshing()) {
-            swipeRefresh.setRefreshing(false);
-        }
+        adapter.notifyDataSetChanged();
+        swipeRefresh.setRefreshing(false);
     }
     private void Filter(){
-        data=new LinkedList<>();
-        for(int i=0;i<viewModel.getData().getValue().size();i++) {
-            if (user.getName().compareTo(viewModel.getData().getValue().get(i).getName())==0)
-                data.add(viewModel.getData().getValue().get(i));
+        LiveData<List<Post>> data = viewModel.getData();
+        for(int i=0;i<data.getValue().size();i++) {
+            if (user.getName().compareTo(data.getValue().get(i).getName())!=0)
+                viewModel.getData().getValue().remove(i);
         }
+        viewModel.setData(data);
     }
     private void editPhoto() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -192,11 +189,13 @@ public class UserPageFragment extends Fragment {
                     Navigation.findNavController(view).navigate(action);
                     break;
                 case R.id.userPageListPost:
+                    viewModel=null;
                     progressbar.setVisibility(View.VISIBLE);
                     UserPageFragmentDirections.ActionUserPageFragmentToListPostFragment action1=UserPageFragmentDirections.actionUserPageFragmentToListPostFragment(user);
                     Navigation.findNavController(view).navigate(action1);
                     break;
                 case R.id.userPageMapPost:
+                    viewModel=null;
                     progressbar.setVisibility(View.VISIBLE);
                     UserPageFragmentDirections.ActionUserPageFragmentToMapFragment action12=UserPageFragmentDirections.actionUserPageFragmentToMapFragment(user);
                     Navigation.findNavController(view).navigate(action12);
