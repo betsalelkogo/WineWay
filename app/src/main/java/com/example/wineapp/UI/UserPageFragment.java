@@ -37,6 +37,7 @@ import com.example.wineapp.model.Constants;
 import com.example.wineapp.model.Model;
 import com.example.wineapp.model.Post;
 import com.example.wineapp.model.User;
+import com.example.wineapp.model.adapter.MyAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 
@@ -48,7 +49,7 @@ public class UserPageFragment extends Fragment {
     UserPageFragmentViewModel viewModel;
     List<Post> data= null;
     View view;
-    Adapter adapter;
+    MyAdapter adapter;
     ProgressBar progressbar;
     TextView userName, email;
     User user;
@@ -90,7 +91,7 @@ public class UserPageFragment extends Fragment {
         list.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
         list.setLayoutManager(linearLayoutManager);
-        adapter = new Adapter();
+        adapter = new MyAdapter();
         list.setAdapter(adapter);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(list.getContext(), linearLayoutManager.getOrientation());
         list.addItemDecoration(dividerItemDecoration);
@@ -105,10 +106,14 @@ public class UserPageFragment extends Fragment {
         updateUserPage();
         setHasOptionsMenu(true);
         action=UserPageFragmentDirections.actionUserPageFragmentToUserAddPostFragment(user);
-        refreshData();
+
         viewModel.getData().observe(getViewLifecycleOwner(), new Observer<List<Post>>() {
             @Override
             public void onChanged(List<Post> posts) {
+                data=posts;
+                adapter.setFragment(UserPageFragment.this);
+                Filter();
+                adapter.setData(data);
                 adapter.notifyDataSetChanged();
             }
         });
@@ -202,57 +207,5 @@ public class UserPageFragment extends Fragment {
             }
         }
         return result;
-    }
-    class Adapter extends RecyclerView.Adapter<UserPageFragment.MyViewHolder> {
-
-        OnItemClickListener listener;
-
-        public void setOnItemClickListener(OnItemClickListener listener) {
-            this.listener = listener;
-        }
-
-        @NonNull
-        @Override
-        public UserPageFragment.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            View view = getLayoutInflater().inflate(R.layout.post_wine_list_row, parent, false);
-            UserPageFragment.MyViewHolder holder = new UserPageFragment.MyViewHolder(view, listener);
-            return holder;
-        }
-
-        @Override
-        public void onBindViewHolder(@NonNull UserPageFragment.MyViewHolder holder, int position) {
-            Post p = data.get(position);
-            holder.nameTv.setText(p.getSubject());
-            holder.detailsTv.setText(p.getDetails());
-            holder.imageView.setImageResource(R.drawable.win);
-            if(p.getImageUrl()!=null){
-                Picasso.get().load(p.getImageUrl()).into(holder.imageView);
-            }
-        }
-
-        @Override
-        public int getItemCount() { if(data==null) return 0;
-            return data.size();}
-    }
-
-    static class MyViewHolder extends RecyclerView.ViewHolder {
-        TextView nameTv;
-        TextView detailsTv;
-        ImageView imageView;
-        public MyViewHolder(@NonNull View itemView, OnItemClickListener listener) {
-            super(itemView);
-            nameTv = itemView.findViewById(R.id.listrow_name_tv);
-            detailsTv = itemView.findViewById(R.id.listrow_details_tv);
-            imageView=itemView.findViewById(R.id.listrow_avatar_imv);
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    int pos = getAdapterPosition();
-                    if (listener != null) {
-                        listener.onItemClick(pos, v);
-                    }
-                }
-            });
-        }
     }
 }
