@@ -134,7 +134,7 @@ public class UserPageFragment extends Fragment {
         Intent intent = getPickImageIntent(getActivity());
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), Constants.REQUEST_IMAGE_CAPTURE);
     }
-    private Intent getPickImageIntent(Context context) {
+    public static Intent getPickImageIntent(Context context) {
         Intent chooserIntent = null;
         List<Intent> intentList = new ArrayList<>();
         Intent pickIntent = new Intent(Intent.ACTION_PICK,
@@ -153,7 +153,7 @@ public class UserPageFragment extends Fragment {
         return chooserIntent;
     }
 
-    private  List<Intent> addIntentsToList(Context context, List<Intent> list, Intent intent) {
+    private static List<Intent> addIntentsToList(Context context, List<Intent> list, Intent intent) {
         List<ResolveInfo> resInfo = context.getPackageManager().queryIntentActivities(intent, 0);
         for (ResolveInfo resolveInfo : resInfo) {
             String packageName = resolveInfo.activityInfo.packageName;

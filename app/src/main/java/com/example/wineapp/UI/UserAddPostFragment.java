@@ -2,6 +2,8 @@ package com.example.wineapp.UI;
 
 import static android.app.Activity.RESULT_OK;
 
+import static com.example.wineapp.UI.UserPageFragment.getPickImageIntent;
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -136,35 +138,7 @@ public class UserAddPostFragment extends Fragment {
         Intent intent = getPickImageIntent(getActivity());
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), Constants.REQUEST_IMAGE_CAPTURE);
     }
-    private Intent getPickImageIntent(Context context) {
-        Intent chooserIntent = null;
-        List<Intent> intentList = new ArrayList<>();
-        Intent pickIntent = new Intent(Intent.ACTION_PICK,
-                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        takePhotoIntent.putExtra("return-data", true);
-        intentList = addIntentsToList(context, intentList, pickIntent);
-        intentList = addIntentsToList(context, intentList, takePhotoIntent);
 
-        if (intentList.size() > 0) {
-            chooserIntent = Intent.createChooser(intentList.remove(intentList.size() - 1),
-                    "Pick Image");
-            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentList.toArray(new Parcelable[]{}));
-        }
-
-        return chooserIntent;
-    }
-
-    private  List<Intent> addIntentsToList(Context context, List<Intent> list, Intent intent) {
-        List<ResolveInfo> resInfo = context.getPackageManager().queryIntentActivities(intent, 0);
-        for (ResolveInfo resolveInfo : resInfo) {
-            String packageName = resolveInfo.activityInfo.packageName;
-            Intent targetedIntent = new Intent(intent);
-            targetedIntent.setPackage(packageName);
-            list.add(targetedIntent);
-        }
-        return list;
-    }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Constants.REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {

@@ -5,8 +5,11 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import static android.app.Activity.RESULT_OK;
 
+import static com.example.wineapp.UI.UserPageFragment.getPickImageIntent;
+
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 
@@ -44,6 +47,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.picasso.Picasso;
+
+import java.io.InputStream;
 
 public class EditPostFragment extends Fragment{
     Post p;
@@ -112,106 +117,6 @@ public class EditPostFragment extends Fragment{
         InitialGoogleMap(savedInstanceState);
         return view;
     }
-    @Override
-    public void onActivityResult(int requestCode, int resultCode,Intent data){
-        if(requestCode== Constants.REQUEST_IMAGE_CAPTURE&&resultCode==RESULT_OK){
-            Bundle extras=data.getExtras();
-            Bitmap imageBitmap=(Bitmap) extras.get("data");
-            postPhoto.setImageBitmap(imageBitmap);
-
-        }
-    }
-    private void editPhoto() {
-        Intent takePictureIntent=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if(takePictureIntent.resolveActivity(getActivity().getPackageManager())!=null){
-            startActivityForResult(takePictureIntent,Constants.REQUEST_IMAGE_CAPTURE);
-        }
-    }
-    private void save() {
-        progressBar.setVisibility(View.VISIBLE);
-        sendPostBtn.setEnabled(false);
-        cancelBtn.setEnabled(false);
-        deleteBtn.setEnabled(false);
-        p.setName(user.getName());
-        p.setSubject(subjectEt.getText().toString());
-        p.setDetails(postTextEd.getText().toString());
-        p.setLang(location.longitude);
-        p.setLant(location.latitude);
-        BitmapDrawable bitmapDrawable=(BitmapDrawable)postPhoto.getDrawable();
-        Bitmap bitmap=bitmapDrawable.getBitmap();
-        Model.instance.uploadImage(bitmap, p.getId_key(), new UploadImageListener() {
-            @Override
-            public void onComplete(String url) {
-                if (url == null) {
-
-                } else {
-                    p.setImageUrl(url);
-                    Model.instance.addPost(p,new AddPostListener(){
-                        @Override
-                        public void onComplete() {
-                            EditPostFragmentDirections.ActionEditPostFragmentToUserPageFragment action1 = EditPostFragmentDirections.actionEditPostFragmentToUserPageFragment(user);
-                            Navigation.findNavController(view).navigate(action1);
-                        }
-                    });
-                }
-            }});
-    }
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        Bundle mapViewBundle = outState.getBundle(Constants.MAPVIEW_BUNDLE_KEY);
-        if (mapViewBundle == null) {
-            mapViewBundle = new Bundle();
-            outState.putBundle(Constants.MAPVIEW_BUNDLE_KEY, mapViewBundle);
-        }
-
-        map.onSaveInstanceState(mapViewBundle);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        map.onResume();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        map.onStart();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        map.onStop();
-    }
-
-    private void updatePost() {
-        subjectEt.setText(p.getSubject());
-        progressBar.setVisibility(View.GONE);
-        postTextEd.setText(p.getDetails());
-        postPhoto.setImageResource(R.drawable.win);
-        if(p.getImageUrl()!=null){
-            Picasso.get().load(p.getImageUrl()).into(postPhoto);
-        }
-    }
-    @Override
-    public void onPause() {
-        super.onPause();
-        map.onPause();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        map.onDestroy();
-    }
-
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        map.onLowMemory();
-    }
     private void InitialGoogleMap(Bundle savedInstanceState) {
         // *** IMPORTANT ***
         // MapView requires that the Bundle you pass contain _ONLY_ MapView SDK
@@ -265,5 +170,117 @@ public class EditPostFragment extends Fragment{
         };
         map.onCreate(mapViewBundle);
         map.getMapAsync(onMapReadyCallback);
+    }
+    private void editPhoto() {
+        Intent intent = getPickImageIntent(getActivity());
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), Constants.REQUEST_IMAGE_CAPTURE);
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode,Intent data){
+        if (requestCode == Constants.REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            Bundle extras;
+            Bitmap imageBitmap;
+            InputStream inputStream;
+            try {
+                if (data.getAction() != null && data.getAction().equals("inline-data")) {
+                    // take picture from camera
+                    extras = data.getExtras();
+                    imageBitmap = (Bitmap) extras.get("data");
+                } else {
+                    // pick from gallery
+                    inputStream = getActivity().getContentResolver().openInputStream(data.getData());
+                    imageBitmap = BitmapFactory.decodeStream(inputStream);
+                }
+                postPhoto.setImageBitmap(imageBitmap);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    private void save() {
+        progressBar.setVisibility(View.VISIBLE);
+        sendPostBtn.setEnabled(false);
+        cancelBtn.setEnabled(false);
+        deleteBtn.setEnabled(false);
+        p.setName(user.getName());
+        p.setSubject(subjectEt.getText().toString());
+        p.setDetails(postTextEd.getText().toString());
+        p.setLang(location.longitude);
+        p.setLant(location.latitude);
+        BitmapDrawable bitmapDrawable=(BitmapDrawable)postPhoto.getDrawable();
+        Bitmap bitmap=bitmapDrawable.getBitmap();
+        Model.instance.uploadImage(bitmap, p.getId_key(), new UploadImageListener() {
+            @Override
+            public void onComplete(String url) {
+                if (url == null) {
+
+                } else {
+                    p.setImageUrl(url);
+                    Model.instance.addPost(p,new AddPostListener(){
+                        @Override
+                        public void onComplete() {
+                            EditPostFragmentDirections.ActionEditPostFragmentToUserPageFragment action1 = EditPostFragmentDirections.actionEditPostFragmentToUserPageFragment(user);
+                            Navigation.findNavController(view).navigate(action1);
+                        }
+                    });
+                }
+            }});
+    }
+    private void updatePost() {
+        subjectEt.setText(p.getSubject());
+        progressBar.setVisibility(View.GONE);
+        postTextEd.setText(p.getDetails());
+        postPhoto.setImageResource(R.drawable.win);
+        if(p.getImageUrl()!=null){
+            Picasso.get().load(p.getImageUrl()).into(postPhoto);
+        }
+    }
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Bundle mapViewBundle = outState.getBundle(Constants.MAPVIEW_BUNDLE_KEY);
+        if (mapViewBundle == null) {
+            mapViewBundle = new Bundle();
+            outState.putBundle(Constants.MAPVIEW_BUNDLE_KEY, mapViewBundle);
+        }
+
+        map.onSaveInstanceState(mapViewBundle);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        map.onResume();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        map.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        map.onStop();
+    }
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        map.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        map.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        map.onLowMemory();
     }
 }
