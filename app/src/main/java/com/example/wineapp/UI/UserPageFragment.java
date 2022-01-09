@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.MediaStore;
@@ -24,9 +23,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -34,19 +31,19 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.wineapp.OnItemClickListener;
+import com.example.wineapp.model.intefaces.OnItemClickListener;
 import com.example.wineapp.R;
 import com.example.wineapp.model.Constants;
 import com.example.wineapp.model.Model;
 import com.example.wineapp.model.Post;
 import com.example.wineapp.model.User;
 import com.example.wineapp.model.adapter.MyAdapter;
+import com.example.wineapp.model.intefaces.UploadImageListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 
@@ -184,7 +181,7 @@ public class UserPageFragment extends Fragment {
                     imageBitmap = BitmapFactory.decodeStream(inputStream);
                 }
                 userImage.setImageBitmap(imageBitmap);
-                Model.instance.uploadImage(imageBitmap, user.getEmail(), new Model.UploadImageListener() {
+                Model.instance.uploadImage(imageBitmap, user.getEmail(), new UploadImageListener() {
                     @Override
                     public void onComplete(String url) {
                         if (url == null) {

@@ -7,7 +7,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.wineapp.OnItemClickListener;
+import com.example.wineapp.model.intefaces.OnItemClickListener;
 import com.example.wineapp.R;
 
 public class MyViewHolder extends RecyclerView.ViewHolder {

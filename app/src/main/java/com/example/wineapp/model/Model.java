@@ -6,6 +6,11 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.wineapp.MyApplication;
+import com.example.wineapp.model.intefaces.AddPostListener;
+import com.example.wineapp.model.intefaces.AddUserListener;
+import com.example.wineapp.model.intefaces.DeletePostListener;
+import com.example.wineapp.model.intefaces.GetUserByEmailListener;
+import com.example.wineapp.model.intefaces.UploadImageListener;
 
 import java.util.List;
 
@@ -78,40 +83,11 @@ public class Model {
         });
     }
 
-    public void getUserByEmail(String userEmail,GetUserByEmailListener listener) {
+    public void getUserByEmail(String userEmail, GetUserByEmailListener listener) {
         modelFirebase.getUserByEmail(userEmail,listener);
-//        MyApplication.executorService.execute(()->{
-//            User user = AppLocalDB.db.userDao().getUserByEmail(userEmail);
-//            MyApplication.mainHandler.post(()->{
-//                listener.onComplete(user);
-//            });
-//        });
     }
     public void uploadImage(Bitmap bitmap, String name, final UploadImageListener listener){
         modelFirebase.uploadImage(bitmap,name,listener);
     }
-    public interface UploadImageListener{
-        void onComplete(String url);
-    }
-    public interface GetAllPostsListener{
-        void onComplete(List<Post> data);
-    }
-    public interface GetUserByEmailListener{
-        void onComplete(User user);
-    }
-    public interface AddPostListener{
-        void onComplete();
-    }
-    public interface AddUserListener{
-        void onComplete();
-    }
-    public interface GetAllUserListener{
-        void onComplete(List<User> data);
-    }
-    public interface GetPostByNameListener{
-        void onComplete(Post post);
-    }
-    public interface DeletePostListener{
-        void onComplete();
-    }
+
 }

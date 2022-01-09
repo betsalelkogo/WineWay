@@ -1,6 +1,5 @@
 package com.example.wineapp.UI;
 
-import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -8,7 +7,6 @@ import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
 
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,14 +20,12 @@ import com.example.wineapp.MyApplication;
 import com.example.wineapp.R;
 import com.example.wineapp.model.Model;
 import com.example.wineapp.model.User;
+import com.example.wineapp.model.intefaces.GetUserByEmailListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
-import java.util.LinkedList;
-import java.util.List;
 
 
 public class SignInFragment extends Fragment {
@@ -73,7 +69,7 @@ public class SignInFragment extends Fragment {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             FirebaseUser userAuth = mAuth.getCurrentUser();
-                            Model.instance.getUserByEmail(userAuth.getEmail(), new Model.GetUserByEmailListener() {
+                            Model.instance.getUserByEmail(userAuth.getEmail(), new GetUserByEmailListener() {
                                 @Override
                                 public void onComplete(User u) {
                                     user = u;

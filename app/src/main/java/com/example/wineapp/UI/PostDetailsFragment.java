@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import com.example.wineapp.MainActivity;
 import com.example.wineapp.MyApplication;
+import com.example.wineapp.model.adapter.PermissionCallback;
 import com.example.wineapp.R;
 import com.example.wineapp.model.Constants;
 import com.example.wineapp.model.Post;
@@ -26,7 +27,6 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.picasso.Picasso;
 
@@ -64,7 +64,7 @@ public class PostDetailsFragment extends Fragment{
         onMapReadyCallback = new OnMapReadyCallback() {
             @Override
             public void onMapReady(@NonNull GoogleMap map) {
-                MainActivity.permissionCallback = new MainActivity.PermissionCallback() {
+                MainActivity.permissionCallback = new PermissionCallback() {
                     @SuppressLint("MissingPermission")
                     @Override
                     public void onResult(boolean isGranted) {

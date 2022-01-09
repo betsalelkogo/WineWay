@@ -27,11 +27,15 @@ import android.widget.ProgressBar;
 
 import com.example.wineapp.MainActivity;
 import com.example.wineapp.MyApplication;
+import com.example.wineapp.model.adapter.PermissionCallback;
 import com.example.wineapp.R;
 import com.example.wineapp.model.Constants;
 import com.example.wineapp.model.Model;
 import com.example.wineapp.model.Post;
 import com.example.wineapp.model.User;
+import com.example.wineapp.model.intefaces.AddPostListener;
+import com.example.wineapp.model.intefaces.DeletePostListener;
+import com.example.wineapp.model.intefaces.UploadImageListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -88,7 +92,7 @@ public class EditPostFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 progressBar.setVisibility(View.VISIBLE);
-                Model.instance.DeletePost(p, new Model.DeletePostListener() {
+                Model.instance.DeletePost(p, new DeletePostListener() {
                     @Override
                     public void onComplete() {
                         EditPostFragmentDirections.ActionEditPostFragmentToUserPageFragment action1 = EditPostFragmentDirections.actionEditPostFragmentToUserPageFragment(user);
@@ -135,14 +139,14 @@ public class EditPostFragment extends Fragment{
         p.setLant(location.latitude);
         BitmapDrawable bitmapDrawable=(BitmapDrawable)postPhoto.getDrawable();
         Bitmap bitmap=bitmapDrawable.getBitmap();
-        Model.instance.uploadImage(bitmap, p.getId_key(), new Model.UploadImageListener() {
+        Model.instance.uploadImage(bitmap, p.getId_key(), new UploadImageListener() {
             @Override
             public void onComplete(String url) {
                 if (url == null) {
 
                 } else {
                     p.setImageUrl(url);
-                    Model.instance.addPost(p,new Model.AddPostListener(){
+                    Model.instance.addPost(p,new AddPostListener(){
                         @Override
                         public void onComplete() {
                             EditPostFragmentDirections.ActionEditPostFragmentToUserPageFragment action1 = EditPostFragmentDirections.actionEditPostFragmentToUserPageFragment(user);
@@ -219,7 +223,7 @@ public class EditPostFragment extends Fragment{
         onMapReadyCallback = new OnMapReadyCallback() {
             @Override
             public void onMapReady(@NonNull GoogleMap map) {
-                MainActivity.permissionCallback = new MainActivity.PermissionCallback() {
+                MainActivity.permissionCallback = new PermissionCallback() {
                     @SuppressLint("MissingPermission")
                     @Override
                     public void onResult(boolean isGranted) {

@@ -1,4 +1,4 @@
-package com.example.wineapp;
+package com.example.wineapp.model.intefaces;
 
 import android.view.View;
 

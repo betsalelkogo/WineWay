@@ -18,13 +18,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
+
 
 import com.example.wineapp.MainActivity;
 import com.example.wineapp.MyApplication;
+import com.example.wineapp.model.adapter.PermissionCallback;
 import com.example.wineapp.R;
 import com.example.wineapp.model.Model;
-import com.example.wineapp.model.Post;
 import com.example.wineapp.model.User;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -49,7 +49,7 @@ public class MapFragment extends Fragment {
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
         @Override
         public void onMapReady(GoogleMap googleMap) {
-            MainActivity.permissionCallback = new MainActivity.PermissionCallback() {
+            MainActivity.permissionCallback = new PermissionCallback() {
                 @SuppressLint("MissingPermission")
                 @Override
                 public void onResult(boolean isGranted) {

@@ -32,11 +32,13 @@ import android.widget.Toast;
 
 import com.example.wineapp.MainActivity;
 import com.example.wineapp.MyApplication;
+import com.example.wineapp.model.adapter.PermissionCallback;
 import com.example.wineapp.R;
 import com.example.wineapp.model.Constants;
 import com.example.wineapp.model.Model;
 import com.example.wineapp.model.Post;
 import com.example.wineapp.model.User;
+import com.example.wineapp.model.intefaces.UploadImageListener;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -105,7 +107,7 @@ public class UserAddPostFragment extends Fragment {
             mapViewBundle = savedInstanceState.getBundle(Constants.MAPVIEW_BUNDLE_KEY);
         }
         onMapReadyCallback = map -> {
-            MainActivity.permissionCallback = new MainActivity.PermissionCallback() {
+            MainActivity.permissionCallback = new PermissionCallback() {
                 @SuppressLint("MissingPermission")
                 @Override
                 public void onResult(boolean isGranted) {
@@ -195,7 +197,7 @@ public class UserAddPostFragment extends Fragment {
         p.setLant(lastKnownLocation.latitude);
         BitmapDrawable bitmapDrawable=(BitmapDrawable)postPhoto.getDrawable();
         Bitmap bitmap=bitmapDrawable.getBitmap();
-        Model.instance.uploadImage(bitmap, p.getId_key(), new Model.UploadImageListener() {
+        Model.instance.uploadImage(bitmap, p.getId_key(), new UploadImageListener() {
             @Override
             public void onComplete(String url) {
                 if (url == null) {

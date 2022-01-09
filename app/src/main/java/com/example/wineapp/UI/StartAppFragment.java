@@ -15,6 +15,7 @@ import android.widget.ProgressBar;
 import com.example.wineapp.R;
 import com.example.wineapp.model.Model;
 import com.example.wineapp.model.User;
+import com.example.wineapp.model.intefaces.GetUserByEmailListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -37,7 +38,7 @@ public class StartAppFragment extends Fragment {
             registerBtn.setEnabled(false);
             signInBtn.setEnabled(false);
             progressBar.setVisibility(View.VISIBLE);
-            Model.instance.getUserByEmail(user.getEmail(), new Model.GetUserByEmailListener() {
+            Model.instance.getUserByEmail(user.getEmail(), new GetUserByEmailListener() {
                 @Override
                 public void onComplete(User u) {
                     StartAppFragmentDirections.ActionStartAppFragmentToListPostFragment action=StartAppFragmentDirections.actionStartAppFragmentToListPostFragment(u);

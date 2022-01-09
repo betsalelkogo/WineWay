@@ -6,6 +6,14 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.example.wineapp.model.intefaces.AddPostListener;
+import com.example.wineapp.model.intefaces.AddUserListener;
+import com.example.wineapp.model.intefaces.DeletePostListener;
+import com.example.wineapp.model.intefaces.GetAllPostsListener;
+import com.example.wineapp.model.intefaces.GetAllUserListener;
+import com.example.wineapp.model.intefaces.GetPostByNameListener;
+import com.example.wineapp.model.intefaces.GetUserByEmailListener;
+import com.example.wineapp.model.intefaces.UploadImageListener;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -32,7 +40,7 @@ public class ModelFirebase {
                 .build();
         db.setFirestoreSettings(settings);
     }
-    public void getAllPosts(Long since,Model.GetAllPostsListener listener) {
+    public void getAllPosts(Long since, GetAllPostsListener listener) {
         db.collection("posts").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -59,52 +67,29 @@ public class ModelFirebase {
 
     }
 
-    public void addPost(Post post, Model.AddPostListener listener) {
+    public void addPost(Post post, AddPostListener listener) {
         if(post.getId_key()==null){
-            db.collection("posts")
+            db.collection(Constants.MODEL_FIRE_BASE_POST_COLLECTION)
                 .document().set(post.toJson())
                 .addOnSuccessListener((successListener)-> {
                     listener.onComplete();
                 })
                 .addOnFailureListener((e)-> {
-                    Log.d("TAG", e.getMessage());
                 });
         }
         else{
-            db.collection("posts")
+            db.collection(Constants.MODEL_FIRE_BASE_POST_COLLECTION)
                     .document(post.getId_key()).set(post.toJson())
                     .addOnSuccessListener((successListener)-> {
                         listener.onComplete();
                     })
                     .addOnFailureListener((e)-> {
-                        Log.d("TAG", e.getMessage());
                     });
         }
     }
 
-    public void getPostByName(String postName, Model.GetPostByNameListener listener) {
-        DocumentReference docRef = db.collection("posts").document(postName);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        Post p = Post.fromJson(document.getData());
-                        listener.onComplete(p);
-                    } else {
-                        listener.onComplete(null);
-                    }
-                } else {
-                    Log.d("TAG", "get failed with ", task.getException());
-                    listener.onComplete(null);
-                }
-            }
-        });
-    }
-
-    public void getUserByEmail(String userEmail, Model.GetUserByEmailListener listener) {
-        DocumentReference docRef = db.collection("users").document(userEmail);
+    public void getUserByEmail(String userEmail, GetUserByEmailListener listener) {
+        DocumentReference docRef = db.collection(Constants.MODEL_FIRE_BASE_USER_COLLECTION).document(userEmail);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
@@ -117,21 +102,20 @@ public class ModelFirebase {
                         listener.onComplete(null);
                     }
                 } else {
-                    Log.d("TAG", "get failed with ", task.getException());
                     listener.onComplete(null);
                 }
             }
         });
     }
 
-    public void uploadImage(Bitmap bitmap, String id_key, final Model.UploadImageListener listener){
+    public void uploadImage(Bitmap bitmap, String id_key, final UploadImageListener listener){
         FirebaseStorage storage=FirebaseStorage.getInstance();
         final StorageReference imageRef;
         if(id_key==null){
             imageRef=storage.getReference().child("image"+counter);
             counter++;}
         else
-            imageRef=storage.getReference().child("image").child(id_key);
+            imageRef=storage.getReference().child(Constants.MODEL_FIRE_BASE_IMAGE_COLLECTION).child(id_key);
         ByteArrayOutputStream baos =new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG,100,baos);
         byte[] data= baos.toByteArray();
@@ -154,59 +138,13 @@ public class ModelFirebase {
         });
 
     }
-    public void deletePost(Post post,Model.DeletePostListener listener) {
-        db.collection("posts").document(post.getId_key())
-                .delete()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        listener.onComplete();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
 
-                    }
-                });
-    }
-    public void getAllUser(Model.GetAllUserListener listener) {
-        db.collection("users").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                LinkedList<User> users = new LinkedList<User>();
-                if(task.isSuccessful()){
-                    for (QueryDocumentSnapshot doc: task.getResult()){
-                        User u = User.fromJson(doc.getData());
-                        if (u != null) {
-                            users.add(u);
-                        }
-                    }
-                }else{
-
-                }
-                listener.onComplete(users);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                listener.onComplete(null);
-            }
-        });
-
-    }
-
-    public void addUser(User user, Model.AddUserListener listener) {
-        db.collection("users")
+    public void addUser(User user, AddUserListener listener) {
+        db.collection(Constants.MODEL_FIRE_BASE_USER_COLLECTION)
                 .document(user.getEmail()).set(user.toJson())
                 .addOnSuccessListener((successListener)-> {
                     listener.onComplete();
                 })
-                .addOnFailureListener((e)-> {
-                    Log.d("TAG", e.getMessage());
-                });
+                .addOnFailureListener((e)-> { });
     }
-
-
-
 }

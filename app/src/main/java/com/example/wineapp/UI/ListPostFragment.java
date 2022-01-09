@@ -9,9 +9,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -23,15 +21,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.wineapp.OnItemClickListener;
+import com.example.wineapp.model.intefaces.OnItemClickListener;
 import com.example.wineapp.R;
 import com.example.wineapp.model.Model;
 import com.example.wineapp.model.Post;
 import com.example.wineapp.model.User;
 import com.example.wineapp.model.adapter.MyAdapter;
-import com.squareup.picasso.Picasso;
 
-import java.util.LinkedList;
 import java.util.List;
 
 public class ListPostFragment extends Fragment {
