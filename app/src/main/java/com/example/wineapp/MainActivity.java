@@ -32,7 +32,7 @@ import java.util.UUID;
 public class MainActivity extends AppCompatActivity {
     private FusedLocationProviderClient fusedLocationProviderClient;
     NavController navCtrl;
-
+    public static PermissionCallback permissionCallback;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -60,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
     public interface PermissionCallback{
         void onResult(boolean isGranted);
     }
-    public static PermissionCallback permissionCallback;
+
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {

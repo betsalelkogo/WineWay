@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.view.MenuInflater;
@@ -19,6 +20,7 @@ import android.view.Menu;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
+import com.example.wineapp.MainActivity;
 import com.example.wineapp.MyApplication;
 import com.example.wineapp.R;
 import com.example.wineapp.model.Model;
@@ -47,6 +49,15 @@ public class MapFragment extends Fragment {
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
         @Override
         public void onMapReady(GoogleMap googleMap) {
+            MainActivity.permissionCallback = new MainActivity.PermissionCallback() {
+                @SuppressLint("MissingPermission")
+                @Override
+                public void onResult(boolean isGranted) {
+                    if (isGranted) {
+                        return;
+                    }
+                }
+            };
             if (ActivityCompat.checkSelfPermission(MyApplication.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) !=
                     PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MyApplication.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.ACCESS_FINE_LOCATION},123);
@@ -78,7 +89,6 @@ public class MapFragment extends Fragment {
                 LatLng latlang = new LatLng(viewModel.getData().getValue().get(0).getLant(),viewModel.getData().getValue().get(0).getLang());
                 googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latlang,7.5F));
             }
-
         }
     };
 

@@ -1,6 +1,7 @@
 package com.example.wineapp.UI;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import static android.app.Activity.RESULT_OK;
 
@@ -24,6 +25,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import com.example.wineapp.MainActivity;
 import com.example.wineapp.MyApplication;
 import com.example.wineapp.R;
 import com.example.wineapp.model.Constants;
@@ -39,8 +41,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.picasso.Picasso;
 
-public class EditPostFragment extends Fragment implements OnMapReadyCallback {
-
+public class EditPostFragment extends Fragment{
     Post p;
     User user;
     View view;
@@ -51,6 +52,7 @@ public class EditPostFragment extends Fragment implements OnMapReadyCallback {
     Button cancelBtn, deleteBtn,sendPostBtn;
     ImageView postPhoto;
     LatLng location;
+    OnMapReadyCallback onMapReadyCallback;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -180,35 +182,6 @@ public class EditPostFragment extends Fragment implements OnMapReadyCallback {
         map.onStop();
     }
 
-    @Override
-    public void onMapReady(GoogleMap map) {
-        if (ActivityCompat.checkSelfPermission(MyApplication.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) !=
-                PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MyApplication.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        location=new LatLng(p.getLant(), p.getLang());
-        MarkerOptions marker=new MarkerOptions().position(location).title(p.getSubject());
-        marker.draggable(true);
-        map.addMarker(marker);
-        map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(p.getLant(), p.getLang()),7.5F));
-        map.setMyLocationEnabled(true);
-        map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
-            @Override
-            public void onMarkerDrag(@NonNull Marker marker) {
-                location= marker.getPosition();
-            }
-
-            @Override
-            public void onMarkerDragEnd(@NonNull Marker marker) {
-                location= marker.getPosition();
-            }
-
-            @Override
-            public void onMarkerDragStart(@NonNull Marker marker) {
-                location= marker.getPosition();
-            }
-        });
-    }
     private void updatePost() {
         subjectEt.setText(p.getSubject());
         progressBar.setVisibility(View.GONE);
@@ -243,8 +216,50 @@ public class EditPostFragment extends Fragment implements OnMapReadyCallback {
         if (savedInstanceState != null) {
             mapViewBundle = savedInstanceState.getBundle(Constants.MAPVIEW_BUNDLE_KEY);
         }
-        map.onCreate(mapViewBundle);
+        onMapReadyCallback = new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(@NonNull GoogleMap map) {
+                MainActivity.permissionCallback = new MainActivity.PermissionCallback() {
+                    @SuppressLint("MissingPermission")
+                    @Override
+                    public void onResult(boolean isGranted) {
+                        if (isGranted) {
 
-        map.getMapAsync(this);
+                            location = new LatLng(p.getLant(), p.getLang());
+                            MarkerOptions marker = new MarkerOptions().position(location).title(p.getSubject());
+                            marker.draggable(true);
+                            map.addMarker(marker);
+                            map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(p.getLant(), p.getLang()), 7.5F));
+                            map.setMyLocationEnabled(true);
+                            map.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+                                @Override
+                                public void onMarkerDrag(@NonNull Marker marker) {
+                                    location = marker.getPosition();
+                                }
+
+                                @Override
+                                public void onMarkerDragEnd(@NonNull Marker marker) {
+                                    location = marker.getPosition();
+                                }
+
+                                @Override
+                                public void onMarkerDragStart(@NonNull Marker marker) {
+                                    location = marker.getPosition();
+                                }
+                            });
+
+                        }
+                    }
+                };
+                if (ActivityCompat.checkSelfPermission(MyApplication.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) !=
+                        PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MyApplication.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.ACCESS_FINE_LOCATION},123);
+                }
+                else
+                    MainActivity.permissionCallback.onResult(true);
+            }
+        };
+        map.onCreate(mapViewBundle);
+        map.getMapAsync(onMapReadyCallback);
     }
 }

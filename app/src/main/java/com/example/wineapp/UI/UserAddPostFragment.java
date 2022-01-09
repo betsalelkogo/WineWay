@@ -2,25 +2,19 @@ package com.example.wineapp.UI;
 
 import static android.app.Activity.RESULT_OK;
 
-import static androidx.core.graphics.TypefaceCompatUtil.getTempFile;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
+
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.Navigation;
 
@@ -44,27 +38,18 @@ import com.example.wineapp.model.Model;
 import com.example.wineapp.model.Post;
 import com.example.wineapp.model.User;
 import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
+
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 
 public class UserAddPostFragment extends Fragment {
-    private Button btnSelectImage;
-    private Bitmap bitmap;
-    private File destination = null;
-    private InputStream inputStreamImg;
-    private String imgPath = null;
-    private final int PICK_IMAGE_CAMERA = 1, PICK_IMAGE_GALLERY = 2;
     View view;
     EditText postEt, subjectEt;
     Button cancelBtn, sendBtn;
@@ -92,48 +77,24 @@ public class UserAddPostFragment extends Fragment {
         editPhoto = view.findViewById(R.id.user_add_post_edit_image_btn);
         postPhoto = view.findViewById(R.id.user_add_new_post_photo_upload);
         progressBar.setVisibility(View.GONE);
-        editPhoto.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                editPhoto();
+        editPhoto.setOnClickListener(v -> editPhoto());
+        sendBtn.setOnClickListener(v -> {
+            if (!validate()) {
+                Toast.makeText(getActivity(), "Please check your input", Toast.LENGTH_SHORT).show();
+                return;
             }
+            save();
         });
-        sendBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!validate()) {
-                    Toast.makeText(getActivity(), "Please check your input", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                save();
-            }
-        });
-        cancelBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                progressBar.setVisibility(View.VISIBLE);
-                UserAddPostFragmentDirections.ActionUserAddPostFragmentToUserPageFragment action1 = UserAddPostFragmentDirections.actionUserAddPostFragmentToUserPageFragment(user);
-                Navigation.findNavController(view).navigate(action1);
-            }
+        cancelBtn.setOnClickListener(v -> {
+            progressBar.setVisibility(View.VISIBLE);
+            UserAddPostFragmentDirections.ActionUserAddPostFragmentToUserPageFragment action1 = UserAddPostFragmentDirections.actionUserAddPostFragmentToUserPageFragment(user);
+            Navigation.findNavController(view).navigate(action1);
         });
         InitialGoogleMap(savedInstanceState);
         setHasOptionsMenu(true);
         return view;
     }
 
-//    public void callCamera() {
-//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-//            startActivityForResult(takePictureIntent, Constants.REQUEST_IMAGE_CAPTURE);
-//        }
-//    }
-//    public void callGallery() {
-//        Intent intent = new Intent(Intent.ACTION_PICK,
-//                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
-//            startActivityForResult(intent, Constants.REQUEST_IMAGE_CAPTURE);
-//        }
-//    }
 
     private void InitialGoogleMap(Bundle savedInstanceState) {
         // *** IMPORTANT ***
@@ -143,64 +104,43 @@ public class UserAddPostFragment extends Fragment {
         if (savedInstanceState != null) {
             mapViewBundle = savedInstanceState.getBundle(Constants.MAPVIEW_BUNDLE_KEY);
         }
-        onMapReadyCallback = new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(@NonNull GoogleMap map) {
-                MainActivity.permissionCallback = new MainActivity.PermissionCallback() {
-                    @SuppressLint("MissingPermission")
-                    @Override
-                    public void onResult(boolean isGranted) {
-                        if (isGranted) {
-                            map.setMyLocationEnabled(true);
-                            map.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
-                                @Override
-                                public void onMapClick(@NonNull LatLng latLng) {
-                                    lastKnownLocation = new LatLng(latLng.latitude, latLng.longitude);
-                                    map.addMarker(new MarkerOptions().position(new LatLng(latLng.latitude, latLng.longitude)).title(p.getSubject()));
-
-                                }
-                            });
-                            if (lastKnownLocation != null)
-                                map.moveCamera(CameraUpdateFactory.newLatLng(lastKnownLocation));
-                        }
+        onMapReadyCallback = map -> {
+            MainActivity.permissionCallback = new MainActivity.PermissionCallback() {
+                @SuppressLint("MissingPermission")
+                @Override
+                public void onResult(boolean isGranted) {
+                    if (isGranted) {
                     }
-                };
-                if (ActivityCompat.checkSelfPermission(MyApplication.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) !=
-                        PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MyApplication.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.ACCESS_FINE_LOCATION},123);
                 }
-                else
-                    MainActivity.permissionCallback.onResult(true);
-
+            };
+            if (ActivityCompat.checkSelfPermission(MyApplication.getContext(), Manifest.permission.ACCESS_FINE_LOCATION) !=
+                    PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(MyApplication.getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(getActivity(),new String[]{Manifest.permission.ACCESS_FINE_LOCATION},123);
             }
+            map.setMyLocationEnabled(true);
+            map.setOnMapClickListener(latLng -> {
+                lastKnownLocation = new LatLng(latLng.latitude, latLng.longitude);
+                map.addMarker(new MarkerOptions().position(new LatLng(latLng.latitude, latLng.longitude)).title(p.getSubject()));
+
+            });
+            if (lastKnownLocation == null)
+                map.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(31.789080,34.654600), 7.5F));
         };
         map.onCreate(mapViewBundle);
         map.getMapAsync(onMapReadyCallback);
     }
 
     private void editPhoto() {
-        /*Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, Constants.REQUEST_IMAGE_CAPTURE);
-        }*/
-       /* Intent intent = new Intent();
-        intent.setType("image/*");
-        intent.setAction(Intent.ACTION_GET_CONTENT);*/
-        Intent intent = getPickImageIntent(getActivity());//new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        //Intent.createChooser(intent, "Select Picture");
-
-        startActivityForResult(Intent.createChooser(intent, "Select Picture"), 1);
-        //startActivityForResult(intent, 1)
-
+        Intent intent = getPickImageIntent(getActivity());
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), Constants.REQUEST_IMAGE_CAPTURE);
     }
-    public static Intent getPickImageIntent(Context context) {
+    private Intent getPickImageIntent(Context context) {
         Intent chooserIntent = null;
         List<Intent> intentList = new ArrayList<>();
         Intent pickIntent = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         Intent takePhotoIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         takePhotoIntent.putExtra("return-data", true);
-        //takePhotoIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getTempFile(context)));
         intentList = addIntentsToList(context, intentList, pickIntent);
         intentList = addIntentsToList(context, intentList, takePhotoIntent);
 
@@ -213,7 +153,7 @@ public class UserAddPostFragment extends Fragment {
         return chooserIntent;
     }
 
-    private static List<Intent> addIntentsToList(Context context, List<Intent> list, Intent intent) {
+    private  List<Intent> addIntentsToList(Context context, List<Intent> list, Intent intent) {
         List<ResolveInfo> resInfo = context.getPackageManager().queryIntentActivities(intent, 0);
         for (ResolveInfo resolveInfo : resInfo) {
             String packageName = resolveInfo.activityInfo.packageName;
@@ -225,7 +165,7 @@ public class UserAddPostFragment extends Fragment {
     }
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 1 && resultCode == RESULT_OK) {
+        if (requestCode == Constants.REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
             try {
                 if (data.getAction() != null && data.getAction().equals("inline-data")){
                     // take picture from camera
@@ -262,12 +202,7 @@ public class UserAddPostFragment extends Fragment {
 
                 } else {
                     p.setImageUrl(url);
-                    Model.instance.addPost(p,new Model.AddPostListener(){
-                        @Override
-                        public void onComplete() {
-                            Navigation.findNavController(sendBtn).navigateUp();
-                        }
-                    });
+                    Model.instance.addPost(p, () -> Navigation.findNavController(sendBtn).navigateUp());
                 }
             }});
     }
