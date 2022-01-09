@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="20dp"
-        android:text="Subject"
+        android:text="@string/subject"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/post_details_map" />
@@ -39,7 +39,7 @@
         android:layout_height="165dp"
         android:layout_marginTop="40dp"
         android:ems="10"
-        android:hint="Post Details"
+        android:hint="@string/post_details"
         android:inputType="textMultiLine"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.491"
