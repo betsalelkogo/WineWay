@@ -57,6 +57,10 @@ public class MainActivity extends AppCompatActivity {
         }
         return true;
     }
+    public interface PermissionCallback{
+        void onResult(boolean isGranted);
+    }
+    public static PermissionCallback permissionCallback;
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[], int[] grantResults) {
@@ -64,9 +68,10 @@ public class MainActivity extends AppCompatActivity {
         switch (requestCode) {
             // Location
             case 123: {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                }
+                boolean result = (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED);
+                if (permissionCallback != null)
+                    permissionCallback.onResult(result);
                 break;
             }
         }
