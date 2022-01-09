@@ -107,40 +107,4 @@ public class PostDetailsFragment extends Fragment{
         }
         map.onSaveInstanceState(mapViewBundle);
     }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        map.onResume();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        map.onStart();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        map.onStop();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        map.onPause();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        map.onDestroy();
-    }
-
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        map.onLowMemory();
-    }
 }

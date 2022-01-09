@@ -58,7 +58,6 @@ public class SignInFragment extends Fragment {
         setHasOptionsMenu(true);
         return view;
     }
-
     private void validateUser() {
         mAuth.signInWithEmailAndPassword(email.getText().toString(), password.getText().toString())
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
@@ -87,11 +86,9 @@ public class SignInFragment extends Fragment {
                     }
                 });
     }
-
     private boolean validate() {
         return (email.getText().length() > 2 && password.getText().length() > 2);
     }
-
     private void draw(){
         email.setText("");
         password.setText("");
