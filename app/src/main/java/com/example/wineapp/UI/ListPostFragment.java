@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.example.wineapp.model.LoadingState;
 import com.example.wineapp.model.intefaces.OnItemClickListener;
 import com.example.wineapp.R;
 import com.example.wineapp.model.Model;
@@ -89,7 +90,10 @@ public class ListPostFragment extends Fragment {
                 Navigation.findNavController(v).navigate(action);
             }
         });
-        Model.instance.reloadPostsList();
+        swipeRefresh.setRefreshing(Model.instance.getLoadingState().getValue()== LoadingState.loading);
+        Model.instance.getLoadingState().observe(getViewLifecycleOwner(),loadingState -> {
+            swipeRefresh.setRefreshing(loadingState== LoadingState.loading);
+        });
         return view;
     }
 

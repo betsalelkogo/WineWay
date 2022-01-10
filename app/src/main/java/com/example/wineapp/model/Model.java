@@ -16,15 +16,19 @@ import java.util.List;
 
 public class Model {
     static final public Model instance = new Model();
+    MutableLiveData<LoadingState> loadingState= new MutableLiveData<LoadingState>();
+    public LiveData<LoadingState> getLoadingState(){return loadingState;}
     MutableLiveData<List<Post>> postsListLd = new MutableLiveData<List<Post>>();
     ModelFirebase modelFirebase = new ModelFirebase();
     private  Model(){
+        loadingState.setValue(LoadingState.loaded);
         reloadPostsList();
     }
     public LiveData<List<Post>> getAll() {
         return postsListLd;
     }
     public void reloadPostsList() {
+        loadingState.setValue(LoadingState.loading);
         //1. get local last update
         Long localLastUpdate = Post.getLocalLastUpdated();
         //2. get all students record since local last update from firebase
@@ -54,6 +58,7 @@ public class Model {
                         }
                     }
                     postsListLd.postValue(stList);
+                    loadingState.postValue(LoadingState.loaded);
                 });
             }
         });
@@ -89,5 +94,6 @@ public class Model {
     public void uploadImage(Bitmap bitmap, String name, final UploadImageListener listener){
         modelFirebase.uploadImage(bitmap,name,listener);
     }
+
 
 }
